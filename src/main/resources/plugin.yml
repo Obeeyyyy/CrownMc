@@ -1,7 +1,7 @@
-name: Slayer-v4
+name: CrownMc
 authors: [ Obey, EntixOG, richardwhateverr ]
 version: 4.0
-main: de.obey.slayer.SlayerMain
+main: de.obey.crownmc.CrownMain
 commands:
   whitelist:
     aliases: [ wl ]
