@@ -58,6 +58,9 @@ public final class Crash {
 
     private Location graphLocation;
 
+    private BukkitTask tempStandRunnable;
+    private final HashMap<ArmorStand, Integer> tempStands = new HashMap<>();
+
     public Crash(final CrashHandler crashHandler) {
         messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
         userHandler = CrownMain.getInstance().getInitializer().getUserHandler();
@@ -78,10 +81,54 @@ public final class Crash {
         playersHolo = new ArmorStandBuilder(crashHandler.getCrashLocationTwo(), "§0");
     }
 
+    private void startTempRunnable() {
+        tempStandRunnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                if(tempStands.size() > 0) {
+                    for (ArmorStand temp : tempStands.keySet()) {
+                        if(temp == null)
+                            continue;
+
+                        int state = tempStands.get(temp);
+
+                        if(state < 3) {
+                            temp.teleport(temp.getLocation().clone().add(0, 0.25f, 0));
+                            tempStands.put(temp, state + 1);
+                        }
+
+                        if (state == 3) {
+                            temp.remove();
+                            temp.setCustomNameVisible(false);
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(CrownMain.getInstance(), 3, 3);
+    }
+
+    private long lastSpawned = 0;
+    private void spawnTempStand(final String increasing) {
+        if(System.currentTimeMillis() - lastSpawned < 200)
+            return;
+
+        lastSpawned = System.currentTimeMillis();
+
+        final ArmorStand stand = graphLocation.getWorld().spawn(crashHandler.getCrashLocationThree().clone().add(0, 0.25f, 0), ArmorStand.class);
+
+        stand.setGravity(false);
+        stand.setVisible(false);
+        stand.setCustomName("§f+" + increasing);
+        stand.setCustomNameVisible(true);
+
+        tempStands.put(stand, 0);
+    }
+
     private final ArrayList<ArmorStand> graphStands = new ArrayList<>();
 
     private void spawnGraphStand(final double increasing, final boolean crashed) {
-        graphLocation.add(0.25, increasing, 0);
+        graphLocation.add(0.1, increasing/1.2d, 0);
 
         final ArmorStand stand = graphLocation.getWorld().spawn(graphLocation, ArmorStand.class);
 
@@ -217,6 +264,8 @@ public final class Crash {
 
         graphLocation = crashHandler.getCrashLocationGraph().clone();
 
+        startTempRunnable();
+
         final Random random = new Random();
 
         /*
@@ -234,7 +283,12 @@ public final class Crash {
         }
          */
 
-        finalMultiplier = random.nextInt(10) + random.nextDouble();
+        if(random.nextInt(10) < 3) { // 30% chance das es unter 1 crasht
+            finalMultiplier = random.nextDouble() + random.nextDouble()/10;
+        } else {
+            finalMultiplier = 0.5 + random.nextInt(5) + random.nextDouble() + random.nextDouble()/10;
+        }
+
         finalMultiplier = Double.parseDouble(format.format(finalMultiplier).replace(",", "."));
 
         bets.keySet().forEach(uuid -> {
@@ -251,7 +305,7 @@ public final class Crash {
 
         runnable = new BukkitRunnable() {
             float pitch = 0.6f;
-            int delay = 20;
+            int delay = 13;
             int finalTicks = 0;
             int tempTicks = 0;
 
@@ -260,19 +314,7 @@ public final class Crash {
 
                 if (tempTicks >= delay) {
 
-                    double increasing = random.nextInt(5)/10d + random.nextDouble()/10d;
-
-                    if(multiplier + increasing > finalMultiplier)
-                        increasing = finalMultiplier - multiplier;
-
-                    tempTicks = 0;
-                    multiplier += increasing;
-
-                    finalTicks++;
-                    if(delay > 2)
-                        delay--;
-
-                    mainHolo.setCustomName(1, "§fx" + getColor(multiplier) + "" + format.format(multiplier));
+                    double increasing = random.nextInt(2) / 10d + random.nextDouble() / 10d;
 
                     if (multiplier >= finalMultiplier) {
                         endCrash();
@@ -280,6 +322,19 @@ public final class Crash {
                         spawnGraphStand(increasing, true);
                         return;
                     }
+
+                    if (multiplier + increasing > finalMultiplier)
+                        increasing = finalMultiplier - multiplier;
+
+                    tempTicks = 0;
+                    multiplier += increasing;
+                    spawnTempStand(format.format(increasing));
+
+                    finalTicks++;
+                    if (delay > 4)
+                        delay--;
+
+                    mainHolo.setCustomName(1, "§fx" + getColor(multiplier) + "" + format.format(multiplier));
 
                     spawnGraphStand(increasing, false);
 
@@ -340,6 +395,12 @@ public final class Crash {
 
                 graphStands.forEach(Entity::remove);
                 graphStands.clear();
+
+                for (ArmorStand armorStand : tempStands.keySet())
+                    armorStand.remove();
+
+                tempStands.clear();
+                tempStandRunnable.cancel();
 
                 cancel();
             }

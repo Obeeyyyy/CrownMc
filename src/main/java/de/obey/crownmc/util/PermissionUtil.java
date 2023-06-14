@@ -31,10 +31,10 @@ public final class PermissionUtil {
         if (user == null)
             return;
 
-        user.getNodes(NodeType.PERMISSION).add(PermissionNode.builder("slayer." + permission).build());
+        user.getNodes(NodeType.PERMISSION).add(PermissionNode.builder("crown." + permission).build());
         luckperms.getUserManager().saveUser(user);
 
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user Obeeyyyy permission set slayer." + permission);
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user Obeeyyyy permission set crown." + permission);
     }
 
     public boolean hasPermission(final CommandSender sender, final String permission, final boolean send) {
@@ -81,11 +81,11 @@ public final class PermissionUtil {
 
          */
 
-        if (player.hasPermission("slayer." + permission))
+        if (player.hasPermission("crown." + permission))
             return true;
 
         if (send) {
-            messageUtil.sendMessage(player, "§c§oDu hast keine Rechte dafür. §8(§f§o slayer." + permission + " §8)");
+            messageUtil.sendMessage(player, "§c§oDu hast keine Rechte dafür. §8(§f§o crown." + permission + " §8)");
             player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
         }
 
