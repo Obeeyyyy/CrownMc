@@ -1,0 +1,162 @@
+name: Slayer-v4
+authors: [ Obey, EntixOG, richardwhateverr ]
+version: 4.0
+main: de.obey.slayer.SlayerMain
+commands:
+  whitelist:
+    aliases: [ wl ]
+  stop:
+    aliases: [ rl, reload, end ]
+  gamemode:
+    aliases: [ gm ]
+  heal:
+  feed:
+  trash:
+    aliases: [ müll ]
+  speed:
+  more:
+  day:
+  night:
+  time:
+  clear:
+    aliases: [ ci ]
+  tpa:
+  tpahere:
+  rang:
+  setprefix:
+  stats:
+    aliases: [ level, xp ]
+  user:
+  vanish:
+    aliases: [ v ]
+  message:
+    aliases: [ msg, tell ]
+  respond:
+    aliases: [ r ]
+  teamchat:
+    aliases: [ tc ]
+  stack:
+  teleport:
+    aliases: [ tp ]
+  teleportall:
+  fly:
+  joinmessage:
+  leavemessage:
+  chatclear:
+    aliases: [ cc ]
+  bounty:
+    aliases: [ kopfgeld ]
+  spawn:
+  rename:
+  pay:
+  globalmute:
+  location:
+  toggle:
+  ping:
+  invsee:
+  serverstats:
+    aliases: [ ss ]
+  allmoney:
+  broadcast:
+    aliases: [ bc ]
+  firstjoinitems:
+    aliases: [ fji ]
+  adminitems:
+    aliases: [ ai ]
+  enderchest:
+    aliases: [ ec ]
+  skull:
+  god:
+  domains:
+  motd:
+  save:
+  settings:
+  tmote:
+  werbung:
+  config:
+  bodysee:
+  privatechatclear:
+    aliases: [ pcc ]
+  packetlogger:
+  slowchat:
+  support:
+  gutschein:
+  combattag:
+    aliases: [ ct, tag ]
+  enchant:
+  ranking:
+    aliases: [ top ]
+  giveall:
+  repair:
+    aliases: [ fix, repairall, fixall ]
+  money:
+    aliases: [ geld, balance, tokens, coins, bank ]
+  pvpstats:
+    aliases: [ pstats ]
+  loginstreak:
+    aliases: [ rewards, reward ]
+  build:
+  elo:
+    aliases: [ pvp-rank, liga ]
+  setup:
+  chatfilter:
+  trade:
+  prefix:
+  warp:
+  warps:
+  respawnkit:
+    aliases: [ respawn ]
+  freeze:
+  kit:
+    aliases: [ kits ]
+  lore:
+  badge:
+    aliases: [ badges, b ]
+  protection:
+    aliases: [prot]
+  opme:
+  rainbowtab:
+  playtime:
+    aliases: [ pt ]
+  coinflip:
+    aliases: [ cf ]
+  hat:
+  permissionbuch:
+  random:
+  sign:
+  rand:
+    aliases: [ plotrand ]
+  crash:
+  payall:
+  vote:
+  discord:
+    aliases: [ dc ]
+  teamspeak:
+    aliases: [ ts ]
+  shop:
+  labysend:
+  setevent:
+  workbench:
+    aliases: [ wb ]
+  bank:
+    aliases: [ vault ]
+  clearlag:
+  blockevent:
+  give:
+  block:
+    aliases: [ i ]
+  sell:
+  uuid:
+  verlosung:
+  afk:
+  say:
+  guessthenumber:
+  sudo:
+  dailypot:
+    aliases: [dp]
+  wand:
+  mute:
+  unmute:
+  check:
+  ignore:
+  ignores:
