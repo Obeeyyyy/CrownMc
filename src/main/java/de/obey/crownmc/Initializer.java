@@ -76,6 +76,7 @@ public final class Initializer {
     private BlockEventHandler blockEventHandler;
     private GuessTheNumberCommand guessTheNumberCommand;
     private DailyPotHandler dailyPotHandler;
+    private LuckySpinHandler luckySpinHandler;
 
     private PlotAPI plotAPI;
 
@@ -160,7 +161,7 @@ public final class Initializer {
         crownMain.getCommand("loginstreak").setExecutor(new LoginStreakCommand(loginRewardHandler));
         crownMain.getCommand("build").setExecutor(new BuildCommand(messageUtil));
         crownMain.getCommand("elo").setExecutor(new EloCommand(eloHandler, messageUtil));
-        crownMain.getCommand("setup").setExecutor(new SetupCommand(messageUtil, crashHandler, blockEventHandler, dailyPotHandler));
+        crownMain.getCommand("setup").setExecutor(new SetupCommand(messageUtil, crashHandler, blockEventHandler, dailyPotHandler, luckySpinHandler));
         crownMain.getCommand("chatfilter").setExecutor(new ChatFilterCommand(chatFilterHandler));
         crownMain.getCommand("trade").setExecutor(new TradeCommand(messageUtil, tradeHandler));
         crownMain.getCommand("prefix").setExecutor(new PrefixCommand(messageUtil, userHandler));
@@ -210,6 +211,7 @@ public final class Initializer {
         crownMain.getCommand("check").setExecutor(new MuteCommand(messageUtil, userHandler));
         crownMain.getCommand("ignore").setExecutor(new IgnoreCommand(messageUtil, userHandler));
         crownMain.getCommand("ignores").setExecutor(new IgnoresCommand(messageUtil, userHandler));
+        crownMain.getCommand("luckyspin").setExecutor(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler));
     }
 
     private void loadTabCompleter() {
@@ -373,6 +375,7 @@ public final class Initializer {
         pluginManager.registerEvents(guessTheNumberCommand, crownMain);
         pluginManager.registerEvents(new DailyPotCommand(messageUtil, dailyPotHandler), crownMain);
         pluginManager.registerEvents(new WandCommand(messageUtil, userHandler, plotAPI), crownMain);
+        pluginManager.registerEvents(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler), crownMain);
     }
 
     public void initializeSystem() {
@@ -413,6 +416,7 @@ public final class Initializer {
                     autoBroadcastHandler = new AutoBroadcastHandler(serverConfig, messageUtil);
                     blockEventHandler = new BlockEventHandler(Initializer.this);
                     dailyPotHandler = new DailyPotHandler(locationHandler, messageUtil, userHandler);
+                    luckySpinHandler = new LuckySpinHandler(locationHandler, messageUtil, userHandler);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
@@ -428,6 +432,7 @@ public final class Initializer {
                     worldProtectionHandler.loadWorlds();
                     blockEventHandler.setupArmorStands();
                     dailyPotHandler.setupArmorStands();
+                    luckySpinHandler.setup();
                 }
 
                 if (ticks == 5) {
@@ -459,6 +464,7 @@ public final class Initializer {
 
         coinflipHandler.shutdown();
         crashHandler.shutdown();
+        luckySpinHandler.shutdown();
 
         for (final Player onlinePlayer : Bukkit.getOnlinePlayers())
             onlinePlayer.kickPlayer("§c§oDer Server startet neu.");

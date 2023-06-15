@@ -10,7 +10,7 @@ import de.obey.crownmc.commands.FreezeCommand;
 import de.obey.crownmc.commands.GodCommand;
 import de.obey.crownmc.handler.CombatHandler;
 import de.obey.crownmc.handler.WorldProtectionHandler;
-import de.obey.crownmc.objects.Combat;
+import de.obey.crownmc.objects.pvp.Combat;
 import de.obey.crownmc.util.Bools;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;

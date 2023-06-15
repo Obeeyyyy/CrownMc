@@ -6,7 +6,7 @@ package de.obey.crownmc.commands;
 
 */
 
-import de.obey.crownmc.objects.Giveaway;
+import de.obey.crownmc.objects.gambling.Giveaway;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;

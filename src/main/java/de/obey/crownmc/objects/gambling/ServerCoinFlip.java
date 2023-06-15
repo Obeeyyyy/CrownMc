@@ -1,4 +1,4 @@
-package de.obey.crownmc.objects;
+package de.obey.crownmc.objects.gambling;
 /*
 
     Author - Obey -> SkySlayer-v4
@@ -7,6 +7,7 @@ package de.obey.crownmc.objects;
 */
 
 import de.obey.crownmc.CrownMain;
+import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MessageUtil;
@@ -23,51 +24,43 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.text.NumberFormat;
 import java.util.Random;
+import java.util.UUID;
 
 @Getter
-public final class CoinFlip {
+public final class ServerCoinFlip {
 
     private final OfflinePlayer player;
-    private OfflinePlayer opponent;
 
     private int state = 0;
-    private final int id;
     private final long amount;
 
     private Inventory inventory;
     private BukkitTask runnable;
 
-    public CoinFlip(final Player player, final long amount, final int id) {
+    public ServerCoinFlip(final Player player, final long amount) {
         this.player = player;
         this.amount = amount;
-        this.id = id;
+
+        start();
     }
 
     public long getWinAmount() {
-        return  (amount*2) *9 / 10;
+        return  amount*2;
     }
 
-    public void join(final Player joined) {
-        if (state != 0) {
-            joined.openInventory(inventory);
+    public void start() {
+        if (state != 0)
             return;
-        }
 
-        inventory = Bukkit.createInventory(null, 9 * 6, "§6§lCF §7" + player.getName() + " §8vs §7" + joined.getName());
+        inventory = Bukkit.createInventory(null, 9 * 6, "§6§lCF §7" + player.getName() + " §8vs §4§lSERVER");
 
         InventoryUtil.fillSideRows(inventory, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
 
         state = 1;
-        opponent = joined;
 
         if (player.isOnline()) {
             player.getPlayer().openInventory(inventory);
             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.CHEST_OPEN, 1, 1);
-        }
-
-        if (opponent.isOnline()) {
-            opponent.getPlayer().openInventory(inventory);
-            opponent.getPlayer().playSound(opponent.getPlayer().getLocation(), Sound.CHEST_OPEN, 1, 1);
         }
 
         inventory.setItem(4, new ItemBuilder(Material.STAINED_GLASS_PANE, 1, (byte) 5)
@@ -86,27 +79,27 @@ public final class CoinFlip {
                         "")
                 .build());
 
-        final ItemStack skull1 = new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+        final ItemStack skull1 = new ItemBuilder(Material.SKULL_ITEM, 2, (byte) 3)
                 .setDisplayname("§7Kopf von§8:§6§l " + player.getName())
                 .setSkullOwner(player.getName())
                 .build();
 
-        final ItemStack skull2 = new ItemBuilder(Material.SKULL_ITEM, 2, (byte) 3)
-                .setDisplayname("§7Kopf von§8:§6§l " + opponent.getName())
-                .setSkullOwner(opponent.getName())
+        final ItemStack skull2 = new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                .setTextur("MzRkYmJjZGRjYzQ0ODE2MGI2OWMwYzdiYWQ2M2VkODIzNjExNmE0ODQ5MTJmYzdjODcxNWM4N2I0Mzc0NTZmIn19fQ==", UUID.randomUUID())
+                .setDisplayname("§4§lSERVER")
                 .build();
 
         inventory.setItem(12, skull2);
         inventory.setItem(13, skull1);
         inventory.setItem(14, skull2);
 
-        inventory.setItem(20, skull1);
+        inventory.setItem(20, skull2);
         inventory.setItem(29, skull2);
-        inventory.setItem(38, skull1);
+        inventory.setItem(38, skull2);
 
-        inventory.setItem(24, skull1);
+        inventory.setItem(24, skull2);
         inventory.setItem(33, skull2);
-        inventory.setItem(42, skull1);
+        inventory.setItem(42, skull2);
 
         inventory.setItem(48, skull2);
         inventory.setItem(49, skull1);
@@ -128,12 +121,9 @@ public final class CoinFlip {
                 if (player.isOnline())
                     player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.NOTE_PLING, 1, 1);
 
-                if (opponent.isOnline())
-                    opponent.getPlayer().playSound(opponent.getPlayer().getLocation(), Sound.NOTE_PLING, 1, 1);
-
                 ticks++;
             }
-        }.runTaskTimerAsynchronously(CrownMain.getInstance(), 10, 10);
+        }.runTaskTimerAsynchronously(CrownMain.getInstance(), 20, 10);
     }
 
     public void startSpinning() {
@@ -166,11 +156,6 @@ public final class CoinFlip {
                     if (roundsSpinned >= 15)
                         delay++;
 
-                    if (opponent.isOnline()) {
-                        if (opponent.getPlayer().getOpenInventory().getTopInventory().getTitle().equalsIgnoreCase(inventory.getTitle()))
-                            opponent.getPlayer().playSound(opponent.getPlayer().getLocation(), Sound.CLICK, 1, 1);
-                    }
-
                     if (player.isOnline()) {
                         if (player.getPlayer().getOpenInventory().getTopInventory().getTitle().equalsIgnoreCase(inventory.getTitle()))
                             player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.CLICK, 1, 1);
@@ -188,8 +173,7 @@ public final class CoinFlip {
             return;
 
         final ItemStack winItem = inventory.getItem(13);
-        final OfflinePlayer winner = winItem.getItemMeta().getDisplayName().split(" ")[2].equalsIgnoreCase(player.getName()) ? player : opponent;
-        final OfflinePlayer looser = player == winner ? opponent : player;
+        final OfflinePlayer winner = winItem.getItemMeta().getDisplayName().equalsIgnoreCase("§4§lSERVER") ? null : player;
 
         state = 3;
 
@@ -199,20 +183,26 @@ public final class CoinFlip {
 
                 final MessageUtil messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
 
-                if (winner.isOnline()) {
-                    winner.getPlayer().playSound(winner.getPlayer().getLocation(), Sound.LEVEL_UP, 1, 1);
-                    winner.getPlayer().closeInventory();
-                    messageUtil.sendMessage(winner.getPlayer(), "Du hast §e§o" + NumberFormat.getInstance().format(getWinAmount()) + "§6§l$ §7im CoinFlip gegen §6§l" + looser.getName() + "§a§o gewonnen§8.");
-                }
+                if(winner == player) { // player won
 
-                if (looser.isOnline()) {
-                    looser.getPlayer().playSound(looser.getPlayer().getLocation(), Sound.LEVEL_UP, 1, 1);
-                    looser.getPlayer().closeInventory();
-                    messageUtil.sendMessage(looser.getPlayer(), "Du hast §e§o" + NumberFormat.getInstance().format(getAmount()) + "§6§l$ §7im CoinFlip gegen §6§l" + winner.getName() + "§c§o verloren§8.");
-                }
+                    if(player.isOnline()) {
+                        messageUtil.sendMessage(winner.getPlayer(), "Du hast §e§o" + NumberFormat.getInstance().format(getWinAmount()) + "§6§l$ §7im CoinFlip gegen den §4§lSERVER§a§o gewonnen§8.");
+                        winner.getPlayer().playSound(winner.getPlayer().getLocation(), Sound.LEVEL_UP, 0.5f, 1);
+                        player.getPlayer().closeInventory();
+                    }
 
-                CrownMain.getInstance().getInitializer().getDailyPotHandler().addMoney(amount/10);
-                CrownMain.getInstance().getInitializer().getCoinflipHandler().endCoinFlip(CoinFlip.this, winner);
+                    CrownMain.getInstance().getInitializer().getUserHandler().getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                        user.addLong(DataType.MONEY, getWinAmount());
+                    });
+                } else { // server won
+                    if(player.isOnline()) {
+                        messageUtil.sendMessage(player.getPlayer(), "Du hast §e§o" + NumberFormat.getInstance().format(getAmount()) + "§6§l$ §7im CoinFlip gegen den §4§lSERVER§c§o verloren§8.");
+                        player.getPlayer().playSound(player.getPlayer().getLocation(), Sound.EXPLODE, 0.5f, 1);
+                        player.getPlayer().closeInventory();
+                    }
+
+                    CrownMain.getInstance().getInitializer().getDailyPotHandler().addMoney(getAmount()/2);
+                }
             }
         }.runTaskLater(CrownMain.getInstance(), 40);
     }
@@ -238,9 +228,6 @@ public final class CoinFlip {
 
         if (player.isOnline())
             player.getPlayer().updateInventory();
-
-        if (opponent.isOnline())
-            opponent.getPlayer().updateInventory();
     }
 
 }

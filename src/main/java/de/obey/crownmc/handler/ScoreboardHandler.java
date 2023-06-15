@@ -13,7 +13,7 @@ import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.commands.AfkCommand;
 import de.obey.crownmc.commands.VanishCommand;
-import de.obey.crownmc.objects.Combat;
+import de.obey.crownmc.objects.pvp.Combat;
 import de.obey.crownmc.util.Bools;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;

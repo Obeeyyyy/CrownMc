@@ -1,4 +1,4 @@
-package de.obey.crownmc.objects;
+package de.obey.crownmc.objects.pvp;
 /*
 
     Author - Obey -> SkySlayer-v4

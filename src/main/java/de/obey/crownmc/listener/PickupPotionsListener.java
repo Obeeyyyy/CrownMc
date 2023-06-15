@@ -16,66 +16,93 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+
 public final class PickupPotionsListener implements Listener {
 
-    @EventHandler
-    public void itemPiuckup(final PlayerPickupItemEvent e) {
-        final Player player = e.getPlayer();
+    private final ArrayList<Player> stacking = new ArrayList<>();
 
-        if (e.getItem().getItemStack().getType() == Material.POTION || e.getItem().getItemStack().getType() == Material.ENDER_PEARL) {
+    @EventHandler
+    public void on(final PlayerPickupItemEvent event) {
+        final Player player = event.getPlayer();
+
+        if(event.getItem().getItemStack().getType() == Material.POTION){
+
+            if(stacking.contains(player)) {
+                event.setCancelled(true);
+                return;
+            }
+
+            stacking.add(player);
+            event.getItem().remove();
+            event.setCancelled(true);
+
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    stackItems(player);
+                    stackPotions(player, event.getItem().getItemStack());
                 }
-            }.runTaskLater(CrownMain.getInstance(), 1);
+            }.runTaskLater(CrownMain.getInstance(), 3);
         }
     }
 
-
-    public static void stackItems(final Player player) {
+    private void stackPotions(final Player player, final ItemStack newItem) {
         final ItemStack[] contents = player.getInventory().getContents();
-
         int changed = 0;
-        int i = 0;
-        while (i < contents.length) {
-            ItemStack current = contents[i];
+        int slot = 0;
 
-            if (current != null && current.getType() != null && current.getType() != Material.AIR) {
+        if(newItem.getAmount() == 64) {
+            player.getInventory().addItem(newItem);
+            player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 5, 5);
+            stacking.remove(player);
+            return;
+        }
 
-                int maxStack = current.getType() == Material.POTION ? 3 : 64;
+        while (slot < contents.length) {
+            final ItemStack slotItem = contents[slot];
 
-                if (current.getAmount() < maxStack && current.getType() == Material.POTION || current.getType() == Material.ENDER_PEARL) {
-                    int needed = maxStack - current.getAmount();
-                    int i2 = i + 1;
-                    while (i2 < contents.length) {
-                        if (contents[i2] != null && contents[i2].getType() != Material.AIR && contents[i2].getAmount() > 0 && current.getType() == contents[i2].getType()) {
-                            final ItemStack nextCurrent = contents[i2].clone();
-                            if (current.getDurability() == nextCurrent.getDurability() && (current.getItemMeta() == null && nextCurrent.getItemMeta() == null || current.getItemMeta() != null && current.getItemMeta().equals((Object) nextCurrent.getItemMeta()))) {
-                                if (nextCurrent.getAmount() > needed) {
-                                    current.setAmount(maxStack);
-                                    contents[i2].setAmount(nextCurrent.getAmount() - needed);
-                                    ++changed;
-                                } else {
-                                    contents[i2].setType(Material.AIR);
-                                    current.setAmount(current.getAmount() + nextCurrent.getAmount());
-                                    needed = maxStack - current.getAmount();
-                                    ++changed;
-                                }
-                            }
-                        }
-                        ++i2;
+            if (slotItem != null && slotItem.getType() != Material.AIR &&
+                    slotItem.getAmount() > 0 && slotItem.getAmount() < 64 &&
+                    slotItem.getType() == Material.POTION) {
+
+                int needed = 64 - slotItem.getAmount();
+
+                if (newItem.getType() != Material.AIR &&
+                        newItem.getAmount() > 0 && newItem.getAmount() < 64 &&
+                        slotItem.getType() == newItem.getType() &&
+                        slotItem.getDurability() == newItem.getDurability() &&
+                        (slotItem.getItemMeta() == null && newItem.getItemMeta() == null ||
+                                slotItem.getItemMeta() != null && slotItem.getItemMeta().equals(newItem.getItemMeta()))) {
+
+                    if (newItem.getAmount() > needed) {
+                        slotItem.setAmount(64);
+                        newItem.setAmount(newItem.getAmount() - needed);
+                        changed++;
+                        break;
                     }
+
+                    slotItem.setAmount(slotItem.getAmount() + newItem.getAmount());
+                    newItem.setAmount(0);
+                    changed++;
+                    break;
                 }
             }
-            ++i;
+            ++slot;
         }
 
         if (changed > 0) {
             player.getInventory().setContents(contents);
+
+            if(newItem.getAmount() > 0)
+                player.getInventory().addItem(newItem);
+
             player.updateInventory();
-            player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 5, 5);
+        } else {
+            player.getInventory().addItem(newItem);
         }
+
+        player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 5, 5);
+        stacking.remove(player);
     }
 
 }

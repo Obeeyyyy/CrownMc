@@ -1,7 +1,7 @@
 // Made by Richard
 
 
-package de.obey.crownmc.objects;
+package de.obey.crownmc.objects.gambling;
 
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.util.PermissionUtil;

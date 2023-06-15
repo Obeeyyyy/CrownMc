@@ -7,7 +7,7 @@ package de.obey.crownmc.commands;
 */
 
 import de.obey.crownmc.Initializer;
-import de.obey.crownmc.objects.Combat;
+import de.obey.crownmc.objects.pvp.Combat;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;

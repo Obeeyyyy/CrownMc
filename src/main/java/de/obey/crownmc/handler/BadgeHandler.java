@@ -47,6 +47,21 @@ public final class BadgeHandler {
         final Set<String> badgeSet = serverConfig.getCfg().getConfigurationSection("badges").getKeys(false);
 
         badgeSet.forEach(name -> badgeMap.put(name, new Badge(name, serverConfig.getCfg())));
+
+        if(!badgeSet.contains("ks10"))
+            createNewBadge("ks10");
+
+        if(!badgeSet.contains("ks25"))
+            createNewBadge("ks25");
+
+        if(!badgeSet.contains("ks50"))
+            createNewBadge("ks50");
+
+        if(!badgeSet.contains("ks100"))
+            createNewBadge("ks100");
+
+        if(!badgeSet.contains("ks200"))
+            createNewBadge("ks200");
     }
 
     public void save() {

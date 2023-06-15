@@ -9,6 +9,7 @@ package de.obey.crownmc.commands;
 import de.obey.crownmc.handler.CrashHandler;
 import de.obey.crownmc.handler.BlockEventHandler;
 import de.obey.crownmc.handler.DailyPotHandler;
+import de.obey.crownmc.handler.LuckySpinHandler;
 import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
@@ -32,6 +33,7 @@ public final class SetupCommand implements CommandExecutor {
     private final CrashHandler crashHandler;
     private final BlockEventHandler blockEventHandler;
     private final DailyPotHandler dailyPotHandler;
+    private final LuckySpinHandler luckySpinHandler;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -85,10 +87,16 @@ public final class SetupCommand implements CommandExecutor {
                 messageUtil.sendMessage(player, "Dailypot wurde aufgesetzt§8.");
                 return false;
             }
+
+            if (args[0].equalsIgnoreCase("luckyspin")) {
+                luckySpinHandler.setup();
+                messageUtil.sendMessage(player, "LuckySpin wurde aufgesetzt§8.");
+                return false;
+            }
         }
 
-        messageUtil.sendSyntax(sender, "/setup <bounty, crash, blockevent, dailypot>");
-        messageUtil.sendMessage(sender, "Benötigte Locations: crash1, crash2, crash3, crashGraph, blockevent, dailypot");
+        messageUtil.sendSyntax(sender, "/setup <bounty, crash, blockevent, dailypot, luckyspin>");
+        messageUtil.sendMessage(sender, "Benötigte Locations: crash1, crash2, crash3, crashGraph, blockevent, dailypot, luckyspin");
 
         return false;
     }

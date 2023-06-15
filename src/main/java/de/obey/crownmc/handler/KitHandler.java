@@ -8,7 +8,7 @@ package de.obey.crownmc.handler;
 
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.user.User;
-import de.obey.crownmc.objects.Kit;
+import de.obey.crownmc.objects.pvp.Kit;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MathUtil;

@@ -39,7 +39,7 @@ public final class VoteRewards implements Listener {
 
         initializer.getScoreboardHandler().updateEverythingForEveryone();
 
-        initializer.getDailyPotHandler().addMoney(20000);
+        initializer.getDailyPotHandler().addMoney(5000);
     }
 
 }

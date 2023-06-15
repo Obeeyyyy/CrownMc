@@ -13,7 +13,7 @@ import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.handler.CombatHandler;
 import de.obey.crownmc.handler.KillFarmHandler;
 import de.obey.crownmc.handler.UserHandler;
-import de.obey.crownmc.objects.Combat;
+import de.obey.crownmc.objects.pvp.Combat;
 import de.obey.crownmc.objects.effects.KillEffect;
 import de.obey.crownmc.util.ArmorStandPacketBuilder;
 import de.obey.crownmc.util.Bools;

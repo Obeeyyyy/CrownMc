@@ -42,7 +42,7 @@ public enum DataType {
     LASTSEEN("lastseen", StoreType.CONFIG, null),
     JOINED("joined", StoreType.CONFIG, null),
     MSGSTATE("msgstate", StoreType.CONFIG, true),
-    TPASTATE("tpastats", StoreType.CONFIG, true),
+    TPASTATE("tpastate", StoreType.CONFIG, true),
     SCOREBOARDSTATE("scoreboardstate", StoreType.CONFIG, true),
     KILLHOLOSTATE("killholostate", StoreType.CONFIG, true),
     SPAWNTELEPORT("spawnteleport", StoreType.CONFIG, true),
@@ -53,7 +53,9 @@ public enum DataType {
     RESPAWNKIT("respawnkitstate", StoreType.CONFIG, true),
     REGISTERED("registered", StoreType.CONFIG, true),
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
-    IGNORES("ignores", StoreType.CONFIG, new ArrayList<>());
+    IGNORES("ignores", StoreType.CONFIG, new ArrayList<>()),
+    LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 0L);
+
 
     private final String savedAs;
     private final StoreType storeType;

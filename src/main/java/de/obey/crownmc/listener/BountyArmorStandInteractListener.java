@@ -43,11 +43,11 @@ public final class BountyArmorStandInteractListener implements Listener {
         if (entity.isCustomNameVisible())
             event.setCancelled(true);
 
-        if (!entity.getCustomName().equalsIgnoreCase("§e§oMert"))
+        if (!entity.getCustomName().equalsIgnoreCase("§5§lReaper"))
             return;
 
         if (!InventoryUtil.isItemInHandStartsWith(player, "§8»┃ §7Kopf von§e§o ")) {
-            player.sendMessage("§e§oMert§8: §fDu hast nichts für mich, komm später wieder.");
+            player.sendMessage("§5§lReaper§8: §fDu hast nichts für mich, komm später wieder.");
             player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1, 1);
             return;
         }

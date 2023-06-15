@@ -145,7 +145,7 @@ public final class DailyPotCommand implements CommandExecutor, Listener {
 
         if(event.getLine(0).startsWith("dp")) {
             event.setLine(0, "§8▰§7▱ §9DailyPot §7▱§8▰");
-            event.setLine(2, "§7Klicke hier um");
+            event.setLine(2, "Klicke hier um");
             event.setLine(3,"beizutreten§8.");
         }
     }

@@ -10,7 +10,7 @@ import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.handler.KitHandler;
 import de.obey.crownmc.handler.UserHandler;
-import de.obey.crownmc.objects.Kit;
+import de.obey.crownmc.objects.pvp.Kit;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;

@@ -52,7 +52,7 @@ public final class IgnoreCommand implements CommandExecutor {
         final Player target = Bukkit.getPlayer(args[0]);
 
         if (target.getUniqueId().equals(player.getUniqueId())) {
-            messageUtil.sendMessage(sender, "Bisschen zuviel Selbsthass.");
+            messageUtil.sendMessage(sender, "Richard sagt§8: §8'§fBisschen zuviel Selbsthass§8.', §7obey stimmt zu§8.");
             return false;
         }
 

@@ -7,7 +7,7 @@ package de.obey.crownmc.commands;
 */
 
 import de.obey.crownmc.handler.CoinflipHandler;
-import de.obey.crownmc.objects.CoinFlip;
+import de.obey.crownmc.objects.gambling.CoinFlip;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;

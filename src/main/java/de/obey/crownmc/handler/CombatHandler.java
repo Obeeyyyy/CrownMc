@@ -6,7 +6,7 @@ package de.obey.crownmc.handler;
 
 */
 
-import de.obey.crownmc.objects.Combat;
+import de.obey.crownmc.objects.pvp.Combat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.bukkit.entity.Player;

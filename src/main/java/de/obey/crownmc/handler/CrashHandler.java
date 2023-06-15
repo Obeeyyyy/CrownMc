@@ -8,7 +8,7 @@ package de.obey.crownmc.handler;
 
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.enums.DataType;
-import de.obey.crownmc.objects.Crash;
+import de.obey.crownmc.objects.gambling.Crash;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -51,10 +51,11 @@ public final class CrashHandler {
         }
 
         crash.getBets().clear();
+
+       killStands();
     }
 
-    public void setupArmorStands() {
-
+    private void killStands()  {
         for (final World world : Bukkit.getWorlds()) {
             for (final Entity entity : world.getEntities()) {
                 if (entity instanceof ArmorStand && entity.getCustomName() != null) {
@@ -64,6 +65,11 @@ public final class CrashHandler {
                 }
             }
         }
+    }
+
+    public void setupArmorStands() {
+
+        killStands();
 
         if (locationHandler.getLocation("crash1") == null ||
                 locationHandler.getLocation("crash2") == null ||

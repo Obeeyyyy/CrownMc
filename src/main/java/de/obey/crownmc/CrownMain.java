@@ -21,7 +21,6 @@ public final class CrownMain extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         initializer = new Initializer(this);
-
         initializer.initializeSystem();
 
         Bukkit.getPluginManager().registerEvents(this, this);

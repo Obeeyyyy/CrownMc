@@ -8,8 +8,8 @@ package de.obey.crownmc.handler;
 
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.backend.user.User;
-import de.obey.crownmc.objects.CoinFlip;
-import de.obey.crownmc.objects.ServerCoinFlip;
+import de.obey.crownmc.objects.gambling.CoinFlip;
+import de.obey.crownmc.objects.gambling.ServerCoinFlip;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MathUtil;
