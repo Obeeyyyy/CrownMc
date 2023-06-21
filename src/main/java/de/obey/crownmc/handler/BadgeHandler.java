@@ -41,8 +41,14 @@ public final class BadgeHandler {
     }
 
     public void loadBadges() {
-        if (!serverConfig.getCfg().contains("badges"))
+        if (!serverConfig.getCfg().contains("badges")) {
+            createNewBadge("ks10");
+            createNewBadge("ks25");
+            createNewBadge("ks50");
+            createNewBadge("ks100");
+            createNewBadge("ks200");
             return;
+        }
 
         final Set<String> badgeSet = serverConfig.getCfg().getConfigurationSection("badges").getKeys(false);
 

@@ -33,7 +33,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RequiredArgsConstructor
@@ -69,6 +68,8 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
                     luckySpinHandler.getItems().forEach(item -> inventory.setItem(slot.getAndIncrement(), item));
                 }
 
+                player.openInventory(inventory);
+
                 return false;
             }
         }
@@ -80,7 +81,7 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
                     return false;
 
                 userHandler.getUser(Bukkit.getOfflinePlayer(args[1]).getUniqueId()).thenAcceptAsync(user -> {
-                   user.setLong(DataType.LASTLUCKYSPIN, 0);
+                   user.setLong(DataType.LASTLUCKYSPIN, System.currentTimeMillis() - 1000*60*60*25);
                    messageUtil.sendMessage(player, user.getOfflinePlayer().getName() + " kann das Rad jetzt wieder drehen§8.");
                 });
 
@@ -115,7 +116,7 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
             return;
 
         if(event.getLine(0).startsWith("lw")) {
-            event.setLine(0, "§0✤ §d§lLucky Wheel §0✤");
+            event.setLine(0, "§8✤ §d§lLucky Wheel §8✤");
             event.setLine(2, "Klicke hier um");
             event.setLine(3,"zu spielen§8.");
         }
@@ -131,7 +132,7 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
 
         final Sign sign = (Sign) event.getClickedBlock().getState();
 
-        if(sign.getLine(2).equalsIgnoreCase("Klicke hier um"))
+        if(sign.getLine(0).equalsIgnoreCase("§8✤ §d§lLucky Wheel §8✤"))
             luckySpinHandler.spin(event.getPlayer());
     }
 }

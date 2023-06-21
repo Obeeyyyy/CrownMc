@@ -51,36 +51,47 @@ public final class StackCommand implements CommandExecutor {
         int changed = 0;
         int i = 0;
 
-        while (i < contents.length) {
-            final ItemStack current = contents[i];
+        while(i < contents.length) {
+            final ItemStack item = contents[i];
 
-            if (current != null && current.getType() != null && current.getType() != Material.AIR) {
-                final int maxStack = current.getType() == Material.ENDER_PEARL ? 64 : (current.getType() == Material.POTION ? 3 : current.getMaxStackSize());
+            if (item != null && !noStack.contains(item.getType())) {
+                int maxStack = item.getType() == Material.POTION ? 64 : item.getMaxStackSize();
 
-                if (current.getAmount() < maxStack && !noStack.contains(current.getType())) {
-                    int needed = maxStack - current.getAmount();
-                    int i2 = i + 1;
-                    while (i2 < contents.length) {
-                        if (contents[i2] != null && contents[i2].getType() != Material.AIR && contents[i2].getAmount() > 0 && current.getType() == contents[i2].getType()) {
-                            final ItemStack nextCurrent = contents[i2].clone();
-                            if (current.getDurability() == nextCurrent.getDurability() && (current.getItemMeta() == null && nextCurrent.getItemMeta() == null || current.getItemMeta() != null && current.getItemMeta().equals((Object) nextCurrent.getItemMeta()))) {
-                                if (nextCurrent.getAmount() > needed) {
-                                    current.setAmount(maxStack);
-                                    contents[i2].setAmount(nextCurrent.getAmount() - needed);
-                                    ++changed;
-                                } else {
-                                    contents[i2].setType(Material.AIR);
-                                    current.setAmount(current.getAmount() + nextCurrent.getAmount());
-                                    needed = maxStack - current.getAmount();
-                                    ++changed;
-                                }
+                int needed = maxStack - item.getAmount();
+                int i2 = i + 1;
+
+                while (i2 < contents.length) {
+                    final ItemStack itemSearch = contents[i2];
+
+                    if (itemSearch != null && itemSearch.getType() != Material.AIR && itemSearch.getAmount() < maxStack
+                            && itemSearch.getType() == item.getType()
+                            && (itemSearch.getItemMeta() == null && item.getItemMeta() == null || itemSearch.getItemMeta() != null && itemSearch.getItemMeta().equals(item.getItemMeta())
+                    )) {
+
+                        if (itemSearch.getType() == Material.POTION) {
+                            if (itemSearch.getDurability() != item.getDurability()) {
+                                i2++;
+                                continue;
                             }
                         }
-                        ++i2;
+
+                        if (itemSearch.getAmount() > needed) {
+                            item.setAmount(maxStack);
+                            itemSearch.setAmount(itemSearch.getAmount() - needed);
+                            changed++;
+                            i2++;
+                            continue;
+                        }
+
+                        contents[i2] = null;
+                        item.setAmount(item.getAmount() + itemSearch.getAmount());
+                        needed -= itemSearch.getAmount();
+                        changed++;
                     }
+                    i2++;
                 }
             }
-            ++i;
+            i++;
         }
 
         if (changed > 0) {

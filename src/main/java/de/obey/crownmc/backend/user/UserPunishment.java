@@ -8,6 +8,7 @@ package de.obey.crownmc.backend.user;
 
 import de.obey.crownmc.util.MathUtil;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -111,11 +112,11 @@ public final class UserPunishment {
 
         mutes.add(new Mute(mutedTimes + "", cfg));
 
-        if(offlinePlayer.isOnline()) {
-            offlinePlayer.getPlayer().sendMessage(prefix + "Du wurdest von §8'§c§o" + mutedBy.getName() + "§8'§7 für §f" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds(getRemainingMillis() / 1000) + "§7gemutet§8.");
-            offlinePlayer.getPlayer().sendMessage(prefix + "Grund§8: §f" + reason);
+        Bukkit.broadcastMessage(prefix + offlinePlayer.getName() + " wurde von §8'§c§o" + mutedBy.getName() + "§8'§7 für §f" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds(getRemainingMillis() / 1000) + "§7gemutet§8.");
+        Bukkit.broadcastMessage(prefix + "Grund§8: §f" + reason);
+
+        if(offlinePlayer.isOnline())
             offlinePlayer.getPlayer().playSound(offlinePlayer.getPlayer().getLocation(), Sound.BLAZE_DEATH, 0.5f,1);
-        }
 
         mutedBy.sendMessage(prefix + "Du hast §8'§c§o" + offlinePlayer.getName() + "§8'§7 für §f" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds(getRemainingMillis() / 1000) + "§7gemutet§8.");
         mutedBy.sendMessage(prefix + "Grund§8: §f" + reason);

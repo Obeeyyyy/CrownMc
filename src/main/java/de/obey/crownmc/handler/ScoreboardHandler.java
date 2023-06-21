@@ -120,12 +120,12 @@ public final class ScoreboardHandler {
         }
 
         final String header = "§6§lCrownMc§8§l.§6§lde\n\n" +
-                "§7Registrierte Spieler§8: §e" + serverConfig.getPlayerCount() + "\n" +
-                "§7Täglicher Spielerrekord§8: §e" + serverConfig.getDailyCount() + "\n" +
-                "§7Online§8: §e" + (Bukkit.getOnlinePlayers().size() - VanishCommand.vanished.size()) + "\n";
+                "§7Registrierte Spieler§8: §f" + serverConfig.getPlayerCount() + "\n" +
+                "§7Täglicher Spielerrekord§8: §f" + serverConfig.getDailyCount() + "\n" +
+                "§7Online§8: §f" + (Bukkit.getOnlinePlayers().size() - VanishCommand.vanished.size()) + "\n";
 
-        final String footer = "\n§7Event§8: §7" + serverConfig.getEvent() +
-                "\n\n§7Discord§8: §ediscord.crownmc.de \n" +
+        final String footer = "\n§6§lEvent§8: §f" + serverConfig.getEvent() +
+                "\n\n§7Discord§8: §fdiscord.crownmc.de \n" +
                 "§7 Wir wünschen viel Spaß beim Spielen§8!\n";
 
         final IChatBaseComponent head = IChatBaseComponent.ChatSerializer.a("{\"text\": \" " + header + "\"}");
@@ -269,7 +269,7 @@ public final class ScoreboardHandler {
             sidebar_normal.getScore("§7           SkyPvP").setScore(14);
             sidebar_normal.getScore("§3").setScore(13);
 
-            sidebar_normal.getScore("§e§l" + player.getName()).setScore(12);
+            sidebar_normal.getScore("§6§l" + player.getName()).setScore(12);
 
             final Team money = scoreboard.registerNewTeam("money");
             money.setSuffix("...");
@@ -298,7 +298,7 @@ public final class ScoreboardHandler {
 
             sidebar_normal.getScore("§2").setScore(6);
 
-            sidebar_normal.getScore("§e§lInformation").setScore(5);
+            sidebar_normal.getScore("§6§lInformation").setScore(5);
 
             if (PermissionUtil.hasPermission(player, "team", false)) {
                 final Team vanish = scoreboard.registerNewTeam("vanish");

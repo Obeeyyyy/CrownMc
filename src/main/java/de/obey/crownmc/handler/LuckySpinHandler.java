@@ -15,6 +15,7 @@ import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +26,9 @@ import java.util.Random;
 
 public final class LuckySpinHandler {
 
+    @Getter
     private final LocationHandler locationHandler;
+    @Getter
     private final MessageUtil messageUtil;
     private final UserHandler userHandler;
 
@@ -67,17 +70,18 @@ public final class LuckySpinHandler {
 
             if(remaining <= 86400000) {
                 messageUtil.sendMessage(player, "Du musst noch " + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((86400000-remaining)/1000) + "warten§8.");
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f,1);
                 return;
             }
 
-            user.setLong(DataType.LASTLUCKYSPIN, System.currentTimeMillis());
-            messageUtil.sendMessage(player, "SPINS");
-            // start spin.
+            messageUtil.sendMessage(player, "Du drehst kräftig am Glücksrad ...");
+            player.playSound(player.getLocation(), Sound.NOTE_PLING, 1, 1);
+            luckySpin.startSpinning(player, user);
         });
     }
 
     public void shutdown() {
-        luckySpin.killAllStands();
+        luckySpin.shutdown();
     }
 
     public void setup() {
@@ -93,13 +97,19 @@ public final class LuckySpinHandler {
     }
 
     public ItemStack getRandomItem() {
-        return items.get(new Random().nextInt(items.size() - 1));
+        return items.get(new Random().nextInt(items.size()));
     }
 
     public void setItems(final ArrayList<ItemStack> list) {
         items.clear();
         items = list;
 
+        items.removeIf(itemStack -> itemStack == null || itemStack.getType() == Material.AIR);
+
+        cfg.set("items", items);
+        FileUtil.saveToFile(FileUtil.getFile("luckyspin.yml"), cfg);
+
+        luckySpin.shutdown();
         luckySpin.setup();
     }
 

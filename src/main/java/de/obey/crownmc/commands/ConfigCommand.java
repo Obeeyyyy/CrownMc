@@ -44,6 +44,9 @@ public final class ConfigCommand implements CommandExecutor {
                 messageUtil.sendMessage(sender, " - votes: " + serverConfig.getVotes());
                 messageUtil.sendMessage(sender, " - voteparty: " + serverConfig.getVoteparty());
                 messageUtil.sendMessage(sender, " - bcdelay: " + serverConfig.getAutoBroadcastDelay());
+                messageUtil.sendMessage(sender, " - baseXPkillstreak: " + serverConfig.getBaseXPkillstreak());
+                messageUtil.sendMessage(sender, " - baseMoneyKillstreak: " + serverConfig.getBaseMoneyKillstreak());
+                messageUtil.sendMessage(sender, " - baseEloKillstreak: " + serverConfig.getBaseMoneyKillstreak());
                 sender.sendMessage("");
 
                 messageUtil.sendMessage(sender, "Blocked Commands:");
@@ -100,6 +103,15 @@ public final class ConfigCommand implements CommandExecutor {
 
                     if (args[1].equalsIgnoreCase("bcdelay"))
                         serverConfig.setAutoBroadcastDelay(amount);
+
+                    if (args[1].equalsIgnoreCase("baseXPkillstreak"))
+                        serverConfig.setBaseXPkillstreak(amount);
+
+                    if (args[1].equalsIgnoreCase("baseMoneyKillstreak"))
+                        serverConfig.setBaseMoneyKillstreak(amount);
+
+                    if (args[1].equalsIgnoreCase("baseEloKillstreak"))
+                        serverConfig.setBaseMoneyKillstreak(amount);
 
                     scoreboardHandler.updateEverythingForEveryone();
 

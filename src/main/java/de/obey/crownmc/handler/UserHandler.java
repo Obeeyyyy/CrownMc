@@ -130,6 +130,7 @@ public final class UserHandler {
                 user.setLong(DataType.LASTSEEN, System.currentTimeMillis());
                 user.setLong(DataType.LOGINSTREAKUPDATED, System.currentTimeMillis());
                 user.setString(DataType.FIRSTJOINDATE, format.format(new Date()));
+                user.setLong(DataType.LASTLUCKYSPIN, 1000L);
                 user.setBoolean(DataType.REGISTERED, true);
 
                 // Creating mysql table row
@@ -170,7 +171,7 @@ public final class UserHandler {
                     messageUtil.broadcast("");
                     messageUtil.broadcast("§8§l§m-----------------------------------");
                     messageUtil.broadcast("");
-                    messageUtil.broadcast("   §8┃> §e§o" + user.getOfflinePlayer().getName() + "§8 (§6#§f§o" + ID + "§8)§7 ist neu auf §e§oSkySlayer.de §7!");
+                    messageUtil.broadcast("   §8┃> §e§o" + user.getOfflinePlayer().getName() + "§8 (§6#§f§o" + ID + "§8)§7 ist neu auf §e§oCrownMc§8.§e§ode §7!");
                     messageUtil.broadcast("");
                     messageUtil.broadcast("§8§l§m-----------------------------------");
                     messageUtil.broadcast("");

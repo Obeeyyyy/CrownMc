@@ -36,7 +36,7 @@ public final class ServerConfig {
     private File configFile;
     private YamlConfiguration cfg;
     @Setter
-    private int playerCount, killMoneyReward = 0, deathMoneyLose = 0, killXPReward = 0, killEloReward = 0, deathEloLose = 0, votes = 0, voteparty = 0, dailycount = 0;
+    private int playerCount, killMoneyReward = 0, deathMoneyLose = 0, killXPReward = 0, killEloReward = 0, deathEloLose = 0, votes = 0, voteparty = 0, dailycount = 0, baseXPkillstreak = 0, baseMoneyKillstreak = 0, baseEloKillstreak = 0;
     @Setter
     private long dailyMillisCount = 0;
     @Setter
@@ -49,9 +49,7 @@ public final class ServerConfig {
     private List<String> blockedCommands = new ArrayList<>(), blockedCombatCommands = new ArrayList<>();
     private List<String> autoBroadcastMessages = new ArrayList<>();
     @Setter
-    private long autoBroadcastDelay = 8;
-    @Setter
-    private long breakCounter, placeCounter;
+    private long breakCounter, placeCounter, autoBroadcastDelay = 8;
     @Setter
     private String destroyEventGoal = "VOID";
 
@@ -159,6 +157,15 @@ public final class ServerConfig {
         if (cfg.contains("destroyEventGoal"))
             destroyEventGoal = cfg.getString("destroyEventGoal");
 
+        if (cfg.contains("baseXPkillstreak"))
+            baseXPkillstreak = cfg.getInt("baseXPkillstreak");
+
+        if (cfg.contains("baseMoneyKillstreak"))
+            baseMoneyKillstreak = cfg.getInt("baseMoneyKillstreak");
+
+        if (cfg.contains("baseEloKillstreak"))
+            baseEloKillstreak = cfg.getInt("baseEloKillstreak");
+
         loadRespawnKitItems();
     }
 
@@ -186,6 +193,9 @@ public final class ServerConfig {
         cfg.set("breakCounter", breakCounter);
         cfg.set("placeCounter", placeCounter);
         cfg.set("destroyEventGoal", destroyEventGoal);
+        cfg.set("baseMoneyKillstreak", baseMoneyKillstreak);
+        cfg.set("baseXPkillstreak", baseXPkillstreak);
+        cfg.set("baseEloKillstreak", baseEloKillstreak);
 
         if (domainJoins.size() > 0) {
             domainJoins.keySet().forEach(domain -> {

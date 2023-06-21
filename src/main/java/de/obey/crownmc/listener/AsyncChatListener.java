@@ -104,6 +104,10 @@ public final class AsyncChatListener implements Listener {
             return;
         }
 
+        if(message.contains("&") && message.length() <= 2) {
+            return;
+        }
+
         message = checkForPlayerNames(player, event.getMessage(), rang);
 
         if (PermissionUtil.hasPermission(player, "chatcolor", false))

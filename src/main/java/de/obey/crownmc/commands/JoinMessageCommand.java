@@ -113,7 +113,7 @@ public final class JoinMessageCommand implements CommandExecutor {
 
                 user.setString(DataType.JOINMESSAGE, message);
                 messageUtil.sendMessage(sender, "Deine JoinMessage wurde gesetzt.");
-                messageUtil.sendMessage(sender, message);
+                messageUtil.sendMessage(sender, message.replace("%name%", player.getName()));
 
                 return;
             }

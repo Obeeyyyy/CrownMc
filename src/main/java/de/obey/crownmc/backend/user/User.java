@@ -11,6 +11,7 @@ import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.util.Bools;
 import de.obey.crownmc.util.FileUtil;
+import de.obey.crownmc.util.LevelUtil;
 import de.obey.crownmc.util.PacketReader;
 import lombok.Getter;
 import lombok.Setter;
@@ -94,6 +95,7 @@ public final class User {
             amount *= 2;
 
         addInt(DataType.XP, amount);
+        LevelUtil.checkForLevelUp(this);
     }
 
     private void updateData() {

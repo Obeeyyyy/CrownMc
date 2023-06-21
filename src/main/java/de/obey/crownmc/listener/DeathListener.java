@@ -82,18 +82,25 @@ public final class DeathListener implements Listener {
 
 
         // Reward stuff start
-        int killerUserKillstreak = killerUser.getInt(DataType.KILLSTREAK);
+        int killerUserKillstreak;
+
+        int moneyReward = serverConfig.getKillMoneyReward(),
+                eloReward =  serverConfig.getKillEloReward(),
+                xpReward = serverConfig.getKillXPReward();
 
         killFarmHandler.check(player, killer);
         if (!killFarmHandler.isBlocked(player)) {
 
             killerUser.addInt(DataType.KILLS, 1);
-            killerUser.addInt(DataType.ELOPOINTS, serverConfig.getKillEloReward());
             killerUser.addInt(DataType.KILLSTREAK, 1);
-            killerUser.addLong(DataType.MONEY, serverConfig.getKillMoneyReward());
-            killerUser.addXP(serverConfig.getKillXPReward());
 
             killerUserKillstreak = killerUser.getInt(DataType.KILLSTREAK);
+
+            if((killerUserKillstreak / 5) % 2 == 0) { // wenn kill streak 5, 10, 15 , 20 usw
+                moneyReward += (serverConfig.getBaseMoneyKillstreak() * (killerUserKillstreak/5L));
+                eloReward += serverConfig.getBaseMoneyKillstreak() * (killerUserKillstreak/5L);
+                xpReward += serverConfig.getBaseXPkillstreak() * (killerUserKillstreak/5);
+            }
 
             if(killerUserKillstreak >= 10)
                 killerUser.getBadges().addBadge("ks10");
@@ -114,6 +121,10 @@ public final class DeathListener implements Listener {
                 killerUser.setInt(DataType.KILLSTREAKRECORD, killerUserKillstreak);
                 messageUtil.sendMessage(killer, "Du hast einen neuen persönlichen §6§lKillstreakrekord§7 aufgestellt§8. §e§o" + killerUserKillstreak + "§7 " + (killerUserKillstreak > 1 ? "Kills" : "Kill") + " in Folge §8!");
             }
+
+            killerUser.addInt(DataType.ELOPOINTS, eloReward);
+            killerUser.addLong(DataType.MONEY, moneyReward);
+            killerUser.addXP(xpReward);
         }
         // Reward stuff end
 
@@ -137,6 +148,7 @@ public final class DeathListener implements Listener {
         }
         // Bounty stuff end
 
+
         // HOLO start
         if (killerUser.is(DataType.KILLHOLOSTATE)) {
 
@@ -146,9 +158,9 @@ public final class DeathListener implements Listener {
                     setCustomName(1, "§6§lSky§e§lSlayer").
                     setCustomName(3, "§7Du hast §e§o" + player.getName() + "§7 getötet§8.").
                     setCustomName(4, "§7Deine Belohnung§8:").
-                    setCustomName(6, "§a§o+ §7" + messageUtil.formatLong(serverConfig.getKillMoneyReward()) + "§e$").
-                    setCustomName(7, "§a§o+ §7" + (Bools.doubleXP ? "§d§l" + messageUtil.formatLong(serverConfig.getKillXPReward() * 2L) : messageUtil.formatLong(serverConfig.getKillXPReward())) + "§e Xp").
-                    setCustomName(8, "§a§o+ §7" + messageUtil.formatLong(serverConfig.getKillEloReward()) + "§e Elo").
+                    setCustomName(6, "§a§o+ §7" + moneyReward + "§e$").
+                    setCustomName(7, "§a§o+ §7" + (Bools.doubleXP ? "§d§l" + messageUtil.formatLong(xpReward * 2L) : messageUtil.formatLong(xpReward)) + "§e Xp").
+                    setCustomName(8, "§a§o+ §7" + messageUtil.formatLong(eloReward) + "§e Elo").
                     spawn(killer);
 
             Bukkit.getScheduler().runTaskLater(CrownMain.getInstance(), () -> stand.delete(killer), 20 * 10);

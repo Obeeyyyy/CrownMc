@@ -85,7 +85,7 @@ public final class UserEnderchest {
         if (!cfg.contains("enderchest")) {
             cfg.set("enderchest.sites", 1);
             cfg.set("enderchest.trusted", new ArrayList<>());
-            cfg.set("enderchest.1.rows", 3);
+            cfg.set("enderchest.1.rows", 1);
             cfg.set("enderchest.1.locked.all", 0);
             cfg.set("enderchest.1.locked.trusted", 0);
             cfg.set("enderchest.1.items", new ArrayList<>());

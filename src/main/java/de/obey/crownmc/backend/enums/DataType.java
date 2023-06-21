@@ -54,7 +54,7 @@ public enum DataType {
     REGISTERED("registered", StoreType.CONFIG, true),
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
     IGNORES("ignores", StoreType.CONFIG, new ArrayList<>()),
-    LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 0L);
+    LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 6000L);
 
 
     private final String savedAs;

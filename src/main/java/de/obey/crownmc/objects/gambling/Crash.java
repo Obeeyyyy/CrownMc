@@ -286,7 +286,11 @@ public final class Crash {
         if(random.nextInt(10) < 3) { // 30% chance das es unter 1 crasht
             finalMultiplier = random.nextDouble() + random.nextDouble()/10;
         } else {
-            finalMultiplier = 0.5 + random.nextInt(5) + random.nextDouble() + random.nextDouble()/10;
+            if(random.nextInt(10) > 5) {
+                finalMultiplier = 0.5 + random.nextDouble() + random.nextDouble() / 10;
+            } else {
+                finalMultiplier = 0.5 + random.nextInt(5) + random.nextDouble() + random.nextDouble() / 10;
+            }
         }
 
         finalMultiplier = Double.parseDouble(format.format(finalMultiplier).replace(",", "."));

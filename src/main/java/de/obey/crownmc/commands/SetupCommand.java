@@ -88,15 +88,16 @@ public final class SetupCommand implements CommandExecutor {
                 return false;
             }
 
-            if (args[0].equalsIgnoreCase("luckyspin")) {
+            if (args[0].equalsIgnoreCase("lw")) {
+                luckySpinHandler.shutdown();
                 luckySpinHandler.setup();
                 messageUtil.sendMessage(player, "LuckySpin wurde aufgesetzt§8.");
                 return false;
             }
         }
 
-        messageUtil.sendSyntax(sender, "/setup <bounty, crash, blockevent, dailypot, luckyspin>");
-        messageUtil.sendMessage(sender, "Benötigte Locations: crash1, crash2, crash3, crashGraph, blockevent, dailypot, luckyspin");
+        messageUtil.sendSyntax(sender, "/setup <bounty, crash, blockevent, dailypot, lw>");
+        messageUtil.sendMessage(sender, "Benötigte Locations: crash1, crash2, crash3, crashGraph, blockevent, dailypot, luckyspin, luckyspinwall");
 
         return false;
     }

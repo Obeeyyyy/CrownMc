@@ -140,7 +140,7 @@ public final class InventoryUtil {
     }
 
     public boolean isItemInHandWithDisplayname(final Player player, final String displayname) {
-        if (player.getItemInHand() == null || !player.getItemInHand().hasItemMeta() || !player.getItemInHand().getItemMeta().hasDisplayName())
+        if (player.getItemInHand() == null || player.getItemInHand().getItemMeta() == null || player.getItemInHand().getItemMeta().getDisplayName() == null)
             return false;
 
         return player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(displayname);

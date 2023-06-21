@@ -52,8 +52,10 @@ public final class JoinListener implements Listener {
     public void on(final PlayerSpawnLocationEvent event) {
         userHandler.getUser(event.getPlayer().getUniqueId()).thenAcceptAsync(user -> {
            if(user.is(DataType.SPAWNTELEPORT)) {
-               if (locationHandler.getLocation("spawn") != null)
-                   event.setSpawnLocation(locationHandler.getLocation("spawn"));
+               if (locationHandler.getLocation("spawn") != null) {
+                   //event.setSpawnLocation(locationHandler.getLocation("spawn"));
+                   event.getPlayer().teleport(locationHandler.getLocation("spawn"));
+               }
            }
         });
     }
@@ -180,8 +182,8 @@ public final class JoinListener implements Listener {
                 player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
 
-                LabyUtil.sendServerBanner(player);
-                LabyUtil.sendCurrentPlayingGamemode(player, "§8» §6§lSky§e§lSlayer§7.§6§ld§e§le §8(§c§lBETA§8)");
+                //LabyUtil.sendServerBanner(player);
+                LabyUtil.sendCurrentPlayingGamemode(player, "§8» §6§lCrownMc.de §7| §f§oJoin Now !");
             }
         }.runTaskLater(CrownMain.getInstance(), 20);
 

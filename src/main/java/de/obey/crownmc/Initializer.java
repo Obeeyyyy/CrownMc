@@ -77,6 +77,7 @@ public final class Initializer {
     private GuessTheNumberCommand guessTheNumberCommand;
     private DailyPotHandler dailyPotHandler;
     private LuckySpinHandler luckySpinHandler;
+    private ClanHandler clanHandler;
 
     private PlotAPI plotAPI;
 
@@ -417,6 +418,7 @@ public final class Initializer {
                     blockEventHandler = new BlockEventHandler(Initializer.this);
                     dailyPotHandler = new DailyPotHandler(locationHandler, messageUtil, userHandler);
                     luckySpinHandler = new LuckySpinHandler(locationHandler, messageUtil, userHandler);
+                    clanHandler = new ClanHandler(messageUtil);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
