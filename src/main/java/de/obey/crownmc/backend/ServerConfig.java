@@ -36,7 +36,7 @@ public final class ServerConfig {
     private File configFile;
     private YamlConfiguration cfg;
     @Setter
-    private int playerCount, killMoneyReward = 0, deathMoneyLose = 0, killXPReward = 0, killEloReward = 0, deathEloLose = 0, votes = 0, voteparty = 0, dailycount = 0, baseXPkillstreak = 0, baseMoneyKillstreak = 0, baseEloKillstreak = 0;
+    private int playerCount, killMoneyReward = 0, deathMoneyLose = 0, killXPReward = 0, killEloReward = 0, deathEloLose = 0, votes = 0, voteparty = 0, dailycount = 0, baseXPkillstreak = 0, baseMoneyKillstreak = 0, baseEloKillstreak = 0, levelUpMoney = 0;
     @Setter
     private long dailyMillisCount = 0;
     @Setter
@@ -166,6 +166,9 @@ public final class ServerConfig {
         if (cfg.contains("baseEloKillstreak"))
             baseEloKillstreak = cfg.getInt("baseEloKillstreak");
 
+        if (cfg.contains("levelUpMoney"))
+            levelUpMoney = cfg.getInt("levelUpMoney");
+
         loadRespawnKitItems();
     }
 
@@ -196,6 +199,7 @@ public final class ServerConfig {
         cfg.set("baseMoneyKillstreak", baseMoneyKillstreak);
         cfg.set("baseXPkillstreak", baseXPkillstreak);
         cfg.set("baseEloKillstreak", baseEloKillstreak);
+        cfg.set("levelupMoney", levelUpMoney);
 
         if (domainJoins.size() > 0) {
             domainJoins.keySet().forEach(domain -> {

@@ -237,7 +237,7 @@ public final class LuckySpin {
                     if(tick == 5) {
                         animationState = 2;
                         tick = 0;
-                        delay = 2;
+                        delay = 1;
                     }
                     return;
                 }
@@ -255,7 +255,7 @@ public final class LuckySpin {
                         player.playSound(player.getLocation(), Sound.FIREWORK_LARGE_BLAST2, 1, 1);
                         player.playSound(player.getLocation(), Sound.FIREWORK_BLAST, 1, 1);
 
-                        player.playEffect(locations.get(2), Effect.LARGE_SMOKE, 0);
+                        player.playEffect(locations.get(2), Effect.MOBSPAWNER_FLAMES, 1);
 
                         return;
                     }
@@ -320,7 +320,7 @@ public final class LuckySpin {
         drop.teleport(location);
         stand.setPassenger(drop);
 
-        player.playEffect(locations.get(2), Effect.FLYING_GLYPH, 0);
+        player.playEffect(location.clone().add(0, 1.5, 0), Effect.HAPPY_VILLAGER, 0);
 
     }
 

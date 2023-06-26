@@ -21,6 +21,7 @@ public final class LevelUtil {
     public void checkForLevelUp(final User user) {
         final int level = user.getInt(DataType.LEVEL);
         final int xp = user.getInt(DataType.XP);
+
         final int xpForNextLevel = getXPForNextLevel(level);
 
         if(xp >= xpForNextLevel) {
@@ -36,13 +37,17 @@ public final class LevelUtil {
         if(messageUtil == null)
             messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
 
+        final int moneyReward = CrownMain.getInstance().getInitializer().getServerConfig().getLevelUpMoney() * nextLevel;
+
         user.addInt(DataType.LEVEL, 1);
         user.setInt(DataType.XP, extraXp);
+        user.addLong(DataType.MONEY, moneyReward);
 
         if(!user.getOfflinePlayer().isOnline())
             return;
 
         messageUtil.sendMessage(user.getOfflinePlayer().getPlayer(), "Du bist ein Level aufgestiegen §8! §a§o" + (nextLevel - 1) + " §f§o> §2§o§l" + nextLevel);
+        messageUtil.sendMessage(user.getOfflinePlayer().getPlayer(), "§a+§e§o" + messageUtil.formatLong(moneyReward) + "§6§l$");
     }
 
 }

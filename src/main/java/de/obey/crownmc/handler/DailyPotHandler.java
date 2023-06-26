@@ -115,13 +115,17 @@ public final class DailyPotHandler {
             }
         }
 
-        if (locationHandler.getLocation("dailypot") == null)
+        if (locationHandler.getLocation("dailypot") == null) {
+            messageUtil.sendMessage(Bukkit.getConsoleSender(), "Dailypot locationHandler == null");
             return;
+        }
 
         final Location dailypotLocation = locationHandler.getLocation("dailypot").clone();
 
-        if (dailypotLocation == null)
+        if (dailypotLocation == null) {
+            messageUtil.sendMessage(Bukkit.getConsoleSender(), "Dailypot location == null");
             return;
+        }
 
         new BukkitRunnable() {
             @Override

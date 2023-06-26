@@ -53,7 +53,7 @@ public final class JoinListener implements Listener {
         userHandler.getUser(event.getPlayer().getUniqueId()).thenAcceptAsync(user -> {
            if(user.is(DataType.SPAWNTELEPORT)) {
                if (locationHandler.getLocation("spawn") != null) {
-                   //event.setSpawnLocation(locationHandler.getLocation("spawn"));
+                   event.setSpawnLocation(locationHandler.getLocation("spawn"));
                    event.getPlayer().teleport(locationHandler.getLocation("spawn"));
                }
            }

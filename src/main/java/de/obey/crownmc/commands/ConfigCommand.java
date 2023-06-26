@@ -113,6 +113,9 @@ public final class ConfigCommand implements CommandExecutor {
                     if (args[1].equalsIgnoreCase("baseEloKillstreak"))
                         serverConfig.setBaseMoneyKillstreak(amount);
 
+                    if (args[1].equalsIgnoreCase("levelUpMoney"))
+                        serverConfig.setLevelUpMoney(amount);
+
                     scoreboardHandler.updateEverythingForEveryone();
 
                     messageUtil.sendMessage(sender, "UPDATED " + args[1] + " -> " + amount);
@@ -186,7 +189,7 @@ public final class ConfigCommand implements CommandExecutor {
         messageUtil.sendSyntax(sender, "/config info",
                 "/config add <blocked, combat, bc> <message>",
                 "/config remove <blocked, combat, bc> <nummer>",
-                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay> <amount>");
+                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay, baseEloKillstreak, baseXpKillstreak, baseMoneyKillstreak, levelUpMoney> <amount>");
 
         return false;
     }

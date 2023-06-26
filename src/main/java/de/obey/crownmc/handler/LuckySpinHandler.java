@@ -52,8 +52,6 @@ public final class LuckySpinHandler {
         } else {
             items.add(new ItemStack(Material.STICK));
         }
-
-        setup();
     }
 
     public void spin(final Player player) {
@@ -81,10 +79,13 @@ public final class LuckySpinHandler {
     }
 
     public void shutdown() {
-        luckySpin.shutdown();
+        if(luckySpin != null)
+            luckySpin.shutdown();
     }
 
     public void setup() {
+        shutdown();
+
         if(luckySpin == null) {
             if (locationHandler.getLocation("luckyspin") != null)
                 luckySpin = new LuckySpin(this, locationHandler.getLocation("luckyspin"));

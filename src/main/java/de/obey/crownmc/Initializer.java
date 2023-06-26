@@ -28,7 +28,7 @@ import de.obey.crownmc.listener.QuitListener;
 import de.obey.crownmc.listener.RangGutscheinInteractListener;
 import de.obey.crownmc.listener.TeleportToPvPWorldListener;
 import de.obey.crownmc.listener.TradeListener;
-import de.obey.crownmc.listener.VoteRewards;
+import de.obey.crownmc.listener.VoteListener;
 import de.obey.crownmc.objects.Runnables;
 import de.obey.crownmc.tabcomplete.OnlineListTabComplete;
 import de.obey.crownmc.util.MessageUtil;
@@ -78,6 +78,7 @@ public final class Initializer {
     private DailyPotHandler dailyPotHandler;
     private LuckySpinHandler luckySpinHandler;
     private ClanHandler clanHandler;
+    private VotePartyHandler votePartyHandler;
 
     private PlotAPI plotAPI;
 
@@ -213,6 +214,7 @@ public final class Initializer {
         crownMain.getCommand("ignore").setExecutor(new IgnoreCommand(messageUtil, userHandler));
         crownMain.getCommand("ignores").setExecutor(new IgnoresCommand(messageUtil, userHandler));
         crownMain.getCommand("luckyspin").setExecutor(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler));
+        crownMain.getCommand("voteparty").setExecutor(new VotePartyCommand(messageUtil, votePartyHandler));
     }
 
     private void loadTabCompleter() {
@@ -352,7 +354,7 @@ public final class Initializer {
         pluginManager.registerEvents(new BodySeeCommand(messageUtil), crownMain);
         pluginManager.registerEvents(new GutscheinCommand(messageUtil, userHandler), crownMain);
         pluginManager.registerEvents(new RankingCommand(messageUtil, rankingHandler), crownMain);
-        pluginManager.registerEvents(new VoteRewards(this), crownMain);
+        pluginManager.registerEvents(new VoteListener(this), crownMain);
         pluginManager.registerEvents(new LoginStreakCommand(loginRewardHandler), crownMain);
         pluginManager.registerEvents(new ProtectionListener(messageUtil, combatHandler, worldProtectionHandler), crownMain);
         pluginManager.registerEvents(new BountyArmorStandInteractListener(messageUtil, userHandler), crownMain);
@@ -377,6 +379,7 @@ public final class Initializer {
         pluginManager.registerEvents(new DailyPotCommand(messageUtil, dailyPotHandler), crownMain);
         pluginManager.registerEvents(new WandCommand(messageUtil, userHandler, plotAPI), crownMain);
         pluginManager.registerEvents(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler), crownMain);
+        pluginManager.registerEvents(new VotePartyCommand(messageUtil, votePartyHandler), crownMain);
     }
 
     public void initializeSystem() {
@@ -395,7 +398,7 @@ public final class Initializer {
                     mySQL = new MySQL(serverConfig);
                 }
 
-                if (ticks == 3) {
+                if (ticks == 4) {
                     rangHandler = new RangHandler(messageUtil);
                     eloHandler = new EloHandler();
                     combatHandler = new CombatHandler();
@@ -419,12 +422,14 @@ public final class Initializer {
                     dailyPotHandler = new DailyPotHandler(locationHandler, messageUtil, userHandler);
                     luckySpinHandler = new LuckySpinHandler(locationHandler, messageUtil, userHandler);
                     clanHandler = new ClanHandler(messageUtil);
+                    votePartyHandler = new VotePartyHandler();
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
+                }
 
+                if(ticks == 6) {
                     coinflipHandler.updateInventory();
-
                     locationHandler.loadLocations();
                     warpHandler.loadWarps();
                     rangHandler.loadRangs();
@@ -435,9 +440,11 @@ public final class Initializer {
                     blockEventHandler.setupArmorStands();
                     dailyPotHandler.setupArmorStands();
                     luckySpinHandler.setup();
+                    votePartyHandler.loadLocations();
+                    crashHandler.setupArmorStands();
                 }
 
-                if (ticks == 5) {
+                if (ticks == 7) {
                     loadCommands();
                     loadTabCompleter();
                     loadListener();
@@ -446,11 +453,10 @@ public final class Initializer {
                     runnables.start10TickTimerAsync();
                     runnables.start2TickTimerAsync();
 
-                    crashHandler.setupArmorStands();
                     rankingHandler.startUpdater();
                 }
 
-                if (ticks == 6) {
+                if (ticks == 8) {
                     restarting = false;
                     cancel();
                     return;
@@ -467,6 +473,7 @@ public final class Initializer {
         coinflipHandler.shutdown();
         crashHandler.shutdown();
         luckySpinHandler.shutdown();
+        votePartyHandler.shutdown();
 
         for (final Player onlinePlayer : Bukkit.getOnlinePlayers())
             onlinePlayer.kickPlayer("§c§oDer Server startet neu.");
