@@ -18,10 +18,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public final class ShopHandler {
@@ -123,6 +126,28 @@ public final class ShopHandler {
 
             if (!categories.isEmpty()) {
                 for (Category value : categories.values()) {
+
+                    if(value.getSkull() != null)  {
+
+                        final ItemStack skull = value.getSkull().clone();
+                        final ItemMeta meta = skull.getItemMeta();
+
+                        meta.setDisplayName(value.getPrefix());
+
+                        final List<String> lore = new ArrayList<>();
+
+                        lore.add("§7");
+                        lore.add("§8▰§7▱ §6§lRechtsklick");
+                        lore.add("§8 -§7 Öffne diese Kategorie§8.");
+                        lore.add("§7");
+
+                        meta.setLore(lore);
+                        skull.setItemMeta(meta);
+
+                        shopInventory.setItem(value.getShowSlot(), skull);
+                        continue;
+                    }
+
                     shopInventory.setItem(value.getShowSlot(), new ItemBuilder(value.getMaterial())
                             .setDisplayname(value.getPrefix())
                             .setLore("",

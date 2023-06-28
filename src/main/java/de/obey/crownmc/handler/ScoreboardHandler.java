@@ -119,8 +119,8 @@ public final class ScoreboardHandler {
             eloHandler = CrownMain.getInstance().getInitializer().getEloHandler();
         }
 
-        final String header = "§6§lCrownMc§8§l.§6§lde\n\n" +
-                "§7Registrierte Spieler§8: §f" + serverConfig.getPlayerCount() + "\n" +
+        final String header = "§6§lCrownMc§8§l.§6§lde\n" +
+                "§7\n§7Regestrierte Spieler§8: §f" + serverConfig.getPlayerCount() + "\n" +
                 "§7Täglicher Spielerrekord§8: §f" + serverConfig.getDailyCount() + "\n" +
                 "§7Online§8: §f" + (Bukkit.getOnlinePlayers().size() - VanishCommand.vanished.size()) + "\n";
 

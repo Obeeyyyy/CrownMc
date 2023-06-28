@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.ResultSet;
@@ -40,6 +41,11 @@ public class BlockEventHandler {
 
         for (final World world : Bukkit.getWorlds()) {
             for (final Entity entity : world.getEntities()) {
+                if(entity instanceof Item && ((Item) entity).getPickupDelay() >= 20000) {
+                    entity.remove();
+                    continue;
+                }
+
                 if (entity instanceof ArmorStand && entity.getCustomName() != null) {
                     if (entity.getCustomName().equalsIgnoreCase("§8▰§7▱ §a§lBlockEvent§7 ▱§8▰"))
                         entity.remove();

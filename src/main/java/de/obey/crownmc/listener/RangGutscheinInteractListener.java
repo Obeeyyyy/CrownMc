@@ -13,6 +13,9 @@ import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -34,37 +37,56 @@ public final class RangGutscheinInteractListener implements Listener {
 
         final Player player = event.getPlayer();
 
-        if (!InventoryUtil.isItemInHandWithDisplayname(player, "§a§lRANGGUTSCHEIN"))
-            return;
+        if (InventoryUtil.isItemInHandWithDisplayname(player, "§a§lRANGGUTSCHEIN")) {
 
-        event.setCancelled(true);
+            event.setCancelled(true);
 
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
-            return;
+            if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+                return;
 
-        final String rangShowPrefix = player.getItemInHand().getItemMeta().getLore().get(5).split(" ")[2];
-        final Rang rang = rangHandler.getRangFromShowPrefix(rangShowPrefix);
+            final String rangShowPrefix = player.getItemInHand().getItemMeta().getLore().get(5).split(" ")[2];
+            final Rang rang = rangHandler.getRangFromShowPrefix(rangShowPrefix);
 
-        if (rang == null) {
-            messageUtil.sendMessage(player, "Dein Rangbuch scheint veraltet§8, §7bitte melde dich bei einem Teammitglied§8.");
-            player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+            if (rang == null) {
+                messageUtil.sendMessage(player, "Dein Rangbuch scheint veraltet§8, §7bitte melde dich bei einem Teammitglied§8.");
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                return;
+            }
+
+            final Rang currentRang = rangHandler.getPlayerRang(player);
+
+            if (rang.getId() >= currentRang.getId()) {
+                messageUtil.sendMessage(player, "Du hast diesen oder einen besseren Rang bereits§8.");
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                return;
+            }
+
+            InventoryUtil.removeItemInHand(player, 1);
+
+            rangHandler.setPlayerRang(player, rang.getName(), Bukkit.getConsoleSender());
+            player.playSound(player.getLocation(), Sound.BAT_TAKEOFF, 1, 1);
+            messageUtil.sendMessage(player, "Du hast den Rang §8'§e§o" + rangShowPrefix + "§8'§7 freigeschaltet§8.");
+            scoreboardHandler.updateEverythingForEveryone();
+
             return;
         }
 
-        final Rang currentRang = rangHandler.getPlayerRang(player);
+        if(InventoryUtil.isItemInHandWithDisplayname(player, "§6§lCrown §7Rang §8(§f1 Woche§8)")) {
+            event.setCancelled(true);
 
-        if (rang.getId() >= currentRang.getId()) {
-            messageUtil.sendMessage(player, "Du hast diesen oder einen besseren Rang bereits§8.");
-            player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+            if(player.hasPermission("group.crown")) {
+                messageUtil.sendMessage(player, "Du hast den §6§lCrown §7Rang bereits§8.");
+                player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
+                return;
+            }
+
+            InventoryUtil.removeItemInHand(player, 1);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " group addtemp crown 1w");
+            messageUtil.sendMessage(player, "Du hast den Crown Rang für eine Woche erhalten§8.");
+            player.playSound(player.getLocation(), Sound.ENDERMAN_DEATH,1 , 0.1f);
+
             return;
         }
-
-        InventoryUtil.removeItemInHand(player, 1);
-
-        rangHandler.setPlayerRang(player, rang.getName(), Bukkit.getConsoleSender());
-        player.playSound(player.getLocation(), Sound.BAT_TAKEOFF, 1, 1);
-        messageUtil.sendMessage(player, "Du hast den Rang §8'§e§o" + rangShowPrefix + "§8'§7 freigeschaltet§8.");
-        scoreboardHandler.updateEverythingForEveryone();
     }
 
 }

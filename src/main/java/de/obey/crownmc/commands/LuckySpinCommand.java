@@ -17,6 +17,7 @@ import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -116,7 +117,7 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
             return;
 
         if(event.getLine(0).startsWith("lw")) {
-            event.setLine(0, "§8✤ §d§lLucky Wheel §8✤");
+            event.setLine(0, "§d§lLucky Wheel");
             event.setLine(2, "Klicke hier um");
             event.setLine(3,"zu spielen§8.");
         }
@@ -132,7 +133,7 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
 
         final Sign sign = (Sign) event.getClickedBlock().getState();
 
-        if(sign.getLine(0).equalsIgnoreCase("§8✤ §d§lLucky Wheel §8✤"))
+        if(ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("Lucky Wheel"))
             luckySpinHandler.spin(event.getPlayer());
     }
 }

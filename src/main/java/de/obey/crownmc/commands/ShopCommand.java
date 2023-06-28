@@ -70,6 +70,19 @@ public final class ShopCommand implements CommandExecutor, Listener {
 
                 return false;
             }
+
+            if(args[0].equalsIgnoreCase("resetcount")) {
+
+                if (shopHandler.getCategories().isEmpty()) {
+                    messageUtil.sendMessage(player, "Es existieren keine Kategorien§8.");
+                    return false;
+                }
+
+                shopHandler.getCategories().values().forEach(category -> category.getItems().forEach(shopItem -> shopItem.setCount(0)));
+                messageUtil.sendMessage(player, "Count resettet§8.");
+
+                return false;
+            }
         }
 
         if (args.length == 2) {
@@ -112,7 +125,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                         return false;
                     }
 
-                    shopHandler.getCategories().get(args[2]).setMaterial(player.getItemInHand().getType());
+                    shopHandler.getCategories().get(args[2]).setMaterial(player.getItemInHand());
                     messageUtil.sendMessage(player, "Du hast das ShowItem für " + args[2] + " auf " + player.getItemInHand().getType().name() + " gesetzt§8.");
                     shopHandler.updateShopInventory();
 
@@ -326,6 +339,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
         messageUtil.sendSyntax(sender, "/shop createcat <name>",
                 "/shop removecat <name>",
                 "/shop listcat",
+                "/shop resetcount",
                 "/shop cat setprefix <name> <prefix>",
                 "/shop cat setslot <name> <slot>",
                 "/shop cat setitem <name>",
@@ -389,7 +403,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
             return;
 
         if (shopItem.getPrice() == 0) {
-            messageUtil.sendMessage(player, "Dieser Gegenstandt wurde noch nicht eingesetllt§8.");
+            messageUtil.sendMessage(player, "Dieser Gegenstand wurde noch nicht eingesetllt§8.");
             return;
         }
 
@@ -411,6 +425,33 @@ public final class ShopCommand implements CommandExecutor, Listener {
             final int finalAmount = amount;
 
             userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+
+                if(kategory.getName().equalsIgnoreCase("crowns")) {
+
+                    if (!messageUtil.hasEnougthCrowns(user, Math.toIntExact(finalAmount * shopItem.getPrice())))
+                        return;
+
+                    user.removeInt(DataType.CROWNS, Math.toIntExact(shopItem.getPrice() * finalAmount));
+
+                    shopItem.setCount(shopItem.getCount() + finalAmount);
+                    kategory.updateInventory(event.getInventory());
+
+                    messageUtil.sendMessage(player, "Du hast §8x§f" + finalAmount + "§e§o " +
+                            (shopItem.getItemStack().hasItemMeta() ?
+                                    (shopItem.getItemStack().getItemMeta().hasDisplayName() ?
+                                            shopItem.getItemStack().getItemMeta().getDisplayName() :
+                                            shopItem.getItemStack().getType().name()) :
+                                    shopItem.getItemStack().getType().name()) +
+                            "§7 für §c§o-" + messageUtil.formatLong(shopItem.getPrice() * finalAmount) + (kategory.getName().equalsIgnoreCase("crowns") ? "§7 Crowns" : "§6§l$") + "§7 gekauft§8.");
+
+                    for (int i = 0; i < finalAmount; i++)
+                        InventoryUtil.addItem(player, shopItem.getItemStack().clone());
+
+                    player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 10);
+
+                    return;
+                }
+
                 if (!messageUtil.hasEnougthMoney(user, finalAmount * shopItem.getPrice()))
                     return;
 
@@ -425,7 +466,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                                         shopItem.getItemStack().getItemMeta().getDisplayName() :
                                         shopItem.getItemStack().getType().name()) :
                                 shopItem.getItemStack().getType().name()) +
-                        "§7 für §c§o-" + messageUtil.formatLong(shopItem.getPrice() * finalAmount) + "§6§l$§7 gekauft§8.");
+                        "§7 für §c§o-" + messageUtil.formatLong(shopItem.getPrice() * finalAmount) + (kategory.getName().equalsIgnoreCase("crowns") ? "§7 Crowns" : "§6§l$") + "§7 gekauft§8.");
 
                 for (int i = 0; i < finalAmount; i++)
                     InventoryUtil.addItem(player, shopItem.getItemStack().clone());

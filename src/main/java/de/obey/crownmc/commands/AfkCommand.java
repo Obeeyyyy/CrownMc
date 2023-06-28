@@ -8,6 +8,7 @@ package de.obey.crownmc.commands;
 
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.handler.ScoreboardHandler;
+import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public final class AfkCommand implements CommandExecutor, Listener {
 
     private final MessageUtil messageUtil;
     private final ScoreboardHandler scoreboardHandler;
+    private final UserHandler userHandler;
 
     public static final ArrayList<Player> afkList = new ArrayList<>();
 
@@ -49,13 +51,14 @@ public final class AfkCommand implements CommandExecutor, Listener {
                 afkList.remove(player);
                 scoreboardHandler.updateEverythingForEveryone();
                 messageUtil.sendMessage(player, "Du bist jetzt nicht mehr AFK§8.");
+                endAFK(player);
                 return false;
             }
 
             afkList.add(player);
             scoreboardHandler.updateEverythingForEveryone();
             messageUtil.sendMessage(player, "Du bist jetzt AFK§8.");
-
+            startAFK(player);
             return false;
         }
 
@@ -64,8 +67,7 @@ public final class AfkCommand implements CommandExecutor, Listener {
         return false;
     }
 
-    private static final HashMap<UUID, Long> lastaction = new HashMap<UUID, Long>();
-
+    private static final HashMap<UUID, Long> lastaction = new HashMap<>();
     public static void checkAllIfAfk()  {
         if(Bukkit.getOnlinePlayers().isEmpty())
             return;
@@ -78,6 +80,7 @@ public final class AfkCommand implements CommandExecutor, Listener {
                 if (System.currentTimeMillis() - lastaction.get(all.getUniqueId()) >= 1000 * 60 * 5) {
                     afkList.add(all);
                     CrownMain.getInstance().getInitializer().getScoreboardHandler().updateEverythingForEveryone();
+                    CrownMain.getInstance().getInitializer().getUserHandler().getUserInstant(all.getUniqueId()).getPlaytime().startAFK();
                 }
             }
         }
@@ -88,6 +91,7 @@ public final class AfkCommand implements CommandExecutor, Listener {
         if(afkList.contains(event.getPlayer())) {
             afkList.remove(event.getPlayer());
             messageUtil.sendMessage(event.getPlayer(), "Du bist jetzt nicht mehr AFK§8.");
+            endAFK(event.getPlayer());
             scoreboardHandler.updateEverythingForEveryone();
         }
 
@@ -99,6 +103,7 @@ public final class AfkCommand implements CommandExecutor, Listener {
         if(afkList.contains(event.getPlayer())) {
             afkList.remove(event.getPlayer());
             messageUtil.sendMessage(event.getPlayer(), "Du bist jetzt nicht mehr AFK§8.");
+            endAFK(event.getPlayer());
             scoreboardHandler.updateEverythingForEveryone();
         }
 
@@ -116,9 +121,18 @@ public final class AfkCommand implements CommandExecutor, Listener {
         if(afkList.contains(event.getPlayer())) {
             afkList.remove(event.getPlayer());
             messageUtil.sendMessage(event.getPlayer(), "Du bist jetzt nicht mehr AFK§8.");
+            endAFK(event.getPlayer());
             scoreboardHandler.updateEverythingForEveryone();
         }
 
         lastaction.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
+    }
+
+    private void startAFK(final Player player) {
+        userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> user.getPlaytime().startAFK());
+    }
+
+    private void endAFK(final Player player) {
+        userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> user.getPlaytime().endAFK());
     }
 }

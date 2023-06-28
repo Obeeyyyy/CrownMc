@@ -22,7 +22,7 @@ public final class LevelUtil {
         final int level = user.getInt(DataType.LEVEL);
         final int xp = user.getInt(DataType.XP);
 
-        final int xpForNextLevel = getXPForNextLevel(level);
+        final int xpForNextLevel = getXPForNextLevel(level + 1);
 
         if(xp >= xpForNextLevel) {
             levelUP(user, xp - xpForNextLevel, level + 1);

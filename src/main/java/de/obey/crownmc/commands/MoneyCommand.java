@@ -69,7 +69,7 @@ public final class MoneyCommand implements CommandExecutor {
             return false;
         }
 
-        if (!PermissionUtil.hasPermission((Player) sender, "edit.money", true))
+        if (!PermissionUtil.hasPermission(sender, "edit.money", true))
             return false;
 
         if (args.length == 3) {

@@ -19,6 +19,7 @@ public enum DataType {
 
     ID("id", StoreType.MYSQL, 0),
     MONEY("money", StoreType.MYSQL, 2500L),
+    CROWNS("crowns", StoreType.MYSQL, 0),
     PLAYTIME("playtime", StoreType.MYSQL, 1L),
     PLAYTIMESAVED("playtimesaved", StoreType.CONFIG, 0L),
     BOUNTY("bounty", StoreType.MYSQL, 0L),

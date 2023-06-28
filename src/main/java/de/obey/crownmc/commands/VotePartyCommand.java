@@ -10,6 +10,7 @@ package de.obey.crownmc.commands;
 
 import de.obey.crownmc.handler.VotePartyHandler;
 import de.obey.crownmc.util.MessageUtil;
+import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -42,6 +43,9 @@ public final class VotePartyCommand implements CommandExecutor, Listener {
             return false;
 
         final Player player = (Player) sender;
+
+        if(!PermissionUtil.hasPermission(sender, "admin", true))
+            return false;
 
         if(args.length == 1) {
             if(args[0].equalsIgnoreCase("items")) {

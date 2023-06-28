@@ -66,8 +66,8 @@ public final class UserPlot {
 
         InventoryUtil.fillSideRows(inventory, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
 
-        inventory.addItem(new ItemBuilder(Material.CARPET, 1, (byte) 13)
-                .setDisplayname("§8» §f§l" + Material.CARPET.name())
+        inventory.addItem(new ItemBuilder(Material.WOOL, 1, (byte) 13)
+                .setDisplayname("§8» §f§l" + Material.WOOL.name())
                 .setLore("",
                         "§8▰§7▱ §b§lRechtsklick",
                         "§8 - §7Setzte diesen Block als deinen Plotrand§8.",

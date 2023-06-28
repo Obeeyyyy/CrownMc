@@ -66,7 +66,7 @@ public final class QuitListener implements Listener {
             if (user.getString(DataType.LEAVEMESSAGE).length() > 0 && PermissionUtil.hasPermission(player, "leavemessage", false))
                 initializer.getMessageUtil().broadcastNoPrefix("§e§lLEAVE§8 × §r" + ChatColor.translateAlternateColorCodes('&', user.getString(DataType.LEAVEMESSAGE)).replace("%name%", player.getName()));
 
-            initializer.getMessageUtil().log("#> " + player.getName() + " LEAVED ( " + initializer.getMessageUtil().formatLong(user.getLong(DataType.MONEY)) + "$, " + user.getInt(DataType.KILLS) + "/" + user.getInt(DataType.DEATHS) + " )");
+            initializer.getMessageUtil().log("#> " + player.getName() + " LEFT ( " + initializer.getMessageUtil().formatLong(user.getLong(DataType.MONEY)) + "$, " + user.getInt(DataType.KILLS) + "/" + user.getInt(DataType.DEATHS) + " - " + initializer.getMessageUtil().formatLong(user.getInt(DataType.CROWNS)) + "C )");
         });
 
         // Update Scoreboard

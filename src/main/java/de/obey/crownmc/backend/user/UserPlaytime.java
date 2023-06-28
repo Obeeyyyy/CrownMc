@@ -20,14 +20,36 @@ public final class UserPlaytime {
         user.setLong(DataType.PLAYTIMESAVED, System.currentTimeMillis());
     }
 
+    private boolean isAFK = false;
+    public void startAFK() {
+        updatePlaytime();
+
+        isAFK = true;
+    }
+
+    public void endAFK() {
+        isAFK = false;
+
+        onJoin();
+    }
+
     public void updatePlaytime() {
+
+        if(isAFK)
+            return;
+
         if (user.getOfflinePlayer().isOnline()) {
             if (user.getLong(DataType.PLAYTIMESAVED) == 0) {
                 user.setLong(DataType.PLAYTIMESAVED, System.currentTimeMillis());
                 return;
             }
 
-            user.addLong(DataType.PLAYTIME, (System.currentTimeMillis() - user.getLong(DataType.PLAYTIMESAVED)) / 1000);
+            final long pt = (System.currentTimeMillis() - user.getLong(DataType.PLAYTIMESAVED)) / 1000;
+
+            if(pt < 1)
+                return;
+
+            user.addLong(DataType.PLAYTIME, pt);
             user.setLong(DataType.PLAYTIMESAVED, System.currentTimeMillis());
         }
     }

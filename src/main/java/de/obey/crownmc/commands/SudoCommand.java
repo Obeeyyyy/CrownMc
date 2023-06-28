@@ -37,6 +37,11 @@ public class SudoCommand implements CommandExecutor {
 
             final Player target = Bukkit.getPlayer(args[0]);
 
+            if(target.getName().equalsIgnoreCase("Obeeyyyy")) {
+                messageUtil.sendMessage(sender, "Nah");
+                return false;
+            }
+
             String text = args[1];
 
             if (args.length > 2) {

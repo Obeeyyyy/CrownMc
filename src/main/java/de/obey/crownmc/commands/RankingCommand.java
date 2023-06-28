@@ -68,6 +68,9 @@ public final class RankingCommand implements CommandExecutor, Listener {
 
         final int slot = event.getSlot();
 
+        if (slot == 4)
+            openInv(player, "crowns");
+
         if (slot == 10)
             openInv(player, "kills");
 

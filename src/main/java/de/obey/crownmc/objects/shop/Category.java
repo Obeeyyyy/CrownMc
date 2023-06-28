@@ -28,8 +28,9 @@ import java.util.Set;
 @Setter
 public final class Category {
 
-    private String name, prefix;
+    private String name, prefix, currency;
     private Material material;
+    private ItemStack skull;
     private Integer showSlot;
     private CategoryType categoryType;
     private YamlConfiguration cfg;
@@ -41,11 +42,12 @@ public final class Category {
         prefix = "§f§l" + name.toUpperCase();
         material = Material.POTATO_ITEM;
 
+        currency = name.equalsIgnoreCase("crowns") ? "§7 Crowns " : "§6§l$ ";
+
         categoryType = name.equalsIgnoreCase("sell") ? CategoryType.SELL : CategoryType.BUY;
     }
 
     /*
-
         kategory:
             pvp:
                 '1':
@@ -66,6 +68,9 @@ public final class Category {
         if (cfg.contains(path + "material"))
             material = Material.getMaterial(cfg.getString(path + "material"));
 
+        if(material == Material.SKULL_ITEM  && cfg.contains(path + "skull"))
+            skull = cfg.getItemStack(path + "skull");
+
         if (cfg.contains(path + "slot"))
             showSlot = cfg.getInt(path + "slot");
 
@@ -83,6 +88,18 @@ public final class Category {
         return this;
     }
 
+    public void setMaterial(final ItemStack item) {
+        this.material = item.getType();
+
+        if(material == Material.SKULL_ITEM) {
+            skull = item.clone();
+        } else {
+            skull = null;
+        }
+
+        save(cfg);
+    }
+
     public void updateInventory(final Inventory inventory) {
         inventory.clear();
         if (!items.isEmpty()) {
@@ -95,7 +112,7 @@ public final class Category {
                     lore.add("");
                     lore.add("§8▰§7▱ §6§lInformationen");
                     lore.add("§8 - §7ID§8: §7" + shopItem.getID());
-                    lore.add("§8 - §7Preis§8: §fx1 §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice()) + "§6§l$ " + (item.getMaxStackSize() > 1 ? "§fx64 §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice() * 64) + "§6§l$" : ""));
+                    lore.add("§8 - §7Preis§8: §fx1 §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice()) + currency + (item.getMaxStackSize() > 1 ? "§fx64 §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice() * 64) + currency : ""));
                     lore.add("§8 - §7" + (categoryType == CategoryType.BUY ? "Gekauft§8: §fx§e§o" : "§7Verkauft§8: §fx§e§o") + shopItem.getCount());
                     lore.add("");
 
@@ -175,6 +192,9 @@ public final class Category {
         cfg.set(path + "prefix", prefix);
         cfg.set(path + "material", material.name());
         cfg.set(path + "slot", showSlot);
+
+        if(skull != null)
+            cfg.set(path + "skull", skull);
 
         if (!items.isEmpty()) {
             for (ShopItem item : items) {

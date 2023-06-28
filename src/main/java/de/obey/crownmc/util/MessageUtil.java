@@ -105,6 +105,17 @@ public final class MessageUtil {
         return true;
     }
 
+    public boolean hasEnougthCrowns(final User user, final int amount) {
+
+        if (user.getInt(DataType.CROWNS) < amount) {
+            user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.EXPLODE, 0.5f, 1);
+            sendMessage(user.getPlayer(), "Du hast nicht genug Crowns§8. (§c§o-" + formatLong(amount - user.getInt(DataType.CROWNS)) + "§8)");
+            return false;
+        }
+
+        return true;
+    }
+
     public void broadcast(final String message) {
         Bukkit.broadcastMessage(serverConfig.getPrefix() + ChatColor.translateAlternateColorCodes('&', message));
     }

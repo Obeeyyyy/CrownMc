@@ -50,11 +50,11 @@ public final class JoinListener implements Listener {
 
     @EventHandler
     public void on(final PlayerSpawnLocationEvent event) {
-        userHandler.getUser(event.getPlayer().getUniqueId()).thenAcceptAsync(user -> {
+        userHandler.getUser(event.getPlayer().getUniqueId()).thenAccept(user -> {
            if(user.is(DataType.SPAWNTELEPORT)) {
                if (locationHandler.getLocation("spawn") != null) {
+                   //event.getPlayer().teleport(locationHandler.getLocation("spawn"));
                    event.setSpawnLocation(locationHandler.getLocation("spawn"));
-                   event.getPlayer().teleport(locationHandler.getLocation("spawn"));
                }
            }
         });
@@ -67,6 +67,14 @@ public final class JoinListener implements Listener {
         serverConfig.checkDailyCount();
 
         final Player player = event.getPlayer();
+
+        userHandler.getUser(event.getPlayer().getUniqueId()).thenAccept(user -> {
+            if(user.is(DataType.SPAWNTELEPORT)) {
+                if (locationHandler.getLocation("spawn") != null) {
+                    event.getPlayer().teleport(locationHandler.getLocation("spawn"));
+                }
+            }
+        });
 
         //Freezed stuff
         if (FreezeCommand.getFreezed().contains(player.getUniqueId()))

@@ -244,6 +244,7 @@ public final class UserHandler {
                 if (results.next()) {
                     user.setInt(DataType.ID, results.getInt("id"));
                     user.setLong(DataType.MONEY, results.getLong("money"));
+                    user.setInt(DataType.CROWNS, results.getInt("crowns"));
                     user.setLong(DataType.BOUNTY, results.getLong("bounty"));
                     user.setInt(DataType.KILLS, results.getInt("kills"));
                     user.setInt(DataType.DEATHS, results.getInt("deaths"));
@@ -290,6 +291,7 @@ public final class UserHandler {
 
             mySQL.execute("UPDATE users SET " +
                     "money='" + user.getLong(DataType.MONEY) + "', " +
+                    "crowns='" + user.getInt(DataType.CROWNS) + "', " +
                     "kills='" + user.getInt(DataType.KILLS) + "', " +
                     "deaths='" + user.getInt(DataType.DEATHS) + "', " +
                     "bounty='" + user.getLong(DataType.BOUNTY) + "', " +

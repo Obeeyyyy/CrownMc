@@ -155,7 +155,7 @@ public final class DeathListener implements Listener {
             final ArmorStandPacketBuilder stand = new ArmorStandPacketBuilder(player.getLocation().add(0, 1, 0));
 
             stand.addStand(8).setGravity(false).setVisible(false).
-                    setCustomName(1, "§6§lSky§e§lSlayer").
+                    setCustomName(1, "§6§lCrownMc").
                     setCustomName(3, "§7Du hast §e§o" + player.getName() + "§7 getötet§8.").
                     setCustomName(4, "§7Deine Belohnung§8:").
                     setCustomName(6, "§a§o+ §7" + moneyReward + "§e$").

@@ -202,7 +202,7 @@ public final class Initializer {
         crownMain.getCommand("sell").setExecutor(new SellCommand(shopHandler));
         crownMain.getCommand("uuid").setExecutor(new UuidCommand(messageUtil));
         crownMain.getCommand("verlosung").setExecutor(new VerlosungCommand(messageUtil));
-        crownMain.getCommand("afk").setExecutor(new AfkCommand(messageUtil, scoreboardHandler));
+        crownMain.getCommand("afk").setExecutor(new AfkCommand(messageUtil, scoreboardHandler, userHandler));
         crownMain.getCommand("say").setExecutor(new SayCommand(messageUtil));
         guessTheNumberCommand = new GuessTheNumberCommand(messageUtil);
         crownMain.getCommand("guessthenumber").setExecutor(guessTheNumberCommand);
@@ -215,6 +215,7 @@ public final class Initializer {
         crownMain.getCommand("ignores").setExecutor(new IgnoresCommand(messageUtil, userHandler));
         crownMain.getCommand("luckyspin").setExecutor(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler));
         crownMain.getCommand("voteparty").setExecutor(new VotePartyCommand(messageUtil, votePartyHandler));
+        crownMain.getCommand("crowns").setExecutor(new CrownCommand(messageUtil, userHandler));
     }
 
     private void loadTabCompleter() {
@@ -343,7 +344,7 @@ public final class Initializer {
         pluginManager.registerEvents(new JoinListener(messageUtil, locationHandler, scoreboardHandler, userHandler, serverConfig, combatHandler), crownMain);
         pluginManager.registerEvents(new QuitListener(this), crownMain);
         pluginManager.registerEvents(new PickupPotionsListener(), crownMain);
-        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, plotAPI), crownMain);
+        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, plotAPI), crownMain);
         pluginManager.registerEvents(new BlockStuffListener(messageUtil, locationHandler, combatHandler, userHandler, serverConfig, worldProtectionHandler), crownMain);
         pluginManager.registerEvents(new InvseeCommand(messageUtil), crownMain);
         pluginManager.registerEvents(new FirstJoinItems(messageUtil, serverConfig), crownMain);
@@ -374,12 +375,13 @@ public final class Initializer {
         pluginManager.registerEvents(new ShopCommand(messageUtil, shopHandler, userHandler), crownMain);
         pluginManager.registerEvents(new BlockCounterListener(serverConfig, userHandler, locationHandler), crownMain);
         pluginManager.registerEvents(new BlockCommand(messageUtil), crownMain);
-        pluginManager.registerEvents(new AfkCommand(messageUtil, scoreboardHandler), crownMain);
+        pluginManager.registerEvents(new AfkCommand(messageUtil, scoreboardHandler, userHandler), crownMain);
         pluginManager.registerEvents(guessTheNumberCommand, crownMain);
         pluginManager.registerEvents(new DailyPotCommand(messageUtil, dailyPotHandler), crownMain);
         pluginManager.registerEvents(new WandCommand(messageUtil, userHandler, plotAPI), crownMain);
         pluginManager.registerEvents(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler), crownMain);
         pluginManager.registerEvents(new VotePartyCommand(messageUtil, votePartyHandler), crownMain);
+        pluginManager.registerEvents(new CrashCommand(messageUtil, crashHandler), crownMain);
     }
 
     public void initializeSystem() {

@@ -207,6 +207,8 @@ public final class Crash {
         if (!messageUtil.hasEnougthMoney(user, bet))
             return;
 
+        crashHandler.getJoiningCrash().remove(player);
+
         user.removeLong(DataType.MONEY, bet);
         bets.put(player.getUniqueId(), bet);
         playerBetLog.put(player, bet);

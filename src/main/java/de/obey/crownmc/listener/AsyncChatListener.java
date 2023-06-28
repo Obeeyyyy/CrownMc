@@ -14,10 +14,7 @@ import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.commands.AfkCommand;
 import de.obey.crownmc.commands.SupportCommand;
 import de.obey.crownmc.commands.VanishCommand;
-import de.obey.crownmc.handler.ChatFilterHandler;
-import de.obey.crownmc.handler.CoinflipHandler;
-import de.obey.crownmc.handler.RangHandler;
-import de.obey.crownmc.handler.UserHandler;
+import de.obey.crownmc.handler.*;
 import de.obey.crownmc.objects.SupportChat;
 import de.obey.crownmc.util.Bools;
 import de.obey.crownmc.util.MathUtil;
@@ -46,6 +43,7 @@ public final class AsyncChatListener implements Listener {
     private final RangHandler rangHandler;
     private final ChatFilterHandler chatFilterHandler;
     private final CoinflipHandler coinflipHandler;
+    private final CrashHandler crashHandler;
     private final PlotAPI plotAPI;
 
     private boolean checkPlotChat(final Player player) {
@@ -86,6 +84,11 @@ public final class AsyncChatListener implements Listener {
         if (TradeListener.settingTradeCoins(player, message))
             return;
         /* Trade setting coins end */
+
+        /* Joining Crash start*/
+        if (crashHandler.isJoiningCrash(player, message))
+            return;
+        /* Joining Crash coins end */
 
         final User user = userHandler.getUserInstant(player.getUniqueId());
 

@@ -16,8 +16,10 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 
 import java.util.UUID;
 
@@ -83,12 +85,6 @@ public final class AdminItemsCommand implements CommandExecutor {
             }
         });
 
-        inventory.addItem(new ItemBuilder(Material.ENCHANTED_BOOK).setDisplayname("§d§lRANGUPGRADE").setLore("",
-                "§8▰§7▱ §d§lRechtsklick",
-                "§8 - §7Upgrade deinen Rang um eine Stufe§8.",
-                ""
-        ).build());
-
         inventory.addItem(new ItemBuilder(Material.SLIME_BALL).setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7I").setLore(
                 "",
                 "§8▰§7▱ §b§lRechtsklick",
@@ -109,6 +105,17 @@ public final class AdminItemsCommand implements CommandExecutor {
                 "§8 - §7Um das Set einzulösen§8.",
                 ""
         ).build());
+
+        inventory.addItem(new ItemBuilder(Material.BOOK)
+                        .addEnchantment(Enchantment.DURABILITY, 1)
+                        .addItemFlags(ItemFlag.HIDE_ENCHANTS)
+                        .setDisplayname("§6§lCrown §7Rang §8(§f1 Woche§8)")
+                        .setLore("",
+                                "§8▰§7▱ §e§lRechtsklick",
+                                "§8 - §7Um den §6Crown §7Rang für ",
+                                "§8 - §71ne Woche zu erhalten§8.",
+                                "")
+                .build());
 
         player.openInventory(inventory);
 

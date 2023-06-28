@@ -9,6 +9,8 @@ package de.obey.crownmc.handler;
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.objects.gambling.Crash;
+import de.obey.crownmc.util.MathUtil;
+import de.obey.crownmc.util.MessageUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +19,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -32,6 +36,9 @@ public final class CrashHandler {
 
     @Getter
     private Crash crash;
+
+    @Getter
+    private final ArrayList<Player> joiningCrash = new ArrayList<>();
 
     public void shutdown() {
         if (crash == null)
@@ -89,5 +96,65 @@ public final class CrashHandler {
                 crash = new Crash(CrashHandler.this);
             }
         }.runTaskLater(CrownMain.getInstance(), 10);
+    }
+
+    public boolean isJoiningCrash(final Player player, final String text) {
+
+        final MessageUtil messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
+
+        if (joiningCrash.contains(player)) {
+
+            if (text.equalsIgnoreCase("cancel")) {
+                joiningCrash.remove(player);
+                messageUtil.sendMessage(player, "Vorgang wurde abgebrochen§8.");
+                return true;
+            }
+
+            long amount = 0L;
+
+            try {
+                amount = Long.parseLong(text);
+
+                if (amount < 100) {
+                    messageUtil.sendMessage(player, "Der Wetteinsatz muss mind. 100$ hoch sein§8.");
+                    return true;
+                }
+
+                final long finalAmount = amount;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        crash.joinCrash(player, finalAmount);
+                    }
+                }.runTask(CrownMain.getInstance());
+
+            } catch (final NumberFormatException exception) {
+
+                amount = MathUtil.getLongFromStringwithSuffix(text);
+
+                if (amount <= 0) {
+                    messageUtil.sendMessage(player, "Bitte gebe eine Zahl an, oder benutze folgende Abkürzungen§8. (§7k, m, mrd, b, brd, t§8)");
+                    messageUtil.sendMessage(player, "Um abzubrechen schreibe §c§ocancel§8.");
+                    return true;
+                }
+
+                if (amount < 100) {
+                    messageUtil.sendMessage(player, "Der Wetteinsatz muss mind. 100$ hoch sein§8.");
+                    return true;
+                }
+
+                final long finalAmount = amount;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        crash.joinCrash(player, finalAmount);
+                    }
+                }.runTask(CrownMain.getInstance());
+            }
+
+            return true;
+        }
+
+        return false;
     }
 }
