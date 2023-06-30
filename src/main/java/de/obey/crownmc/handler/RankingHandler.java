@@ -105,7 +105,7 @@ public final class RankingHandler {
         InventoryUtil.fillSideRows(inventory, bar);
 
         inventory.setItem(4, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
-                .setTextur("OTMwNDIzMTI3YmIwMjY5YzUwODMzM2M2OTY2NTc4YzEzMTdkYjMzNjhjMWZiZDA1MDNkYzM4YjY0MmM1ZDE5MyJ9fX0=", UUID.randomUUID())
+                .setTextur("YTkzZGZiM2FlODE3Nzc4NGE2NDU3NzlkY2EyYzEyZGZiYTEyNThjMjAyYWZkYzA0ZDg3ZDgwZjJjZWNlYTFkNyJ9fX0=", UUID.randomUUID())
                 .setDisplayname("§7Top 10 §8(§6§lCrowns§8)").build());
 
         inventory.setItem(10, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)

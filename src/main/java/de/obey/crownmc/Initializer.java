@@ -79,6 +79,7 @@ public final class Initializer {
     private LuckySpinHandler luckySpinHandler;
     private ClanHandler clanHandler;
     private VotePartyHandler votePartyHandler;
+    private JackPotHandler jackPotHandler;
 
     private PlotAPI plotAPI;
 
@@ -216,6 +217,10 @@ public final class Initializer {
         crownMain.getCommand("luckyspin").setExecutor(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler));
         crownMain.getCommand("voteparty").setExecutor(new VotePartyCommand(messageUtil, votePartyHandler));
         crownMain.getCommand("crowns").setExecutor(new CrownCommand(messageUtil, userHandler));
+        crownMain.getCommand("buy").setExecutor(new BuyCommand(messageUtil, userHandler));
+        crownMain.getCommand("refund").setExecutor(new BuyCommand(messageUtil, userHandler));
+        crownMain.getCommand("store").setExecutor(new StoreCommand(messageUtil));
+        crownMain.getCommand("jackpot").setExecutor(new JackPotCommand(messageUtil, userHandler, jackPotHandler));
     }
 
     private void loadTabCompleter() {
@@ -344,7 +349,7 @@ public final class Initializer {
         pluginManager.registerEvents(new JoinListener(messageUtil, locationHandler, scoreboardHandler, userHandler, serverConfig, combatHandler), crownMain);
         pluginManager.registerEvents(new QuitListener(this), crownMain);
         pluginManager.registerEvents(new PickupPotionsListener(), crownMain);
-        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, plotAPI), crownMain);
+        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, jackPotHandler, plotAPI), crownMain);
         pluginManager.registerEvents(new BlockStuffListener(messageUtil, locationHandler, combatHandler, userHandler, serverConfig, worldProtectionHandler), crownMain);
         pluginManager.registerEvents(new InvseeCommand(messageUtil), crownMain);
         pluginManager.registerEvents(new FirstJoinItems(messageUtil, serverConfig), crownMain);
@@ -382,6 +387,8 @@ public final class Initializer {
         pluginManager.registerEvents(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler), crownMain);
         pluginManager.registerEvents(new VotePartyCommand(messageUtil, votePartyHandler), crownMain);
         pluginManager.registerEvents(new CrashCommand(messageUtil, crashHandler), crownMain);
+        pluginManager.registerEvents(new CrownCommand(messageUtil, userHandler), crownMain);
+        pluginManager.registerEvents(new JackPotCommand(messageUtil, userHandler, jackPotHandler), crownMain);
     }
 
     public void initializeSystem() {
@@ -425,6 +432,7 @@ public final class Initializer {
                     luckySpinHandler = new LuckySpinHandler(locationHandler, messageUtil, userHandler);
                     clanHandler = new ClanHandler(messageUtil);
                     votePartyHandler = new VotePartyHandler();
+                    jackPotHandler = new JackPotHandler();
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
@@ -476,6 +484,7 @@ public final class Initializer {
         crashHandler.shutdown();
         luckySpinHandler.shutdown();
         votePartyHandler.shutdown();
+        jackPotHandler.shutdown();
 
         for (final Player onlinePlayer : Bukkit.getOnlinePlayers())
             onlinePlayer.kickPlayer("§c§oDer Server startet neu.");

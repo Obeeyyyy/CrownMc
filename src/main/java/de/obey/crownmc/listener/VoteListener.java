@@ -39,7 +39,10 @@ public final class VoteListener implements Listener {
         });
 
         initializer.getScoreboardHandler().updateEverythingForEveryone();
-        initializer.getDailyPotHandler().addMoney(5000);
+        initializer.getDailyPotHandler().addMoney(500);
+
+        initializer.getMessageUtil().broadcast(target.getName() + " hat für den Server gevotet §8!§7 Voteparty§8: §a" + target.getName() + "§8/§2" + initializer.getServerConfig().getVoteparty());
+        initializer.getMessageUtil().broadcast("§a+§e§o500§6§l$ §7in den §9§lDailyPot§8.");
 
         if(initializer.getServerConfig().getVotes() >= initializer.getServerConfig().getVoteparty()) {
             initializer.getServerConfig().setVotes(0);

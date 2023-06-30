@@ -145,7 +145,7 @@ public final class PrefixCommand implements CommandExecutor {
             if (args.length > 1) {
                 if (args[0].equalsIgnoreCase("get")) {
 
-                    if (!PermissionUtil.hasPermission(player, "slayer.createprefix", true))
+                    if (!PermissionUtil.hasPermission(player, "createprefix", true))
                         return false;
 
                     String prefix = args[1];

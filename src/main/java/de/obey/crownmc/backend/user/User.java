@@ -122,8 +122,8 @@ public final class User {
         return data.containsKey(type) ? (String) data.get(type) : (String) type.getDefaultValue();
     }
 
-    public List getList(final DataType type) {
-        return data.containsKey(type) ? (List) data.get(type) : (List) type.getDefaultValue();
+    public List<?> getList(final DataType type) {
+        return data.containsKey(type) ? (List<?>) data.get(type) : (List<?>) type.getDefaultValue();
     }
 
     public boolean is(final DataType type) {
@@ -131,7 +131,7 @@ public final class User {
     }
 
     public void addInt(final DataType type, final int amount) {
-        data.put(type, (data.containsKey(type) ? ((int) data.get(type) + amount < 0 ? 0 : (int) data.get(type) + amount) : amount));
+        data.put(type, (data.containsKey(type) ? (Math.max((int) data.get(type) + amount, 0)) : amount));
         updateData();
     }
 
@@ -141,7 +141,12 @@ public final class User {
     }
 
     public void removeInt(final DataType type, final int amount) {
-        data.put(type, (data.containsKey(type) ? ((int) data.get(type) - amount < 0 ? 0 : (int) data.get(type) - amount) : 0));
+        if(type == DataType.CROWNS) {
+            data.put(type, (data.containsKey(type) ? ((int) data.get(type) - amount) : 0));
+        } else {
+            data.put(type, (data.containsKey(type) ? (Math.max((int) data.get(type) - amount, 0)) : 0));
+        }
+
         updateData();
     }
 
@@ -175,7 +180,7 @@ public final class User {
         updateData();
     }
 
-    public void setList(final DataType type, List list) {
+    public void setList(final DataType type, List<?> list) {
         data.put(type, list);
         updateData();
     }

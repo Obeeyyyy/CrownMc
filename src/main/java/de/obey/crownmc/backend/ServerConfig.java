@@ -85,6 +85,7 @@ public final class ServerConfig {
         }
 
         whitelist = cfg.getBoolean("whitelist");
+        betawhitelist = cfg.getBoolean("betawhitelist");
         prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString("prefix"));
         host = cfg.getString("mysql.host");
         username = cfg.getString("mysql.username");
@@ -174,7 +175,7 @@ public final class ServerConfig {
 
     public void save() {
         cfg.set("whitelist", whitelist);
-        cfg.set("prefix", prefix);
+        cfg.set("betawhitelist", betawhitelist);
         cfg.set("playercount", playerCount);
         cfg.set("motd.1", motd1);
         cfg.set("motd.2", motd2);
@@ -256,7 +257,5 @@ public final class ServerConfig {
 
     public void vote(final String name) {
         votes++;
-
-        initializer.getMessageUtil().broadcast(name + " hat für den Server gevotet §8!§7 Voteparty§8: §a" + votes + "§8/§2" + voteparty);
     }
 }

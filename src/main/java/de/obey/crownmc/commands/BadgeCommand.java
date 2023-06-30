@@ -11,18 +11,10 @@ import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.handler.BadgeHandler;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.objects.Badge;
-import de.obey.crownmc.util.FileUtil;
-import de.obey.crownmc.util.InventoryUtil;
-import de.obey.crownmc.util.MathUtil;
-import de.obey.crownmc.util.MessageBuilder;
-import de.obey.crownmc.util.MessageUtil;
-import de.obey.crownmc.util.PermissionUtil;
+import de.obey.crownmc.util.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,6 +23,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.HashMap;
@@ -102,6 +96,7 @@ public final class BadgeCommand implements CommandExecutor, Listener {
                         "/badge resetbadgecount",
                         "/badge create <name>",
                         "/badge delete <name>",
+                        "/badge get <name>",
                         "/badge setitem <name>",
                         "/badge setdate <name> <text>",
                         "/badge setprefix <name> <text>",
@@ -200,6 +195,29 @@ public final class BadgeCommand implements CommandExecutor, Listener {
 
                 badgeHandler.deleteBadge(name);
                 messageUtil.sendMessage(player, "Du hast die Badge " + name + " gelöscht§8.");
+
+                return false;
+            }
+
+            if (args[0].equalsIgnoreCase("get")) {
+
+                final String name = args[1];
+
+                if (badgeHandler.getBadgeFromName(name) == null) {
+                    messageUtil.sendMessage(player, "§c§oEs existiert keine Badge mit dem Namen§8. ( §f§o" + name + " §8)");
+                    return false;
+                }
+
+                final Badge bage = badgeHandler.getBadgeFromName(name);
+
+                player.getInventory().addItem(new ItemBuilder(Material.NETHER_STAR)
+                                .setDisplayname("§f§lBADGE §8(" + bage.getPrefix() + "§8)")
+                                .setLore("",
+                                        "§f§lRECHTSKLICK",
+                                        "§8 - §7Löst diese Badge Permanent ein§8.",
+                                        "§7",
+                                        "§0" + name)
+                        .build());
 
                 return false;
             }
@@ -368,6 +386,37 @@ public final class BadgeCommand implements CommandExecutor, Listener {
         );
 
         return false;
+    }
+
+    @EventHandler
+    public void on(final PlayerInteractEvent event) {
+
+        final Player player = event.getPlayer();
+
+        if (!InventoryUtil.isItemInHandStartsWith(player, "§f§lBADGE"))
+            return;
+
+        event.setCancelled(true);
+
+        final String name = ChatColor.stripColor(player.getItemInHand().getItemMeta().getLore().get(4));
+        final Badge badge = badgeHandler.getBadgeFromName(name);
+
+        if (badge == null) {
+            messageUtil.sendMessage(player, "Die Badge " + name + " existiert nicht§8.");
+            return;
+        }
+
+        userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+            if (user.getBadges().getBadges().containsKey(badge.getName())) {
+                messageUtil.sendMessage(player, "Du hast die " + name + " Badge schon§8.");
+                return;
+            }
+
+            player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+            user.getBadges().addBadge(badge.getName());
+            InventoryUtil.removeItemInHand(player, 1);
+        });
+
     }
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();

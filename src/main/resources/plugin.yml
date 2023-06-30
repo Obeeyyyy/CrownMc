@@ -164,3 +164,6 @@ commands:
   voteparty:
   crowns:
   buy:
+  refund:
+  store:
+  jackpot:

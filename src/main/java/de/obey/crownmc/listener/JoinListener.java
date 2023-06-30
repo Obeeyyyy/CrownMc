@@ -15,10 +15,7 @@ import de.obey.crownmc.handler.CombatHandler;
 import de.obey.crownmc.handler.LocationHandler;
 import de.obey.crownmc.handler.ScoreboardHandler;
 import de.obey.crownmc.handler.UserHandler;
-import de.obey.crownmc.util.LabyUtil;
-import de.obey.crownmc.util.MessageUtil;
-import de.obey.crownmc.util.PacketReader;
-import de.obey.crownmc.util.PermissionUtil;
+import de.obey.crownmc.util.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -67,14 +64,6 @@ public final class JoinListener implements Listener {
         serverConfig.checkDailyCount();
 
         final Player player = event.getPlayer();
-
-        userHandler.getUser(event.getPlayer().getUniqueId()).thenAccept(user -> {
-            if(user.is(DataType.SPAWNTELEPORT)) {
-                if (locationHandler.getLocation("spawn") != null) {
-                    event.getPlayer().teleport(locationHandler.getLocation("spawn"));
-                }
-            }
-        });
 
         //Freezed stuff
         if (FreezeCommand.getFreezed().contains(player.getUniqueId()))
@@ -143,14 +132,14 @@ public final class JoinListener implements Listener {
                     player.sendMessage("");
                     player.sendMessage("§8▰§7▱ §6§lWillkommen zurück §7" + player.getName());
                     player.sendMessage("");
-                    //player.sendMessage("  §8- §7Du warst §f§o" + (MathUtil.getHoursAndMinutesAndSecondsFromSeconds((System.currentTimeMillis() - user.getLong(DataType.LASTSEEN)) / 1000)) + "§coffline.");
-                    //player.sendMessage("  §8- §7Loginstreak§8: §f§o" + user.getInt(DataType.LOGINSTREAK) + "§8.");
-                    //player.sendMessage("  §8- §7Nächster Tag in §a§o" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((86400000 - (System.currentTimeMillis() - user.getLong(DataType.LOGINSTREAKUPDATED))) / 1000));
-                    player.sendMessage("");
                     player.sendMessage(" §8- §7Spieler Online§8: §e§o" + (Bukkit.getOnlinePlayers().size() - VanishCommand.vanished.size()));
                     player.sendMessage(" §8- §7Discord Server§8: §e§o/discord");
                     player.sendMessage(" §8- §7Täglicher Vote§8: §e§o/vote");
-                    player.sendMessage(" §8- §7Online Shop§8: §e§oshop.crownmc.de");
+                    player.sendMessage(" §8- §7Online Shop§8: §e§ostore.crownmc.de");
+                    player.sendMessage("");
+                    player.sendMessage(" §8- §7Du warst §f§o" + (MathUtil.getHoursAndMinutesAndSecondsFromSeconds((System.currentTimeMillis() - user.getLong(DataType.LASTSEEN)) / 1000)) + "§coffline.");
+                    player.sendMessage(" §8- §7Loginstreak§8: §f§o" + user.getInt(DataType.LOGINSTREAK) + "§8.");
+                    player.sendMessage(" §8- §7Nächster Tag in §a§o" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((86400000 - (System.currentTimeMillis() - user.getLong(DataType.LOGINSTREAKUPDATED))) / 1000));
                     player.sendMessage("");
                     player.sendMessage("§8§l§m-----------------------------------");
                     player.sendMessage("");
@@ -178,8 +167,15 @@ public final class JoinListener implements Listener {
                         } else if (user.getString(DataType.JOINMESSAGE).length() > 0 && PermissionUtil.hasPermission(player, "joinmessage", false)) {
                             messageUtil.broadcastNoPrefix("§e§lJOIN§8 × §r" + ChatColor.translateAlternateColorCodes('&', user.getString(DataType.JOINMESSAGE)).replace("%name%", player.getName()));
                         }
+
+                        // SPAWN TP
+                        if(user.is(DataType.SPAWNTELEPORT)) {
+                            if (locationHandler.getLocation("spawn") != null) {
+                                event.getPlayer().teleport(locationHandler.getLocation("spawn"));
+                            }
+                        }
                     }
-                }.runTaskLater(CrownMain.getInstance(), 20);
+                }.runTaskLater(CrownMain.getInstance(), 15);
             });
         }
 

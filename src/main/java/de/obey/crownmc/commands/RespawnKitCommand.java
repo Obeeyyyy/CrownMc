@@ -20,6 +20,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -227,9 +228,38 @@ public final class RespawnKitCommand implements CommandExecutor, Listener {
 
                 return false;
             }
+
+            if(args[0].equalsIgnoreCase("setlevel")) {
+
+                final int type = Integer.parseInt(args[2]);
+                final int level = Integer.parseInt(args[3]);
+
+                if (type > 8) {
+                    messageUtil.sendMessage(sender, "Ungültiger Type§8.");
+                    messageUtil.sendMessage(sender, "1 = helm, 2 = chest, 3 = leggings, 4 = boots, 5 = weapon, 6 = bow, 7 = apple, 8 = enderpearls");
+                    return false;
+                }
+
+                if(level > serverConfig.getRespawnKitItems().get(type).getMaxLevel()) {
+                    messageUtil.sendMessage(sender, "Level zu hoch§8.");
+                    return false;
+                }
+
+                if (!messageUtil.hasPlayedBefore(sender, args[0]))
+                    return false;
+
+                final OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+
+                userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> user.getRespawnKit().getItemLevels().put(type, level));
+                messageUtil.sendMessage(sender, target.getName() + " type auf " + level + "§8.");
+
+                return false;
+            }
         }
 
-        messageUtil.sendSyntax(sender, "/respawnkit setitem <type> <level> muss item in der hand halten",
+        messageUtil.sendSyntax(sender,
+                "/respawnkit setlevel <spieler> <type> <value>",
+                "/respawnkit setitem <type> <level> muss item in der hand halten",
                 "/respawnkit setprice <type> <level> <price>",
                 "/respawnkit clearitem <type> <level>",
                 "/respawnkit info <type>",

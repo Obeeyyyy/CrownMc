@@ -44,7 +44,7 @@ public final class IgnoresCommand implements CommandExecutor {
         }
 
         final User user = userHandler.getUserInstant(player.getUniqueId());
-        final List<String> ignores = user.getList(DataType.IGNORES);
+        final List<String> ignores = (List<String>) user.getList(DataType.IGNORES);
 
         if (ignores.size() < 1) {
             messageUtil.sendMessage(player, "Du ignorierst niemanden.");

@@ -6,6 +6,7 @@ package de.obey.crownmc.listener;
 
 */
 
+import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.Rang;
 import de.obey.crownmc.handler.RangHandler;
 import de.obey.crownmc.handler.ScoreboardHandler;
@@ -80,8 +81,10 @@ public final class RangGutscheinInteractListener implements Listener {
                 return;
             }
 
-            InventoryUtil.removeItemInHand(player, 1);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " group addtemp crown 1w");
+            CrownMain.getInstance().getInitializer().getScoreboardHandler().updateScoreboard(player);
+            InventoryUtil.removeItemInHand(player, 1);
+
             messageUtil.sendMessage(player, "Du hast den Crown Rang für eine Woche erhalten§8.");
             player.playSound(player.getLocation(), Sound.ENDERMAN_DEATH,1 , 0.1f);
 

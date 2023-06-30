@@ -14,6 +14,7 @@ import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,6 +41,7 @@ public final class UserRespawnKit {
 
     private final YamlConfiguration cfg;
 
+    @Getter
     private final Map<Integer, Integer> itemLevels = new HashMap<>();
 
     public UserRespawnKit(final User user) {
@@ -129,6 +131,9 @@ public final class UserRespawnKit {
                                 "§8  -§7 Dieses Item ist auf Stufe §f§o" + itemLevel + "§8/§f§l" + kitItem.getMaxLevel(),
                                 "§8  -§7 Upgradepreis§8: §f§o" + messageUtil.formatLong(kitItem.getPriceForLevel(itemLevel + 1)) + "§f§l$",
                                 "",
+                                "§8▰§7▱ §f§lNächstes Upgrade",
+                                "§8  -§7 " + kitItem.getItemForLevel(itemLevel+1).getType().name(),
+                                "",
                                 "§8▰§7▱ §f§lLinksklick",
                                 "§8  -§7 Um das Upgrade freizuschalten§8.",
                                 "")
@@ -147,35 +152,35 @@ public final class UserRespawnKit {
             return;
 
         final RespawnKitItem helm = serverConfig.getRespawnKitItems().get(1);
-        if (helm != null && helm.getItemForLevel(itemLevels.get(1)).getType() != Material.BARRIER)
+        if (helm != null && helm.getItemForLevel(itemLevels.get(1)).getType() != Material.IRON_FENCE && helm.getItemForLevel(itemLevels.get(1)).getType() != Material.BARRIER)
             player.getInventory().setHelmet(helm.getItemForLevel(itemLevels.get(1)));
 
         final RespawnKitItem chestplate = serverConfig.getRespawnKitItems().get(2);
-        if (chestplate != null && chestplate.getItemForLevel(itemLevels.get(2)).getType() != Material.BARRIER)
+        if (chestplate != null  && chestplate.getItemForLevel(itemLevels.get(2)).getType() != Material.IRON_FENCE && chestplate.getItemForLevel(itemLevels.get(2)).getType() != Material.BARRIER)
             player.getInventory().setChestplate(chestplate.getItemForLevel(itemLevels.get(2)));
 
         final RespawnKitItem leggings = serverConfig.getRespawnKitItems().get(3);
-        if (leggings != null && leggings.getItemForLevel(itemLevels.get(3)).getType() != Material.BARRIER)
+        if (leggings != null && leggings.getItemForLevel(itemLevels.get(3)).getType() != Material.IRON_FENCE && leggings.getItemForLevel(itemLevels.get(3)).getType() != Material.BARRIER)
             player.getInventory().setLeggings(leggings.getItemForLevel(itemLevels.get(3)));
 
         final RespawnKitItem boots = serverConfig.getRespawnKitItems().get(4);
-        if (boots != null && boots.getItemForLevel(itemLevels.get(4)).getType() != Material.BARRIER)
+        if (boots != null && boots.getItemForLevel(itemLevels.get(4)).getType() != Material.IRON_FENCE && boots.getItemForLevel(itemLevels.get(4)).getType() != Material.BARRIER)
             player.getInventory().setBoots(boots.getItemForLevel(itemLevels.get(4)));
 
         final RespawnKitItem weapon = serverConfig.getRespawnKitItems().get(5);
-        if (weapon != null && weapon.getItemForLevel(itemLevels.get(5)).getType() != Material.BARRIER)
+        if (weapon != null && weapon.getItemForLevel(itemLevels.get(5)).getType() != Material.IRON_FENCE && weapon.getItemForLevel(itemLevels.get(5)).getType() != Material.BARRIER)
             player.getInventory().addItem(weapon.getItemForLevel(itemLevels.get(5)));
 
         final RespawnKitItem bow = serverConfig.getRespawnKitItems().get(6);
-        if (bow != null && bow.getItemForLevel(itemLevels.get(6)).getType() != Material.BARRIER)
+        if (bow != null && bow.getItemForLevel(itemLevels.get(6)).getType() != Material.IRON_FENCE && bow.getItemForLevel(itemLevels.get(6)).getType() != Material.BARRIER)
             player.getInventory().addItem(bow.getItemForLevel(itemLevels.get(6)));
 
         final RespawnKitItem apple = serverConfig.getRespawnKitItems().get(7);
-        if (apple != null && apple.getItemForLevel(itemLevels.get(7)).getType() != Material.BARRIER)
+        if (apple != null && apple.getItemForLevel(itemLevels.get(7)).getType() != Material.IRON_FENCE && apple.getItemForLevel(itemLevels.get(7)).getType() != Material.BARRIER)
             player.getInventory().addItem(apple.getItemForLevel(itemLevels.get(7)));
 
         final RespawnKitItem enderpearl = serverConfig.getRespawnKitItems().get(8);
-        if (enderpearl != null && enderpearl.getItemForLevel(itemLevels.get(8)).getType() != Material.BARRIER)
+        if (enderpearl != null && enderpearl.getItemForLevel(itemLevels.get(8)).getType() != Material.IRON_FENCE && enderpearl.getItemForLevel(itemLevels.get(8)).getType() != Material.BARRIER)
             player.getInventory().addItem(enderpearl.getItemForLevel(itemLevels.get(8)));
     }
 }

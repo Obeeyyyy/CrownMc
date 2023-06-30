@@ -120,7 +120,7 @@ public final class ScoreboardHandler {
         }
 
         final String header = "§6§lCrownMc§8§l.§6§lde\n" +
-                "§7\n§7Regestrierte Spieler§8: §f" + serverConfig.getPlayerCount() + "\n" +
+                "§7\n§7Registrierte Spieler§8: §f" + serverConfig.getPlayerCount() + "\n" +
                 "§7Täglicher Spielerrekord§8: §f" + serverConfig.getDailyCount() + "\n" +
                 "§7Online§8: §f" + (Bukkit.getOnlinePlayers().size() - VanishCommand.vanished.size()) + "\n";
 
@@ -266,15 +266,20 @@ public final class ScoreboardHandler {
 
             sidebar_normal.setDisplayName("§6§lCrownMc §8(§f" + (Bukkit.getOnlinePlayers().size() - VanishCommand.vanished.size()) + "§8)");
 
-            sidebar_normal.getScore("§7           SkyPvP").setScore(14);
-            sidebar_normal.getScore("§3").setScore(13);
+            sidebar_normal.getScore("§7           SkyPvP").setScore(15);
+            sidebar_normal.getScore("§3").setScore(14);
 
-            sidebar_normal.getScore("§6§l" + player.getName()).setScore(12);
+            sidebar_normal.getScore("§6§l" + player.getName()).setScore(13);
 
             final Team money = scoreboard.registerNewTeam("money");
             money.setSuffix("...");
             money.addEntry("§8 ├ §7Money§8: §e");
-            sidebar_normal.getScore("§8 ├ §7Money§8: §e").setScore(11);
+            sidebar_normal.getScore("§8 ├ §7Money§8: §e").setScore(12);
+
+            final Team crowns = scoreboard.registerNewTeam("crowns");
+            crowns.setSuffix("...");
+            crowns.addEntry("§8 ├ §7Crowns§8: §e");
+            sidebar_normal.getScore("§8 ├ §7Crowns§8: §e").setScore(11);
 
             final Team stats = scoreboard.registerNewTeam("stats");
             stats.setSuffix("...");
@@ -475,6 +480,23 @@ public final class ScoreboardHandler {
 
                 money.setSuffix(coinString + "§6§o$");
 
+                final int crownAmount = user.getInt(DataType.CROWNS);
+                final Team crowns = scoreboard.getTeam("crowns");
+
+                String crownString = "";
+
+                if (crownAmount >= 1000000) {
+                    crownString = MathUtil.replaceLongWithSuffix(crownAmount) + "§6§l¢";
+                } else {
+                    if(crownAmount == 0) {
+                        crownString = "§8/§e§ostore";
+                    } else {
+                        crownString = messageUtil.formatLong(crownAmount) + "§6§l¢";
+                    }
+                }
+
+                crowns.setSuffix(crownString);
+
                 final Team stats = scoreboard.getTeam("stats");
                 stats.setSuffix(user.getInt(DataType.KILLS) + "§8 × §c" + user.getInt(DataType.DEATHS));
 
@@ -499,7 +521,7 @@ public final class ScoreboardHandler {
                     vanish.setSuffix(VanishCommand.vanished.contains(player) ? "§aJa" : "§cNein");
                 }
 
-            } else if (type.equalsIgnoreCase("combat")) {
+            }  else if (type.equalsIgnoreCase("combat")) {
 
                 if (scoreboard.getObjective("sidebar_combat").getDisplaySlot() == null) {
                     scoreboard.getObjective("sidebar_combat").setDisplaySlot(DisplaySlot.SIDEBAR);

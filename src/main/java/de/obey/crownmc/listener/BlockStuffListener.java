@@ -35,9 +35,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -74,8 +72,30 @@ public final class BlockStuffListener implements Listener {
     private final HashMap<UUID, Long> enderpearlCooldown = new HashMap<>();
 
     @EventHandler
+    public void on(final LeavesDecayEvent event) {
+
+        if (event.getBlock().getWorld().getName().equalsIgnoreCase("plots") ||
+                event.getBlock().getWorld().getName().equalsIgnoreCase("farmwelt") ||
+                event.getBlock().getWorld().getName().equalsIgnoreCase("world"))
+            return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(final BlockFromToEvent event) {
+        if (event.getBlock().getWorld().getName().equalsIgnoreCase("plots") ||
+                event.getBlock().getWorld().getName().equalsIgnoreCase("farmwelt") ||
+                event.getBlock().getWorld().getName().equalsIgnoreCase("world"))
+            return;
+
+        if(event.getBlock().getType() == Material.WATER)
+            event.setCancelled(true);
+    }
+
+    @EventHandler
     public void on(final ChunkUnloadEvent event) {
-        if (event.getWorld().getName().equalsIgnoreCase("plotwelt"))
+        if (event.getWorld().getName().equalsIgnoreCase("plots"))
             return;
 
         for (Entity entity : event.getChunk().getEntities()) {

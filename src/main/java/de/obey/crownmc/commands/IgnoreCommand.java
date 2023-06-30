@@ -65,7 +65,7 @@ public final class IgnoreCommand implements CommandExecutor {
         player.playSound(player.getLocation(), Sound.VILLAGER_YES, 0.4f, 0.4f);
 
         final User user = userHandler.getUserInstant(player.getUniqueId());
-        final List<String> ignores = user.getList(DataType.IGNORES);
+        final List<String> ignores = (List<String>) user.getList(DataType.IGNORES);
 
         if (!ignores.contains(target.getUniqueId().toString())) {
             ignores.add(target.getUniqueId().toString());

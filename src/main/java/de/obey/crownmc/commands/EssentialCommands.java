@@ -506,6 +506,10 @@ public final class EssentialCommands implements CommandExecutor {
         }
 
         if (command.getName().equalsIgnoreCase("tpahere")) {
+
+            if(!PermissionUtil.hasPermission(sender, "tpahere", true))
+                return false;
+
             if (args.length == 1) {
                 if (!initializer.getMessageUtil().isOnline(sender, args[0]))
                     return false;

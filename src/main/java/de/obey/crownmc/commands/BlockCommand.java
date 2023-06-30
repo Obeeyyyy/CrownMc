@@ -9,6 +9,7 @@ package de.obey.crownmc.commands;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MessageUtil;
+import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -36,6 +37,9 @@ public final class BlockCommand implements CommandExecutor, Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (!(sender instanceof Player))
+            return false;
+
+        if(!PermissionUtil.hasPermission(sender, "block", true))
             return false;
 
         if (args.length == 1) {

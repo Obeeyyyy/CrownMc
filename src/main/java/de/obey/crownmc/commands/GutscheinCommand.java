@@ -15,6 +15,7 @@ import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -72,14 +73,28 @@ public final class GutscheinCommand implements CommandExecutor, Listener {
 
             user.removeLong(DataType.MONEY, amount);
             messageUtil.sendMessage(sender, "Du hast einen §8(§e§o" + messageUtil.formatLong(amount) + "§6$§8)§7 Gutschein erstellt.");
-            InventoryUtil.addItem(player, new ItemBuilder(Material.DOUBLE_PLANT, 1)
-                    .setDisplayname("§8» §7Gutschein")
-                    .setLore("",
-                            "§8▰§7▱  §6§lBetrag",
-                            "  §8-§f§o " + messageUtil.formatLong(amount) + "§6§l$",
-                            "",
-                            "§8▰§7▱  §6§lRecktsklick",
-                            "  §8- §7Um den Gutschein einzulösen§8.").build());
+
+            if(amount < 10000) {
+                InventoryUtil.addItem(player, new ItemBuilder(Material.FIREWORK_CHARGE, 1)
+                        .setFireWorkColor(Color.YELLOW)
+                        .setDisplayname("§8» §7Gutschein")
+                        .setLore("",
+                                "§8▰§7▱  §6§lBetrag",
+                                "  §8-§f§o " + messageUtil.formatLong(amount) + "§6§l$",
+                                "",
+                                "§8▰§7▱  §6§lRecktsklick",
+                                "  §8- §7Um den Gutschein einzulösen§8.").build());
+            } else {
+                InventoryUtil.addItem(player, new ItemBuilder(Material.FIREWORK_CHARGE, 1)
+                        .setFireWorkColor(Color.BLACK)
+                        .setDisplayname("§8» §7Gutschein")
+                        .setLore("",
+                                "§8▰§7▱  §6§lBetrag",
+                                "  §8-§f§o " + messageUtil.formatLong(amount) + "§6§l$",
+                                "",
+                                "§8▰§7▱  §6§lRecktsklick",
+                                "  §8- §7Um den Gutschein einzulösen§8.").build());
+            }
 
             return false;
         }

@@ -104,7 +104,7 @@ public final class WarpCommand implements CommandExecutor, Listener {
 
             if (args[0].equalsIgnoreCase("setprefix")) {
 
-                String prefix = args[2].toLowerCase();
+                String prefix = args[2];
 
                 for (int i = 3; i < args.length; i++) {
                     prefix = prefix + " " + args[i];
