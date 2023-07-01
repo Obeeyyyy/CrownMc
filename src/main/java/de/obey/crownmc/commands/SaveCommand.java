@@ -29,7 +29,6 @@ public final class SaveCommand implements CommandExecutor {
 
         initializer.getChatFilterHandler().save();
         initializer.getRangHandler().save();
-        initializer.getLoginRewardHandler().save();
         initializer.getKitHandler().save();
         initializer.getBadgeHandler().save();
         initializer.getShopHandler().save();

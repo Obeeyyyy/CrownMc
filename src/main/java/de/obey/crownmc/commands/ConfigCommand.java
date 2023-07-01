@@ -36,17 +36,18 @@ public final class ConfigCommand implements CommandExecutor {
 
                 messageUtil.sendMessage(sender, "ServerConfig:");
                 messageUtil.sendMessage(sender, " - Playercount: " + serverConfig.getPlayerCount());
+                messageUtil.sendMessage(sender, " - votes: " + serverConfig.getVotes());
+                messageUtil.sendMessage(sender, " - voteparty: " + serverConfig.getVoteparty());
+                messageUtil.sendMessage(sender, " - bcdelay: " + serverConfig.getAutoBroadcastDelay());
                 messageUtil.sendMessage(sender, " - killMoneyReward: " + serverConfig.getKillMoneyReward());
                 messageUtil.sendMessage(sender, " - killXpReward: " + serverConfig.getKillXPReward());
                 messageUtil.sendMessage(sender, " - killEloReward: " + serverConfig.getKillEloReward());
                 messageUtil.sendMessage(sender, " - deathMoneyLose: " + serverConfig.getDeathMoneyLose());
                 messageUtil.sendMessage(sender, " - deathEloLose: " + serverConfig.getDeathEloLose());
-                messageUtil.sendMessage(sender, " - votes: " + serverConfig.getVotes());
-                messageUtil.sendMessage(sender, " - voteparty: " + serverConfig.getVoteparty());
-                messageUtil.sendMessage(sender, " - bcdelay: " + serverConfig.getAutoBroadcastDelay());
                 messageUtil.sendMessage(sender, " - baseXPkillstreak: " + serverConfig.getBaseXPkillstreak());
                 messageUtil.sendMessage(sender, " - baseMoneyKillstreak: " + serverConfig.getBaseMoneyKillstreak());
                 messageUtil.sendMessage(sender, " - baseEloKillstreak: " + serverConfig.getBaseMoneyKillstreak());
+                messageUtil.sendMessage(sender, " - levelUpMoney: " + serverConfig.getLevelUpMoney());
                 sender.sendMessage("");
 
                 messageUtil.sendMessage(sender, "Blocked Commands:");

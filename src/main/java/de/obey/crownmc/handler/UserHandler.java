@@ -129,6 +129,7 @@ public final class UserHandler {
                 user.setLong(DataType.JOINED, System.currentTimeMillis());
                 user.setLong(DataType.LASTSEEN, System.currentTimeMillis());
                 user.setLong(DataType.LOGINSTREAKUPDATED, System.currentTimeMillis());
+                user.setLong(DataType.LOGINLASTREWARD, System.currentTimeMillis() - 1000L);
                 user.setString(DataType.FIRSTJOINDATE, format.format(new Date()));
                 user.setLong(DataType.LASTLUCKYSPIN, 1000L);
                 user.setBoolean(DataType.REGISTERED, true);

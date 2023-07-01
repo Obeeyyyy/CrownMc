@@ -54,7 +54,7 @@ public final class LoginListener implements Listener {
                     && !PermissionUtil.hasPermission(player, "beta", false)
                     && !WhitelistCommand.tempList.contains(player.getName().toLowerCase())) {
 
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "§c§oDer Server ist in der Betaphase§8. \n\n§7Trete unserem Discord bei um einen §9Beta Key§7 zu erhalten§8!\n§7discord.SkySlayer.de");
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "§c§oDie Whitelist ist aktiviert§8, §cwir arbeiten am Server §8...");
 
                 if (Bools.nowl)
                     initializer.getMessageUtil().broadcast(player.getName() + " hat versucht den Server zu betreten. §8(§e§o" + host.replace(",", ".") + "§8)");

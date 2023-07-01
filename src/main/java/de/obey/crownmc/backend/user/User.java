@@ -46,6 +46,7 @@ public final class User {
     private UserPlot plot;
     private UserBank bank;
     private UserPunishment punishment;
+    private UserLoginStreak loginStreak;
 
     private PacketReader packetReader;
 
@@ -77,6 +78,7 @@ public final class User {
         this.plot = new UserPlot(this);
         this.bank = new UserBank(this);
         this.punishment = new UserPunishment(this);
+        this.loginStreak = new UserLoginStreak(this);
     }
 
     public void saveObjects() {

@@ -24,10 +24,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.entity.SpawnerSpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -53,6 +50,19 @@ public final class ProtectionListener implements Listener {
     public void on(final BlockBreakEvent event) {
         if(!worldProtectionHandler.canBuild(event.getPlayer()))
             event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(final PlayerLeashEntityEvent event) {
+
+        if(!worldProtectionHandler.canBuild(event.getPlayer()))
+            event.setCancelled(true);
+
+        if (worldProtectionHandler.getWorldProtection(event.getEntity().getWorld()) == null ||
+                worldProtectionHandler.getWorldProtection(event.getEntity().getWorld()).isInteract())
+            return;
+
+        event.setCancelled(true);
     }
 
     @EventHandler

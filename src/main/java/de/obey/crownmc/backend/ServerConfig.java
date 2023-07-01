@@ -8,6 +8,7 @@ package de.obey.crownmc.backend;
 
 import de.obey.crownmc.Initializer;
 import de.obey.crownmc.util.FileUtil;
+import de.obey.crownmc.util.InventoryUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -16,6 +17,8 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -76,6 +79,7 @@ public final class ServerConfig {
             cfg.set("mysql.username", "change");
             cfg.set("mysql.database", "change");
             cfg.set("firstjoin", new ArrayList<ItemStack>());
+            cfg.set("voteitems", new ArrayList<ItemStack>());
             cfg.set("domains.45,142,114,29", 0);
             cfg.set("motd.1", "line1");
             cfg.set("motd.2", "line2");
@@ -255,7 +259,15 @@ public final class ServerConfig {
         domainJoins.put(domain, 1);
     }
 
-    public void vote(final String name) {
+    public void vote(final Player player) {
         votes++;
+
+        final ArrayList<ItemStack> items = cfg.contains("voteitems") ? (ArrayList<ItemStack>) cfg.getList("voteitems") : new ArrayList<>();
+
+        if(items.isEmpty())
+            return;
+
+        for (final ItemStack item : items)
+            InventoryUtil.addItem(player, item);
     }
 }

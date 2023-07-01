@@ -77,7 +77,8 @@ public final class VotePartyCommand implements CommandExecutor, Listener {
             }
         }
 
-        messageUtil.sendSyntax(sender,"/voteparty items", "/voteparty reloadloc", "/voteparty start");
+        messageUtil.sendSyntax(sender,"/voteparty items",
+                "/voteparty reloadloc", "/voteparty start");
 
         return false;
     }

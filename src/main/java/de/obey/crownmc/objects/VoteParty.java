@@ -71,7 +71,7 @@ public final class VoteParty {
             public void run() {
 
                 if(itemDrops >= 5) {
-                    messageUtil.broadcast("§8(" + prefix + "§8)§7 Die VoteParty ist beendet§8.");
+                    messageUtil.broadcast("§8(  " + prefix + "§8)§7 Die VoteParty ist beendet§8.");
                     cancel();
                     return;
                 }
@@ -94,7 +94,7 @@ public final class VoteParty {
                     }
                 }
             }
-        }.runTaskTimer(CrownMain.getInstance(), 10, 10);
+        }.runTaskTimer(CrownMain.getInstance(), 5, 5);
     }
 
     public void shutdown() {

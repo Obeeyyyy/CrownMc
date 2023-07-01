@@ -181,8 +181,6 @@ public final class JackPot {
                         stage = 1;
                     }
                 } else if(stage == 1) {
-                    delay = 0;
-
                     for (HumanEntity viewer : inventory.getViewers()) {
                         ((Player) viewer).playSound(viewer.getLocation(), Sound.CLICK, 1, 0.2f);
                         ((Player) viewer).updateInventory();

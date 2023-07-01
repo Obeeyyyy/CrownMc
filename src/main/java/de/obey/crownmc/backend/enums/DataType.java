@@ -36,6 +36,7 @@ public enum DataType {
     VOTESTREAK("votestreak", StoreType.CONFIG, 0),
     LOGINSTREAK("loginstreak", StoreType.CONFIG, 1),
     LOGINSTREAKUPDATED("loginstreakupdated", StoreType.CONFIG, 0),
+    LOGINLASTREWARD("loginlastreward", StoreType.CONFIG, 1000000L),
     FIRSTJOINDATE("firstjoindate", StoreType.CONFIG, null),
     TMOTE("tmote", StoreType.CONFIG, ""),
     JOINMESSAGE("joinmessage", StoreType.CONFIG, ""),
@@ -55,7 +56,8 @@ public enum DataType {
     REGISTERED("registered", StoreType.CONFIG, true),
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
     IGNORES("ignores", StoreType.CONFIG, new ArrayList<>()),
-    LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 6000L);
+    LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 6000L),
+    LASTVOTE("lastvote", StoreType.CONFIG, 6000L);
 
 
     private final String savedAs;

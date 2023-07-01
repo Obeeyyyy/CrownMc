@@ -35,13 +35,24 @@ public final class VoteListener implements Listener {
 
         initializer.getUserHandler().getUser(target.getUniqueId()).thenAcceptAsync(user -> {
             user.addInt(DataType.VOTES, 1);
-            initializer.getServerConfig().vote(vote.getUsername());
+
+            if(System.currentTimeMillis() - user.getLong(DataType.LASTVOTE) > 86400000)
+                user.setInt(DataType.VOTESTREAK, 0);
+
+            user.addInt(DataType.VOTESTREAK, 1);
+            user.setLong(DataType.LASTVOTE, System.currentTimeMillis());
+
+            if(target.isOnline()) {
+                initializer.getServerConfig().vote(target.getPlayer());
+                initializer.getMessageUtil().sendMessage(target.getPlayer(), "Votestreak§8: §a§o" + user.getInt(DataType.VOTESTREAK) + "§7 Votes§8.");
+            }
         });
 
         initializer.getScoreboardHandler().updateEverythingForEveryone();
         initializer.getDailyPotHandler().addMoney(500);
 
-        initializer.getMessageUtil().broadcast(target.getName() + " hat für den Server gevotet §8!§7 Voteparty§8: §a" + target.getName() + "§8/§2" + initializer.getServerConfig().getVoteparty());
+        initializer.getMessageUtil().broadcast(target.getName() + " hat gevotet §8!§7 Vote auch du für eine Belohnung§8.");
+        initializer.getMessageUtil().broadcast("§7Voteparty§8: §a" + initializer.getServerConfig().getVotes()+ "§8/§2" + initializer.getServerConfig().getVoteparty());
         initializer.getMessageUtil().broadcast("§a+§e§o500§6§l$ §7in den §9§lDailyPot§8.");
 
         if(initializer.getServerConfig().getVotes() >= initializer.getServerConfig().getVoteparty()) {

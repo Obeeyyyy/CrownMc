@@ -36,11 +36,6 @@ public final class TradeCommand implements CommandExecutor {
 
         final Player player = (Player) sender;
 
-        if (args.length == 0 || args.length > 2) {
-            player.sendMessage("§cAnwendung: §b/trade <spieler>");
-            return false;
-        }
-
         if (args.length == 1) {
 
             if (!messageUtil.isOnline(player, args[0]))
@@ -49,48 +44,50 @@ public final class TradeCommand implements CommandExecutor {
             final Player target = Bukkit.getPlayer(args[0]);
 
             if (target == player) {
-                player.sendMessage("§cDu kannst dir selbst keine Handelsanfrage schicken.");
+                messageUtil.sendMessage(sender, "Du kannst nicht mit dir selber Traden§8.");
                 return false;
             }
 
 
             final List<UUID> requestedPlayers = tradeHandler.getRequests().getOrDefault(player, new ArrayList<>());
             if (requestedPlayers.contains(target.getUniqueId())) {
-                player.sendMessage("§cDu hast schon eine Anfrage an §a" + target.getName() + " §7gesendet.");
+                messageUtil.sendMessage(player, "Du hast schon eine Tradeanfrage an §e§o" + target.getName() + "§7 gesendet§8.");
                 return false;
             }
 
             requestedPlayers.add(target.getUniqueId());
             tradeHandler.getRequests().put(player, requestedPlayers);
 
-            player.sendMessage("§7Du hast §a" + target.getName() + " §7eine Anfrage gesendet.");
+            messageUtil.sendMessage(player, "Du hast §e§o" + target.getName() + "§u7 eine Tradeanfrage gesendet§8.");
+            messageUtil.sendMessage(target, "§e§o" + player.getName() + "§7 hat dir eine Tradeanfrage gesendet§8.");
 
-            target.sendMessage("§7Du hast eine Anfrage von §a" + player.getName() + " §7erhalten.");
-            new MessageBuilder("§8►§a► §a§oKlicke, um die Handelsanfrage anzunehmen.").addClickable(ClickEvent.Action.RUN_COMMAND, "/trade accept " + player.getName()).send(target);
-            new MessageBuilder("§8►§4► §c§oKlicke, um die Handelsanfrage abzulehnen.").addClickable(ClickEvent.Action.RUN_COMMAND, "/trade deny " + player.getName()).send(target);
+            new MessageBuilder("§8» §7Klicke hier, um die Tradeanfrage §a§oanzunehmen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/trade accept " + player.getName()).send(target);
+            target.sendMessage("");
+            new MessageBuilder("§8» §7Klicke hier, um die Tradeanfrage §c§oabzulehnen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/trade deny " + player.getName()).send(target);
+
+            return false;
         }
 
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("akzeptieren")) {
-                Player target = Bukkit.getPlayer(args[1]);
-                if (target == null) {
-                    player.sendMessage("§cDer Spieler §a" + args[1] + " §cist nicht online.");
+                if(!messageUtil.isOnline(sender, args[1]))
                     return false;
-                }
+
+                Player target = Bukkit.getPlayer(args[1]);
 
                 if (target == player) {
-                    player.sendMessage("§cDu kannst mit dir selbst nicht Handeln.");
+                    messageUtil.sendMessage(sender, "Du kannst nicht mit dir selber Traden§8.");
                     return false;
                 }
 
                 if (tradeHandler.getPlayerTrade(player) != null) {
-                    player.sendMessage("§cDu bist aktuell schon am Handeln, versuche es später erneut.");
+                    messageUtil.sendMessage(player, "Du bist bereits am Traden§8.");
                     return false;
                 }
 
                 final List<UUID> requestedPlayers = tradeHandler.getRequests().getOrDefault(target, null);
                 if (requestedPlayers == null || !requestedPlayers.contains(player.getUniqueId())) {
-                    player.sendMessage("§a" + target.getName() + " §7hat dir keine Handelsanfrage geschickt.");
+                    messageUtil.sendMessage(player, "Du hast keine Tradeanfrage von " + target.getName() + "§8.");
                     return false;
                 }
 
@@ -100,9 +97,13 @@ public final class TradeCommand implements CommandExecutor {
                 tradeHandler.getRequests().remove(target);
                 tradeHandler.openTrade(player, target);
 
-                player.sendMessage("§7Du bist nun im Handel mit §a" + target.getName());
-                target.sendMessage("§7Du bist nun im Handel mit §a" + player.getName());
-            } else if (args[0].equalsIgnoreCase("deny") || args[0].equalsIgnoreCase("ablehnen")) {
+                messageUtil.sendMessage(player, "Du Tradest jetzt mit " + target.getName());
+                messageUtil.sendMessage(target, "Du Tradest jetzt mit " + player.getName());
+
+                return false;
+            }
+
+            if (args[0].equalsIgnoreCase("deny") || args[0].equalsIgnoreCase("ablehnen")) {
 
                 if (!messageUtil.isOnline(sender, args[1]))
                     return false;
@@ -110,24 +111,30 @@ public final class TradeCommand implements CommandExecutor {
                 final Player target = Bukkit.getPlayer(args[1]);
 
                 if (target == player) {
-                    player.sendMessage("§cDu kannst mit dir selbst nicht Handeln.");
+                    messageUtil.sendMessage(sender, "Du kannst nicht mit dir selber Traden§8.");
                     return false;
                 }
 
                 final List<UUID> requestedPlayers = tradeHandler.getRequests().getOrDefault(target, null);
                 if (requestedPlayers == null || !requestedPlayers.contains(player.getUniqueId())) {
-                    player.sendMessage("§a" + target.getName() + " §7hat dir keine Handelsanfrage geschickt.");
+                    messageUtil.sendMessage(player, "Du hast keine Anfrage von " + target.getName() + "§8.");
                     return false;
                 }
 
                 requestedPlayers.remove(player.getUniqueId());
-                player.sendMessage("§7Du hast die Handelsanfrage von §a" + target.getName() + " §7abgelehnt.");
-                target.sendMessage("§a" + player.getName() + " §chat die Handelsanfrage abgelehnt.");
-            } else {
-                player.sendMessage("§cAnwendung: §b/trade <spieler>");
+
+                messageUtil.sendMessage(player, "Du hast die Anfrage von §e§o" + target.getName() + "§c abgelehnt§8.");
+                messageUtil.sendMessage(target , "§e§o" + player.getName() + "§7 hat deine Anfrage §cabgelehnt§8.");
+
                 return false;
             }
         }
+
+        messageUtil.sendSyntax(sender, "/trade <spieler>",
+                "/trade accept <spieler>",
+                "/trade deny <spieler>"
+        );
+
         return false;
     }
 }

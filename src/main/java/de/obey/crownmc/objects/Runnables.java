@@ -17,7 +17,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 @NonNull
 public final class Runnables {
 
-    private final LoginRewardHandler loginRewardHandler;
     private final KitHandler kitHandler;
     private final UserHandler userHandler;
     private final ScoreboardHandler scoreboardHandler;
@@ -41,7 +40,6 @@ public final class Runnables {
             @Override
             public void run() {
                 kitHandler.runUpdateTick();
-                loginRewardHandler.runUpdateTick();
                 userHandler.runInterval();
                 dailyPotHandler.updateStands();
             }

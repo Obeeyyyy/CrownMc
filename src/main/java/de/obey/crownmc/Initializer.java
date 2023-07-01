@@ -59,7 +59,6 @@ public final class Initializer {
     private EloHandler eloHandler;
     private KillFarmHandler killFarmHandler;
     private LocationHandler locationHandler;
-    private LoginRewardHandler loginRewardHandler;
     private RangHandler rangHandler;
     private RankingHandler rankingHandler;
     private ScoreboardHandler scoreboardHandler;
@@ -161,7 +160,7 @@ public final class Initializer {
         crownMain.getCommand("repair").setExecutor(new RepairCommand(messageUtil));
         crownMain.getCommand("money").setExecutor(new MoneyCommand(messageUtil, userHandler));
         crownMain.getCommand("pvpstats").setExecutor(new StatsCommand(messageUtil, userHandler, eloHandler, executorService));
-        crownMain.getCommand("loginstreak").setExecutor(new LoginStreakCommand(loginRewardHandler));
+        crownMain.getCommand("loginstreak").setExecutor(new LoginStreakCommand(messageUtil, userHandler, serverConfig));
         crownMain.getCommand("build").setExecutor(new BuildCommand(messageUtil));
         crownMain.getCommand("elo").setExecutor(new EloCommand(eloHandler, messageUtil));
         crownMain.getCommand("setup").setExecutor(new SetupCommand(messageUtil, crashHandler, blockEventHandler, dailyPotHandler, luckySpinHandler));
@@ -188,7 +187,7 @@ public final class Initializer {
         crownMain.getCommand("sign").setExecutor(new SignCommand(messageUtil));
         crownMain.getCommand("crash").setExecutor(new CrashCommand(messageUtil, crashHandler));
         crownMain.getCommand("payall").setExecutor(new PayAllCommand(messageUtil, userHandler));
-        crownMain.getCommand("vote").setExecutor(new VoteCommand());
+        crownMain.getCommand("vote").setExecutor(new VoteCommand(serverConfig, messageUtil));
         crownMain.getCommand("discord").setExecutor(new DiscordCommand(messageUtil));
         crownMain.getCommand("teamspeak").setExecutor(new TeamSpeakCommand(messageUtil));
         crownMain.getCommand("shop").setExecutor(new ShopCommand(messageUtil, shopHandler, userHandler));
@@ -361,7 +360,7 @@ public final class Initializer {
         pluginManager.registerEvents(new GutscheinCommand(messageUtil, userHandler), crownMain);
         pluginManager.registerEvents(new RankingCommand(messageUtil, rankingHandler), crownMain);
         pluginManager.registerEvents(new VoteListener(this), crownMain);
-        pluginManager.registerEvents(new LoginStreakCommand(loginRewardHandler), crownMain);
+        pluginManager.registerEvents(new LoginStreakCommand(messageUtil, userHandler, serverConfig), crownMain);
         pluginManager.registerEvents(new ProtectionListener(messageUtil, combatHandler, worldProtectionHandler), crownMain);
         pluginManager.registerEvents(new BountyArmorStandInteractListener(messageUtil, userHandler), crownMain);
         pluginManager.registerEvents(new TradeListener(this), crownMain);
@@ -388,6 +387,7 @@ public final class Initializer {
         pluginManager.registerEvents(new VotePartyCommand(messageUtil, votePartyHandler), crownMain);
         pluginManager.registerEvents(new CrashCommand(messageUtil, crashHandler), crownMain);
         pluginManager.registerEvents(new CrownCommand(messageUtil, userHandler), crownMain);
+        pluginManager.registerEvents(new VoteCommand(serverConfig, messageUtil), crownMain);
         pluginManager.registerEvents(new JackPotCommand(messageUtil, userHandler, jackPotHandler), crownMain);
     }
 
@@ -414,7 +414,6 @@ public final class Initializer {
                     scoreboardHandler = new ScoreboardHandler();
                     locationHandler = new LocationHandler(messageUtil);
                     userHandler = new UserHandler(serverConfig, messageUtil, scoreboardHandler, locationHandler, mySQL, executorService);
-                    loginRewardHandler = new LoginRewardHandler(userHandler, messageUtil);
                     chatFilterHandler = new ChatFilterHandler(messageUtil);
                     killFarmHandler = new KillFarmHandler(messageUtil);
                     tradeHandler = new TradeHandler(messageUtil);
@@ -443,7 +442,6 @@ public final class Initializer {
                     locationHandler.loadLocations();
                     warpHandler.loadWarps();
                     rangHandler.loadRangs();
-                    loginRewardHandler.loadRewards();
                     kitHandler.loadKits();
                     badgeHandler.loadBadges();
                     worldProtectionHandler.loadWorlds();
@@ -459,7 +457,7 @@ public final class Initializer {
                     loadTabCompleter();
                     loadListener();
 
-                    runnables = new Runnables(loginRewardHandler, kitHandler, userHandler, scoreboardHandler, autoBroadcastHandler, dailyPotHandler);
+                    runnables = new Runnables(kitHandler, userHandler, scoreboardHandler, autoBroadcastHandler, dailyPotHandler);
                     runnables.start10TickTimerAsync();
                     runnables.start2TickTimerAsync();
 
@@ -492,7 +490,6 @@ public final class Initializer {
         chatFilterHandler.save();
         rangHandler.save();
         tradeHandler.shutdown();
-        loginRewardHandler.save();
         kitHandler.save();
         badgeHandler.save();
         worldProtectionHandler.save();
