@@ -35,7 +35,7 @@ public enum DataType {
     DESTROYEDEVENTBLOCKS("destroyedEventBlocks", StoreType.MYSQL, 0L),
     VOTESTREAK("votestreak", StoreType.CONFIG, 0),
     LOGINSTREAK("loginstreak", StoreType.CONFIG, 1),
-    LOGINSTREAKUPDATED("loginstreakupdated", StoreType.CONFIG, 0),
+    LOGINSTREAKUPDATED("loginstreakupdated", StoreType.CONFIG, 10000L),
     LOGINLASTREWARD("loginlastreward", StoreType.CONFIG, 1000000L),
     FIRSTJOINDATE("firstjoindate", StoreType.CONFIG, null),
     TMOTE("tmote", StoreType.CONFIG, ""),

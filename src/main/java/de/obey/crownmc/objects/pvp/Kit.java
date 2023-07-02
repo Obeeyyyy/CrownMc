@@ -29,7 +29,7 @@ public final class Kit {
     private long kitCooldown = 0;
     private long buyOutForSecondPrice = 0;
 
-    private String permission = "slayer.*";
+    private String permission = "crown.*";
     private ArrayList<ItemStack> items = new ArrayList<>();
 
     private int showSlot = 15;

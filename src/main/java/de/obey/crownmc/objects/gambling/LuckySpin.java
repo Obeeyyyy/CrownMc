@@ -169,8 +169,10 @@ public final class LuckySpin {
 
         final Location location = luckySpinHandler.getLocationHandler().getLocation("luckyspinwall");
 
-        if(location == null)
+        if(location == null) {
+            Bukkit.getConsoleSender().sendMessage("§c§oLuckyspinwall location existiert nicht§8.");
             return;
+        }
 
         final ArrayList<ItemStack> items = luckySpinHandler.getItems();
 

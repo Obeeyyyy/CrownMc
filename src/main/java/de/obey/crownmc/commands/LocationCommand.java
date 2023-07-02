@@ -16,10 +16,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor @NonNull
 public final class LocationCommand implements CommandExecutor {
 
-    @NonNull
     private final Initializer initializer;
 
     @Override

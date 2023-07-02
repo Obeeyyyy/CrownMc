@@ -23,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 
 @RequiredArgsConstructor
 @NonNull
-public final class BountyArmorStandInteractListener implements Listener {
+public final class BountyStandInteractListener implements Listener {
 
     private final MessageUtil messageUtil;
     private final UserHandler userHandler;

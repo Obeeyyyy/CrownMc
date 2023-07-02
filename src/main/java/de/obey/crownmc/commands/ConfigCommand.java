@@ -28,10 +28,17 @@ public final class ConfigCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "*", true))
+        if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "*", true))
             return false;
 
         if (args.length == 1) {
+            if(args[0].equalsIgnoreCase("reload")) {
+                serverConfig.load();
+
+                messageUtil.sendMessage(sender, "ServerConfig neu geladen§8.");
+                return false;
+            }
+
             if (args[0].equalsIgnoreCase("info")) {
 
                 messageUtil.sendMessage(sender, "ServerConfig:");
@@ -48,6 +55,8 @@ public final class ConfigCommand implements CommandExecutor {
                 messageUtil.sendMessage(sender, " - baseMoneyKillstreak: " + serverConfig.getBaseMoneyKillstreak());
                 messageUtil.sendMessage(sender, " - baseEloKillstreak: " + serverConfig.getBaseMoneyKillstreak());
                 messageUtil.sendMessage(sender, " - levelUpMoney: " + serverConfig.getLevelUpMoney());
+                messageUtil.sendMessage(sender, " - netherPrice: " + serverConfig.getNetherPrice());
+                messageUtil.sendMessage(sender, " - endPrice: " + serverConfig.getEndPrice());
                 sender.sendMessage("");
 
                 messageUtil.sendMessage(sender, "Blocked Commands:");
@@ -116,6 +125,12 @@ public final class ConfigCommand implements CommandExecutor {
 
                     if (args[1].equalsIgnoreCase("levelUpMoney"))
                         serverConfig.setLevelUpMoney(amount);
+
+                    if (args[1].equalsIgnoreCase("netherprice"))
+                        serverConfig.setNetherPrice(amount);
+
+                    if (args[1].equalsIgnoreCase("endprice"))
+                        serverConfig.setEndPrice(amount);
 
                     scoreboardHandler.updateEverythingForEveryone();
 
@@ -187,10 +202,12 @@ public final class ConfigCommand implements CommandExecutor {
             }
         }
 
-        messageUtil.sendSyntax(sender, "/config info",
+        messageUtil.sendSyntax(sender,
+                "/config info",
+                "/config reload",
                 "/config add <blocked, combat, bc> <message>",
                 "/config remove <blocked, combat, bc> <nummer>",
-                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay, baseEloKillstreak, baseXpKillstreak, baseMoneyKillstreak, levelUpMoney> <amount>");
+                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay, baseEloKillstreak, baseXpKillstreak, baseMoneyKillstreak, levelUpMoney, netherPrice, endPrice> <amount>");
 
         return false;
     }

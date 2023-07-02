@@ -36,16 +36,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor @NonNull
 public final class LuckySpinCommand implements CommandExecutor, Listener {
 
-    @NonNull
     private final MessageUtil messageUtil;
-
-    @NonNull
     private final UserHandler userHandler;
-
-    @NonNull
     private final LuckySpinHandler luckySpinHandler;
 
     @Override
@@ -112,19 +107,19 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
     }
 
     @EventHandler
-    public void signChange(final SignChangeEvent event) {
+    public void on(final SignChangeEvent event) {
         if(!PermissionUtil.hasPermission(event.getPlayer(), "admin", false))
             return;
 
         if(event.getLine(0).startsWith("lw")) {
-            event.setLine(0, "§d§lLucky Wheel");
+            event.setLine(0, "§8▰§7▱ §dLuckyWheel §7▱§8▰");
             event.setLine(2, "Klicke hier um");
             event.setLine(3,"zu spielen§8.");
         }
     }
 
     @EventHandler
-    public void signInteract(final PlayerInteractEvent event) {
+    public void on(final PlayerInteractEvent event) {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
 
@@ -133,7 +128,8 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
 
         final Sign sign = (Sign) event.getClickedBlock().getState();
 
-        if(ChatColor.stripColor(sign.getLine(0)).equalsIgnoreCase("Lucky Wheel"))
+
+        if(sign.getLine(0).equalsIgnoreCase("§8▰§7▱ §dLuckyWheel §7▱§8▰"))
             luckySpinHandler.spin(event.getPlayer());
     }
 }

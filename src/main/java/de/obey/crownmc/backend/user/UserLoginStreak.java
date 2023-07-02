@@ -15,6 +15,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -72,28 +73,29 @@ public final class UserLoginStreak {
             case 31: return 50;
             case 32: return 51;
             case 33: return 52;
-            case 34: return 33;
+            case 34: return 53;
         }
 
         return -1;
     }
 
-    private boolean isRewardSlot(final int slot) {
+    public boolean isRewardSlot(final int slot) {
 
         switch (slot) {
-            case 2 :
-            case 5 :
-            case 8 :
+            case 0 :
+            case 3 :
+            case 6 :
 
-            case 35 :
-            case 24 :
-            case 31 :
-            case 20 :
-            case 27 :
+            case 17 :
+            case 34 :
+            case 23 :
+            case 30 :
+            case 19 :
 
-            case 46 :
-            case 49 :
-            case 52 :
+            case 36 :
+            case 47 :
+            case 50 :
+            case 53 :
                 return true;
         }
 
@@ -144,7 +146,7 @@ public final class UserLoginStreak {
         return new ItemBuilder(Material.STAINED_GLASS_PANE,1, (byte) 5)
                 .setDisplayname("§a§lTag §8(§7 " + day + " §8)")
                 .setLore("",
-                        "§8▰§7▱ §a§lInformation",
+                        "§8▰§7▱ §2§lInformation",
                         "§8  - §7Du bist bei Tag§8: §f" + streak,
                         "")
                 .build();
@@ -164,11 +166,14 @@ public final class UserLoginStreak {
         return new ItemBuilder(Material.STORAGE_MINECART)
                 .setDisplayname("§a§lTag §8(§7 " + day + " §8)")
                 .setLore("",
-                        "§8▰§7▱ §a§lInformation",
+                        "§a§lInformation",
                         "§8  - §7Du bist bei Tag§8: §f" + streak,
                         "",
-                        "§8▰§7▱ §a§lLinksklick",
+                        "§a§lLinksklick",
                         "§8  - §7Erhalte deine Belohnung§8.",
+                        "",
+                        "§a§lRechtsklick",
+                        "§8  - §7Preview der Belohnung§8.",
                         "")
                 .build();
     }
@@ -177,9 +182,12 @@ public final class UserLoginStreak {
         return new ItemBuilder(Material.HOPPER_MINECART)
                 .setDisplayname("§a§lTag §8(§7 " + day + " §8)")
                 .setLore("",
-                        "§8▰§7▱ §2§lInformation",
+                        "§a§lInformation",
                         "§8  - §7Du bist bei Tag§8: §f" + streak,
                         "§8  - §7Du hast diese Belohnung bereits eingesammelt§8.",
+                        "",
+                        "§a§lRechtsklick",
+                        "§8  - §7Preview der Belohnung§8.",
                         "")
                 .build();
     }
@@ -188,9 +196,12 @@ public final class UserLoginStreak {
         return new ItemBuilder(Material.POWERED_MINECART)
                 .setDisplayname("§c§lTag §8(§7 " + day + " §8)")
                 .setLore("",
-                        "§8▰§7▱ §c§lInformation",
+                        "§c§lInformation",
                         "§8  - §7Du bist bei Tag§8: §f" + streak,
                         "§8  - §7Noch §f" + (day - streak) + "§7 Tag" + (day - streak > 1 ? "e" : "") + "§8.",
+                        "",
+                        "§c§lRechtsklick",
+                        "§8  - §7Preview der Belohnung§8.",
                         "")
                 .build();
     }
@@ -219,6 +230,25 @@ public final class UserLoginStreak {
     private ArrayList<ItemStack> getReward(final int day) {
         final YamlConfiguration cfg = user.getInitializer().getServerConfig().getCfg();
         return cfg.contains("loginreward." + day) ? (ArrayList<ItemStack>) cfg.getList("loginreward." + day) : new ArrayList<>();
+    }
+
+    public void openPreview(final Player player, final int day) {
+        final Inventory inventory = Bukkit.createInventory(null, 9*6, "§7Preview Tag §9§l" + day);
+
+
+        final ArrayList<ItemStack> items = getReward(day);
+
+        if(items.isEmpty())
+            return;
+
+        for (final ItemStack item : items)
+            inventory.addItem(item);
+
+        inventory.setItem(53, new ItemBuilder(Material.BARRIER).setDisplayname("§c§lZurück").build());
+
+        player.closeInventory();
+        player.openInventory(inventory);
+        player.updateInventory();
     }
 
 }

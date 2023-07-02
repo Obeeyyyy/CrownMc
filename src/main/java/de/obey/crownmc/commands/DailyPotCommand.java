@@ -139,7 +139,7 @@ public final class DailyPotCommand implements CommandExecutor, Listener {
     }
 
     @EventHandler
-    public void signChange(final SignChangeEvent event) {
+    public void on(final SignChangeEvent event) {
         if(!PermissionUtil.hasPermission(event.getPlayer(), "admin", false))
             return;
 
@@ -151,7 +151,7 @@ public final class DailyPotCommand implements CommandExecutor, Listener {
     }
 
     @EventHandler
-    public void signInteract(final PlayerInteractEvent event) {
+    public void on(final PlayerInteractEvent event) {
         if(event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
 

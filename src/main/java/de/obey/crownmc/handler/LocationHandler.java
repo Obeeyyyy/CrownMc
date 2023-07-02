@@ -15,10 +15,7 @@ import de.obey.crownmc.util.PermissionUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -46,7 +43,11 @@ public final class LocationHandler {
             return;
 
         for (String key : cfg.getConfigurationSection("locations").getKeys(false)) {
-            locations.put(key, decode(cfg.getString("locations." + key)));
+            final Location location = decode(cfg.getString("locations." + key));
+
+            if(location == null) continue;
+
+            locations.put(key, location);
             messageUtil.log("Loaded location < " + key + " >");
         }
     }
@@ -60,7 +61,15 @@ public final class LocationHandler {
         //#world#x#y#z#yaw#pitch
 
         final String[] splitted = value.split("#");
-        final Location location = new Location(Bukkit.getWorld(splitted[1]), Float.parseFloat(splitted[2]), Float.parseFloat(splitted[3]), Float.parseFloat(splitted[4]));
+
+        final World world = Bukkit.getWorld(splitted[1]);
+
+        if(world == null) {
+            messageUtil.sendMessage(Bukkit.getConsoleSender(), "Welt: " + splitted[1] + " existiert nicht§8.");
+            return null;
+        }
+
+        final Location location = new Location(world, Float.parseFloat(splitted[2]), Float.parseFloat(splitted[3]), Float.parseFloat(splitted[4]));
 
         location.setYaw(Float.parseFloat(splitted[5]));
         location.setPitch(Float.parseFloat(splitted[6]));

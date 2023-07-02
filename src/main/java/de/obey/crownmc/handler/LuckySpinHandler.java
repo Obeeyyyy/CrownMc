@@ -14,6 +14,7 @@ import de.obey.crownmc.util.FileUtil;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -86,10 +87,13 @@ public final class LuckySpinHandler {
     public void setup() {
         shutdown();
 
-        if(luckySpin == null) {
-            if (locationHandler.getLocation("luckyspin") != null)
-                luckySpin = new LuckySpin(this, locationHandler.getLocation("luckyspin"));
+        if (locationHandler.getLocation("luckyspin") == null) {
+            messageUtil.sendMessage(Bukkit.getConsoleSender(), "Luckyspin Location existiert nicht§8.");
+            return;
+        }
 
+        if(luckySpin == null) {
+            luckySpin = new LuckySpin(this, locationHandler.getLocation("luckyspin"));
             return;
         }
 

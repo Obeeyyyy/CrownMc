@@ -9,6 +9,7 @@ package de.obey.crownmc.util;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
@@ -30,6 +32,7 @@ public final class ItemBuilder {
     private final ItemStack itemStack;
     private FireworkEffectMeta fireworkMeta;
     private SkullMeta skullMeta;
+    private LeatherArmorMeta leatherMeta;
     private final ItemMeta meta;
 
     public ItemBuilder(final Material material) {
@@ -41,6 +44,9 @@ public final class ItemBuilder {
 
         if (material == Material.SKULL_ITEM)
             skullMeta = (SkullMeta) itemStack.getItemMeta();
+
+        if(material.name().contains("LEATHER"))
+            leatherMeta = (LeatherArmorMeta) itemStack.getItemMeta();
     }
 
     public ItemBuilder(final Material material, final int amount) {
@@ -52,6 +58,9 @@ public final class ItemBuilder {
 
         if (material == Material.SKULL_ITEM)
             skullMeta = (SkullMeta) itemStack.getItemMeta();
+
+        if(material.name().contains("LEATHER"))
+            leatherMeta = (LeatherArmorMeta) itemStack.getItemMeta();
     }
 
     public ItemBuilder(final Material material, final int amount, final byte subid) {
@@ -63,6 +72,9 @@ public final class ItemBuilder {
 
         if (material == Material.SKULL_ITEM)
             skullMeta = (SkullMeta) itemStack.getItemMeta();
+
+        if(material.name().contains("LEATHER"))
+            leatherMeta = (LeatherArmorMeta) itemStack.getItemMeta();
     }
 
     public ItemBuilder setDisplayname(final String name) {
@@ -73,6 +85,9 @@ public final class ItemBuilder {
 
         if (skullMeta != null)
             skullMeta.setDisplayName(name);
+
+        if (leatherMeta != null)
+            leatherMeta.setDisplayName(name);
 
         return this;
     }
@@ -90,6 +105,9 @@ public final class ItemBuilder {
         if (skullMeta != null)
             skullMeta.setLore(list);
 
+        if (leatherMeta != null)
+            leatherMeta.setLore(list);
+
         return this;
     }
 
@@ -101,6 +119,9 @@ public final class ItemBuilder {
 
         if (skullMeta != null)
             skullMeta.setLore(list);
+
+        if (leatherMeta != null)
+            leatherMeta.setLore(list);
 
         return this;
     }
@@ -117,6 +138,9 @@ public final class ItemBuilder {
 
         if (skullMeta != null)
             skullMeta.setLore(list);
+
+        if (leatherMeta != null)
+            leatherMeta.setLore(list);
 
         return this;
     }
@@ -161,6 +185,15 @@ public final class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setColor(final DyeColor color) {
+        if(leatherMeta == null)
+            return this;
+
+        leatherMeta.setColor(color.getColor());
+
+        return this;
+    }
+
     public ItemBuilder addEnchantment(final Enchantment enchantment, final int level) {
         meta.addEnchant(enchantment, level, true);
 
@@ -169,6 +202,9 @@ public final class ItemBuilder {
 
         if (skullMeta != null)
             skullMeta.addEnchant(enchantment, level, true);
+
+        if (leatherMeta != null)
+            leatherMeta.addEnchant(enchantment, level, true);
 
         return this;
     }
@@ -182,13 +218,14 @@ public final class ItemBuilder {
         if (skullMeta != null)
             skullMeta.addEnchant(enchantment, 1, true);
 
+        if (leatherMeta != null)
+            leatherMeta.addEnchant(enchantment, 1, true);
+
         return this;
     }
 
     public ItemBuilder setEnchantments(final Map<Enchantment, Integer> enchantments) {
-        enchantments.keySet().forEach(enchantment -> {
-            meta.addEnchant(enchantment, enchantments.get(enchantment), true);
-        });
+        enchantments.keySet().forEach(enchantment -> meta.addEnchant(enchantment, enchantments.get(enchantment), true));
 
         return this;
     }
@@ -197,10 +234,13 @@ public final class ItemBuilder {
         meta.addItemFlags(flags);
 
         if (fireworkMeta != null)
-            meta.addItemFlags(flags);
+            fireworkMeta.addItemFlags(flags);
 
         if (skullMeta != null)
-            meta.addItemFlags(flags);
+            skullMeta.addItemFlags(flags);
+
+        if (skullMeta != null)
+            leatherMeta.addItemFlags(flags);
 
         return this;
     }
@@ -213,6 +253,9 @@ public final class ItemBuilder {
 
         if (skullMeta != null)
             itemStack.setItemMeta(skullMeta);
+
+        if (leatherMeta != null)
+            itemStack.setItemMeta(leatherMeta);
 
         return itemStack;
     }

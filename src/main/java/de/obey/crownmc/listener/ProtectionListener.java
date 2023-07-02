@@ -115,7 +115,6 @@ public final class ProtectionListener implements Listener {
                 event.getRightClicked() instanceof ItemFrame) {
             if(!worldProtectionHandler.canBuild(event.getPlayer()))
                 event.setCancelled(true);
-
             return;
         }
 
@@ -125,9 +124,6 @@ public final class ProtectionListener implements Listener {
 
     @EventHandler
     public void on(final PlayerInteractEvent event) {
-
-        if(event.isCancelled())
-            return;
 
         // Cancel Bucket , AmorStand, Frame
         if(event.getItem() != null && event.getItem().getType() != Material.AIR) {
@@ -142,8 +138,10 @@ public final class ProtectionListener implements Listener {
 
                 // Cancel Enderpearls
             } else if (event.getItem() != null && event.getItem().getType() != Material.AIR && event.getItem().getType() == Material.ENDER_PEARL) {
-                if (!worldProtectionHandler.canEp(event.getPlayer()))
+                if (!worldProtectionHandler.canEp(event.getPlayer())) {
                     event.setCancelled(true);
+                    return;
+                }
 
                 return;
             }

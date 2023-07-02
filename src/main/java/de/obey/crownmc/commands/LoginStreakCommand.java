@@ -55,24 +55,34 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
             return false;
         }
 
-        if(!PermissionUtil.hasPermission(sender, "admin", true))
+        if (!PermissionUtil.hasPermission(sender, "admin", true))
             return false;
 
-        if(args.length == 2) {
-            if(args[0].equalsIgnoreCase("setreward")) {
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("setreward")) {
 
                 try {
                     final int tag = Integer.parseInt(args[1]);
 
-                    final Inventory inventory = Bukkit.createInventory(null, 9 * 5, "LoginReward " + tag);
-                    final YamlConfiguration cfg = serverConfig.getCfg();
+                    userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
 
-                    final ArrayList<ItemStack> contents = cfg.contains("loginreward." + tag) ? (ArrayList<ItemStack>) cfg.getList("loginreward." + tag) : new ArrayList<>();
+                        if(!user.getLoginStreak().isRewardSlot(tag)) {
+                            messageUtil.sendMessage(player, tag + " ist kein Reward Tag§8.");
+                            return;
+                        }
 
-                    if (contents.size() > 0)
-                        contents.forEach(inventory::addItem);
+                        final Inventory inventory = Bukkit.createInventory(null, 9 * 5, "LoginReward " + tag);
+                        final YamlConfiguration cfg = serverConfig.getCfg();
 
-                    player.openInventory(inventory);
+                        final ArrayList<ItemStack> contents = cfg.contains("loginreward." + tag) ? (ArrayList<ItemStack>) cfg.getList("loginreward." + tag) : new ArrayList<>();
+
+                        if (contents.size() > 0)
+                            contents.forEach(inventory::addItem);
+
+                        player.openInventory(inventory);
+                        player.updateInventory();
+
+                    });
 
                 } catch (final NumberFormatException exception) {
                     messageUtil.sendMessage(sender, "Bitte gebe eine Zahl ein§8.");
@@ -107,6 +117,18 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
     }
 
     @EventHandler
+    public void onPreview(final InventoryClickEvent event) {
+
+        if (!InventoryUtil.startsWithInventoryTitle(event.getInventory(), "§7Preview Tag "))
+            return;
+
+        event.setCancelled(true);
+
+        if(event.getSlot() == 53)
+            userHandler.getUser(event.getWhoClicked().getUniqueId()).thenAccept(user -> event.getWhoClicked().openInventory(user.getLoginStreak().getInventory()));
+    }
+
+    @EventHandler
     public void on(final InventoryClickEvent event) {
 
         if (!InventoryUtil.isInventoryTitle(event.getInventory(), "§d§lLoginStreak"))
@@ -117,36 +139,56 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
         if (!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§d§lLoginStreak"))
             return;
 
-        if(event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
             return;
 
         final Player player = (Player) event.getWhoClicked();
 
-        if(event.getCurrentItem().getType() == Material.POWERED_MINECART) {
-            player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
-            messageUtil.sendMessage(player, "Du kannst diese Belohnung noch nicht einlösen§8.");
-            return;
-        }
+        if (event.getCurrentItem().getType() == Material.POWERED_MINECART) {
 
-        if(event.getCurrentItem().getType() == Material.POWERED_MINECART) {
-            player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
-            messageUtil.sendMessage(player, "Du kannst diese Belohnung noch nicht einlösen§8.");
-            return;
-        }
+            if (event.isLeftClick()) {
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
+                messageUtil.sendMessage(player, "Du kannst diese Belohnung noch nicht einlösen§8.");
+                return;
+            }
 
-        if(event.getCurrentItem().getType() == Material.HOPPER_MINECART) {
-            player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
-            messageUtil.sendMessage(player, "Du hast diese Belohnung bereits eingelöst§8.");
-            return;
-        }
-
-        if(event.getCurrentItem().getType() == Material.STORAGE_MINECART) {
             userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
                 final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
-                user.getLoginStreak().claimReward(tag);
+                user.getLoginStreak().openPreview(player, tag);
+            });
+            return;
+        }
 
-                player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE, 0.6f, 1);
-                messageUtil.sendMessage(player, "Du hast die Belohnung für Tag §e§o" + tag + "§7 erhalten§8.");
+        if (event.getCurrentItem().getType() == Material.HOPPER_MINECART) {
+
+            if(event.isLeftClick()) {
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
+                messageUtil.sendMessage(player, "Du hast diese Belohnung bereits eingelöst§8.");
+                return;
+            }
+
+            userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
+                user.getLoginStreak().openPreview(player, tag);
+            });
+
+            return;
+        }
+
+        if (event.getCurrentItem().getType() == Material.STORAGE_MINECART) {
+            userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
+
+                if (event.isLeftClick()) {
+                    user.getLoginStreak().claimReward(tag);
+
+                    player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE, 0.6f, 1);
+                    messageUtil.sendMessage(player, "Du hast die Belohnung für Tag §e§o" + tag + "§7 erhalten§8.");
+
+                    return;
+                }
+
+                user.getLoginStreak().openPreview(player, tag);
             });
         }
     }
