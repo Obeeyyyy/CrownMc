@@ -66,7 +66,7 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
 
                     userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
 
-                        if(!user.getLoginStreak().isRewardSlot(tag)) {
+                        if(!user.getLoginStreak().isRewardSlot(tag - 1)) {
                             messageUtil.sendMessage(player, tag + " ist kein Reward Tag§8.");
                             return;
                         }
@@ -117,79 +117,85 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
     }
 
     @EventHandler
-    public void onPreview(final InventoryClickEvent event) {
-
-        if (!InventoryUtil.startsWithInventoryTitle(event.getInventory(), "§7Preview Tag "))
-            return;
-
-        event.setCancelled(true);
-
-        if(event.getSlot() == 53)
-            userHandler.getUser(event.getWhoClicked().getUniqueId()).thenAccept(user -> event.getWhoClicked().openInventory(user.getLoginStreak().getInventory()));
-    }
-
-    @EventHandler
     public void on(final InventoryClickEvent event) {
 
-        if (!InventoryUtil.isInventoryTitle(event.getInventory(), "§d§lLoginStreak"))
-            return;
+        if (InventoryUtil.isInventoryTitle(event.getInventory(), "§d§lLoginStreak")) {
 
-        event.setCancelled(true);
 
-        if (!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§d§lLoginStreak"))
-            return;
+            event.setCancelled(true);
 
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
-            return;
-
-        final Player player = (Player) event.getWhoClicked();
-
-        if (event.getCurrentItem().getType() == Material.POWERED_MINECART) {
-
-            if (event.isLeftClick()) {
-                player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
-                messageUtil.sendMessage(player, "Du kannst diese Belohnung noch nicht einlösen§8.");
+            if (!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§d§lLoginStreak"))
                 return;
-            }
 
-            userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
-                final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
-                user.getLoginStreak().openPreview(player, tag);
-            });
-            return;
-        }
-
-        if (event.getCurrentItem().getType() == Material.HOPPER_MINECART) {
-
-            if(event.isLeftClick()) {
-                player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
-                messageUtil.sendMessage(player, "Du hast diese Belohnung bereits eingelöst§8.");
+            if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)
                 return;
-            }
 
-            userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
-                final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
-                user.getLoginStreak().openPreview(player, tag);
-            });
+            final Player player = (Player) event.getWhoClicked();
 
-            return;
-        }
-
-        if (event.getCurrentItem().getType() == Material.STORAGE_MINECART) {
-            userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
-                final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
+            if (event.getCurrentItem().getType() == Material.POWERED_MINECART) {
 
                 if (event.isLeftClick()) {
-                    user.getLoginStreak().claimReward(tag);
-
-                    player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE, 0.6f, 1);
-                    messageUtil.sendMessage(player, "Du hast die Belohnung für Tag §e§o" + tag + "§7 erhalten§8.");
-
+                    player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
+                    messageUtil.sendMessage(player, "Du kannst diese Belohnung noch nicht einlösen§8.");
                     return;
                 }
 
-                user.getLoginStreak().openPreview(player, tag);
-            });
+                userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                    final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
+                    user.getLoginStreak().openPreview(player, tag);
+                });
+                return;
+            }
+
+            if (event.getCurrentItem().getType() == Material.HOPPER_MINECART) {
+
+                if (event.isLeftClick()) {
+                    player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
+                    messageUtil.sendMessage(player, "Du hast diese Belohnung bereits eingelöst§8.");
+                    return;
+                }
+
+                userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                    final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
+                    user.getLoginStreak().openPreview(player, tag);
+                });
+
+                return;
+            }
+
+            if (event.getCurrentItem().getType() == Material.STORAGE_MINECART) {
+                userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                    final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
+
+                    if (event.isLeftClick()) {
+                        user.getLoginStreak().claimReward(tag);
+
+                        player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE, 0.6f, 1);
+                        messageUtil.sendMessage(player, "Du hast die Belohnung für Tag §e§o" + tag + "§7 erhalten§8.");
+
+                        return;
+                    }
+
+                    user.getLoginStreak().openPreview(player, tag);
+                });
+            }
+
+            return;
         }
+
+        if (InventoryUtil.startsWithInventoryTitle(event.getInventory(), "§7Preview Tag ")) {
+            event.setCancelled(true);
+
+            final Player player = (Player) event.getWhoClicked();
+
+            if (event.getSlot() == 53)
+                userHandler.getUser(event.getWhoClicked().getUniqueId()).thenAccept(user -> {
+
+                    player.openInventory(user.getLoginStreak().getInventory());
+                    player.updateInventory();
+
+                });
+        }
+
     }
 }

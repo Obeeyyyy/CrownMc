@@ -480,7 +480,7 @@ public final class ScoreboardHandler {
 
                 money.setSuffix(coinString + "§6§o$");
 
-                final int crownAmount = user.getInt(DataType.CROWNS);
+                final long crownAmount = user.getLong(DataType.CROWNS);
                 final Team crowns = scoreboard.getTeam("crowns");
 
                 String crownString = "";
@@ -498,13 +498,13 @@ public final class ScoreboardHandler {
                 crowns.setSuffix(crownString);
 
                 final Team stats = scoreboard.getTeam("stats");
-                stats.setSuffix(user.getInt(DataType.KILLS) + "§8 × §c" + user.getInt(DataType.DEATHS));
+                stats.setSuffix(user.getLong(DataType.KILLS) + "§8 × §c" + user.getLong(DataType.DEATHS));
 
                 final Team pvprank = scoreboard.getTeam("rank");
-                pvprank.setSuffix(eloHandler.getEloRangFromEloPoints(user.getInt(DataType.ELOPOINTS)));
+                pvprank.setSuffix(eloHandler.getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)));
 
                 final Team votes = scoreboard.getTeam("votes");
-                votes.setSuffix(messageUtil.formatLong(user.getInt(DataType.VOTES)));
+                votes.setSuffix(messageUtil.formatLong(user.getLong(DataType.VOTES)));
 
                 final Team playtime = scoreboard.getTeam("playtime");
                 final String value = MathUtil.getDaysAnHoursFromSeconds(user.getLong(DataType.PLAYTIME));

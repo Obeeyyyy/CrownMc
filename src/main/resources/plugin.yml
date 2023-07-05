@@ -2,6 +2,10 @@ name: CrownMc
 authors: [ Obey, EntixOG, richardwhateverr ]
 version: 4.0
 main: de.obey.crownmc.CrownMain
+
+depend:
+  - JDA
+
 commands:
   whitelist:
     aliases: [ wl ]
@@ -167,3 +171,6 @@ commands:
   refund:
   store:
   jackpot:
+  ban:
+  unban:
+  roulette:

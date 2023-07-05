@@ -10,6 +10,7 @@ import com.intellectualcrafters.plot.api.PlotAPI;
 import de.obey.crownmc.backend.MySQL;
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.commands.*;
+import de.obey.crownmc.discord.CrownBot;
 import de.obey.crownmc.handler.*;
 import de.obey.crownmc.listener.*;
 import de.obey.crownmc.objects.Runnables;
@@ -62,6 +63,7 @@ public final class Initializer {
     private ClanHandler clanHandler;
     private VotePartyHandler votePartyHandler;
     private JackPotHandler jackPotHandler;
+    private RouletteHandler rouletteHandler;
 
     private PlotAPI plotAPI;
 
@@ -69,6 +71,8 @@ public final class Initializer {
     private boolean restarting = true;
 
     private Runnables runnables;
+
+    private CrownBot crownBot;
 
     public Initializer(final CrownMain crownMain) {
         this.crownMain = crownMain;
@@ -119,7 +123,7 @@ public final class Initializer {
         crownMain.getCommand("allmoney").setExecutor(new AllMoneyCommand(mySQL, messageUtil));
         crownMain.getCommand("broadcast").setExecutor(new BroadcastCommand(messageUtil));
         crownMain.getCommand("firstjoinitems").setExecutor(new FirstJoinItems(messageUtil, serverConfig));
-        crownMain.getCommand("adminitems").setExecutor(new AdminItemsCommand(rangHandler));
+        crownMain.getCommand("adminitems").setExecutor(new AdminItemsCommand(rangHandler, kitHandler));
         crownMain.getCommand("enderchest").setExecutor(new EnderChestCommand(this));
         crownMain.getCommand("skull").setExecutor(new SkullCommand(messageUtil, userHandler));
         crownMain.getCommand("god").setExecutor(new GodCommand(messageUtil));
@@ -203,6 +207,65 @@ public final class Initializer {
         crownMain.getCommand("refund").setExecutor(new BuyCommand(messageUtil, userHandler));
         crownMain.getCommand("store").setExecutor(new StoreCommand(messageUtil));
         crownMain.getCommand("jackpot").setExecutor(new JackPotCommand(messageUtil, userHandler, jackPotHandler));
+        crownMain.getCommand("ban").setExecutor(new BanCommand(messageUtil, userHandler));
+        crownMain.getCommand("unban").setExecutor(new BanCommand(messageUtil, userHandler));
+        crownMain.getCommand("roulette").setExecutor(new RouletteCommand(messageUtil, rouletteHandler));
+    }
+
+    private void loadListener() {
+        final PluginManager pluginManager = Bukkit.getPluginManager();
+
+        pluginManager.registerEvents(new AsyncPlayerPreLoginListener(this), crownMain);
+        pluginManager.registerEvents(new LoginListener(this), crownMain);
+        pluginManager.registerEvents(new JoinListener(messageUtil, locationHandler, scoreboardHandler, userHandler, serverConfig, combatHandler), crownMain);
+        pluginManager.registerEvents(new QuitListener(this), crownMain);
+        pluginManager.registerEvents(new PickupPotionsListener(), crownMain);
+        pluginManager.registerEvents(new PortalMeisterListener(messageUtil, serverConfig, userHandler, locationHandler), crownMain);
+        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, jackPotHandler, plotAPI), crownMain);
+        pluginManager.registerEvents(new BlockStuffListener(messageUtil, locationHandler, combatHandler, userHandler, serverConfig, worldProtectionHandler), crownMain);
+        pluginManager.registerEvents(new InvseeCommand(messageUtil), crownMain);
+        pluginManager.registerEvents(new FirstJoinItems(messageUtil, serverConfig), crownMain);
+        pluginManager.registerEvents(new EnderchestListener(userHandler), crownMain);
+        pluginManager.registerEvents(new MotdCommand(messageUtil, serverConfig), crownMain);
+        pluginManager.registerEvents(new SettingsCommand(this), crownMain);
+        pluginManager.registerEvents(new DeathListener(messageUtil, userHandler, killFarmHandler, combatHandler, serverConfig), crownMain);
+        pluginManager.registerEvents(new BodySeeCommand(messageUtil), crownMain);
+        pluginManager.registerEvents(new GutscheinCommand(messageUtil, userHandler), crownMain);
+        pluginManager.registerEvents(new RankingCommand(messageUtil, rankingHandler), crownMain);
+        pluginManager.registerEvents(new VoteListener(this), crownMain);
+        pluginManager.registerEvents(new LoginStreakCommand(messageUtil, userHandler, serverConfig), crownMain);
+        pluginManager.registerEvents(new ProtectionListener(messageUtil, combatHandler, worldProtectionHandler), crownMain);
+        pluginManager.registerEvents(new BountyStandInteractListener(messageUtil, userHandler), crownMain);
+        pluginManager.registerEvents(new TradeListener(this), crownMain);
+        pluginManager.registerEvents(new PrefixListener(messageUtil, userHandler), crownMain);
+        pluginManager.registerEvents(new WarpCommand(messageUtil, warpHandler), crownMain);
+        pluginManager.registerEvents(new RespawnKitCommand(messageUtil, userHandler, serverConfig), crownMain);
+        pluginManager.registerEvents(new RangGutscheinInteractListener(messageUtil, rangHandler, scoreboardHandler), crownMain);
+        pluginManager.registerEvents(new KitCommand(messageUtil, kitHandler, userHandler), crownMain);
+        pluginManager.registerEvents(new BadgeCommand(messageUtil, userHandler, badgeHandler, executorService), crownMain);
+        pluginManager.registerEvents(new CoinFlipCommand(messageUtil, coinflipHandler), crownMain);
+        pluginManager.registerEvents(new PermissionBuchCommand(messageUtil), crownMain);
+        pluginManager.registerEvents(new TeleportToPvPWorldListener(locationHandler), crownMain);
+        pluginManager.registerEvents(new RandCommand(messageUtil, userHandler, plotAPI), crownMain);
+        pluginManager.registerEvents(new FreezeCommand(messageUtil), crownMain);
+        pluginManager.registerEvents(new PvPSetInteract(), crownMain);
+        pluginManager.registerEvents(new ShopCommand(messageUtil, shopHandler, userHandler), crownMain);
+        pluginManager.registerEvents(new BlockCounterListener(serverConfig, userHandler, locationHandler), crownMain);
+        pluginManager.registerEvents(new BlockCommand(messageUtil), crownMain);
+        pluginManager.registerEvents(new AfkCommand(messageUtil, scoreboardHandler, userHandler), crownMain);
+        pluginManager.registerEvents(guessTheNumberCommand, crownMain);
+        pluginManager.registerEvents(new DailyPotCommand(messageUtil, dailyPotHandler), crownMain);
+        pluginManager.registerEvents(new WandCommand(messageUtil, userHandler, plotAPI), crownMain);
+        pluginManager.registerEvents(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler), crownMain);
+        pluginManager.registerEvents(new VotePartyCommand(messageUtil, votePartyHandler), crownMain);
+        pluginManager.registerEvents(new CrashCommand(messageUtil, crashHandler), crownMain);
+        pluginManager.registerEvents(new CrownCommand(messageUtil, userHandler), crownMain);
+        pluginManager.registerEvents(new VoteCommand(serverConfig, messageUtil), crownMain);
+        pluginManager.registerEvents(new JackPotCommand(messageUtil, userHandler, jackPotHandler), crownMain);
+        pluginManager.registerEvents(new RouletteCommand(messageUtil, rouletteHandler), crownMain);
+        pluginManager.registerEvents(new StatResetInteract(messageUtil, userHandler), crownMain);
+        pluginManager.registerEvents(new KitGutscheinInteract(messageUtil, kitHandler), crownMain);
+        pluginManager.registerEvents(new FreeSignListener(messageUtil), crownMain);
     }
 
     private void loadTabCompleter() {
@@ -321,58 +384,8 @@ public final class Initializer {
         crownMain.getCommand("mute").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("ignore").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("ignores").setTabCompleter(new OnlineListTabComplete());
-    }
-
-    private void loadListener() {
-        final PluginManager pluginManager = Bukkit.getPluginManager();
-
-        pluginManager.registerEvents(new AsyncPlayerPreLoginListener(this), crownMain);
-        pluginManager.registerEvents(new LoginListener(this), crownMain);
-        pluginManager.registerEvents(new JoinListener(messageUtil, locationHandler, scoreboardHandler, userHandler, serverConfig, combatHandler), crownMain);
-        pluginManager.registerEvents(new QuitListener(this), crownMain);
-        pluginManager.registerEvents(new PickupPotionsListener(), crownMain);
-        pluginManager.registerEvents(new PortalMeisterListener(messageUtil, serverConfig, userHandler, locationHandler), crownMain);
-        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, jackPotHandler, plotAPI), crownMain);
-        pluginManager.registerEvents(new BlockStuffListener(messageUtil, locationHandler, combatHandler, userHandler, serverConfig, worldProtectionHandler), crownMain);
-        pluginManager.registerEvents(new InvseeCommand(messageUtil), crownMain);
-        pluginManager.registerEvents(new FirstJoinItems(messageUtil, serverConfig), crownMain);
-        pluginManager.registerEvents(new EnderchestListener(userHandler), crownMain);
-        pluginManager.registerEvents(new MotdCommand(messageUtil, serverConfig), crownMain);
-        pluginManager.registerEvents(new SettingsCommand(this), crownMain);
-        pluginManager.registerEvents(new DeathListener(messageUtil, userHandler, killFarmHandler, combatHandler, serverConfig), crownMain);
-        pluginManager.registerEvents(new BodySeeCommand(messageUtil), crownMain);
-        pluginManager.registerEvents(new GutscheinCommand(messageUtil, userHandler), crownMain);
-        pluginManager.registerEvents(new RankingCommand(messageUtil, rankingHandler), crownMain);
-        pluginManager.registerEvents(new VoteListener(this), crownMain);
-        pluginManager.registerEvents(new LoginStreakCommand(messageUtil, userHandler, serverConfig), crownMain);
-        pluginManager.registerEvents(new ProtectionListener(messageUtil, combatHandler, worldProtectionHandler), crownMain);
-        pluginManager.registerEvents(new BountyStandInteractListener(messageUtil, userHandler), crownMain);
-        pluginManager.registerEvents(new TradeListener(this), crownMain);
-        pluginManager.registerEvents(new PrefixListener(messageUtil, userHandler), crownMain);
-        pluginManager.registerEvents(new WarpCommand(messageUtil, warpHandler), crownMain);
-        pluginManager.registerEvents(new RespawnKitCommand(messageUtil, userHandler, serverConfig), crownMain);
-        pluginManager.registerEvents(new RangGutscheinInteractListener(messageUtil, rangHandler, scoreboardHandler), crownMain);
-        pluginManager.registerEvents(new KitCommand(messageUtil, kitHandler, userHandler), crownMain);
-        pluginManager.registerEvents(new BadgeCommand(messageUtil, userHandler, badgeHandler, executorService), crownMain);
-        pluginManager.registerEvents(new CoinFlipCommand(messageUtil, coinflipHandler), crownMain);
-        pluginManager.registerEvents(new PermissionBuchCommand(messageUtil), crownMain);
-        pluginManager.registerEvents(new TeleportToPvPWorldListener(locationHandler), crownMain);
-        pluginManager.registerEvents(new RandCommand(messageUtil, userHandler, plotAPI), crownMain);
-        pluginManager.registerEvents(new FreezeCommand(messageUtil), crownMain);
-        pluginManager.registerEvents(new PvPSetInteract(), crownMain);
-        pluginManager.registerEvents(new ShopCommand(messageUtil, shopHandler, userHandler), crownMain);
-        pluginManager.registerEvents(new BlockCounterListener(serverConfig, userHandler, locationHandler), crownMain);
-        pluginManager.registerEvents(new BlockCommand(messageUtil), crownMain);
-        pluginManager.registerEvents(new AfkCommand(messageUtil, scoreboardHandler, userHandler), crownMain);
-        pluginManager.registerEvents(guessTheNumberCommand, crownMain);
-        pluginManager.registerEvents(new DailyPotCommand(messageUtil, dailyPotHandler), crownMain);
-        pluginManager.registerEvents(new WandCommand(messageUtil, userHandler, plotAPI), crownMain);
-        pluginManager.registerEvents(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler), crownMain);
-        pluginManager.registerEvents(new VotePartyCommand(messageUtil, votePartyHandler), crownMain);
-        pluginManager.registerEvents(new CrashCommand(messageUtil, crashHandler), crownMain);
-        pluginManager.registerEvents(new CrownCommand(messageUtil, userHandler), crownMain);
-        pluginManager.registerEvents(new VoteCommand(serverConfig, messageUtil), crownMain);
-        pluginManager.registerEvents(new JackPotCommand(messageUtil, userHandler, jackPotHandler), crownMain);
+        crownMain.getCommand("ban").setTabCompleter(new OnlineListTabComplete());
+        crownMain.getCommand("unban").setTabCompleter(new OnlineListTabComplete());
     }
 
     public void initializeSystem() {
@@ -416,6 +429,7 @@ public final class Initializer {
                     clanHandler = new ClanHandler(messageUtil);
                     votePartyHandler = new VotePartyHandler();
                     jackPotHandler = new JackPotHandler();
+                    rouletteHandler = new RouletteHandler(locationHandler, messageUtil, userHandler);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
@@ -434,12 +448,16 @@ public final class Initializer {
                     luckySpinHandler.setup();
                     votePartyHandler.loadLocations();
                     crashHandler.setupArmorStands();
+                    rouletteHandler.loadTables();
                 }
 
                 if (ticks == 7) {
                     loadCommands();
                     loadTabCompleter();
                     loadListener();
+
+                    crownBot = new CrownBot(userHandler, messageUtil);
+                    crownBot.setup();
 
                     runnables = new Runnables(kitHandler, userHandler, scoreboardHandler, autoBroadcastHandler, dailyPotHandler);
                     runnables.start10TickTimerAsync();
@@ -467,6 +485,7 @@ public final class Initializer {
         luckySpinHandler.shutdown();
         votePartyHandler.shutdown();
         jackPotHandler.shutdown();
+        rouletteHandler.shutdown();
 
         for (final Player onlinePlayer : Bukkit.getOnlinePlayers())
             onlinePlayer.kickPlayer("§c§oDer Server startet neu.");

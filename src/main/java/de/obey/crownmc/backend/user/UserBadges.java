@@ -150,7 +150,6 @@ public final class UserBadges {
                     lore.add("§8▰§7▱ §f§lInformation§8:");
                     lore.add("§8 -§7 Beschreibung§8: §7" + ChatColor.translateAlternateColorCodes('&', badge.getDescription()));
                     lore.add("§8 -§7 Diese Badge wurde x§f" + badge.getOwned() + "§7 mal vergeben§8.");
-                    lore.add("");
 
                 } else {
                     showItem.setType(Material.BARRIER);
@@ -166,13 +165,13 @@ public final class UserBadges {
                     lore.add("§8 -§7 Diese Badge wurde x§f" + badge.getOwned() + "§7 mal vergeben§8.");
                     lore.add("");
                     lore.add("§c§oDu hast diese Badge nicht freigeschaltet§8.");
-                    lore.add("");
                 }
+                lore.add("");
 
                 meta.setLore(lore);
 
                 showItem.setItemMeta(meta);
-                inventory.addItem(showItem);
+                inventory.setItem(badge.getSlot() + 1, showItem);
             });
         }
 

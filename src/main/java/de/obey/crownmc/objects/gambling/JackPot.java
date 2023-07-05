@@ -188,10 +188,10 @@ public final class JackPot {
 
                     switch (ticks) {
                         case 20 : delay = 3; break;
-                        case 40 : delay = 7; break;
-                        case 60 : delay = 15; break;
-                        case 80 : delay = 22; break;
-                        case 100 : end(); break;
+                        case 30 : delay = 7; break;
+                        case 50 : delay = 15; break;
+                        case 55 : delay = 22; break;
+                        case 65 : end(); break;
                     }
 
                 }

@@ -41,7 +41,7 @@ public final class SupportChat {
         player.sendMessage("");
         player.sendMessage("");
 
-        messageUtil.sendMessageToTeamMembers(player.getName() + " hat eine Supportanfrage erstellt. Grund§8: §f§o" + grund);
+        messageUtil.sendMessageToTeamMembers("§8» §7" + player.getName() + " hat eine Supportanfrage erstellt. Grund§8: §f§o" + grund);
         messageUtil.sendHoverTextCommandToTeamMembers("§a§oKlicke hier um sie anzunehmen", "/support join " + player.getName());
     }
 

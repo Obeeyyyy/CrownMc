@@ -30,7 +30,7 @@ public final class TeleportCommand implements CommandExecutor {
 
         final Player player = (Player) sender;
 
-        if (!PermissionUtil.hasPermission(player, "tp", true))
+        if (!PermissionUtil.hasPermission(player, "teleport", true))
             return false;
 
         if (args.length == 0) {
@@ -55,7 +55,7 @@ public final class TeleportCommand implements CommandExecutor {
         }
 
         if (args.length == 2) {
-            if (!PermissionUtil.hasPermission(player, "tp.others", true))
+            if (!PermissionUtil.hasPermission(player, "teleport.other", true))
                 return false;
 
             if (!messageUtil.isOnline(sender, args[1]))

@@ -31,7 +31,6 @@ import java.util.Map;
 public final class User {
 
     private final Initializer initializer = CrownMain.getInstance().getInitializer();
-    private final Map<DataType, Object> data = new HashMap<>();
     private OfflinePlayer offlinePlayer;
     private Player player;
     private File playerFile;
@@ -49,6 +48,8 @@ public final class User {
     private UserLoginStreak loginStreak;
 
     private PacketReader packetReader;
+
+    private final Map<DataType, Object> data = new HashMap<>();
 
     public User(final Player player) {
         this.player = player;
@@ -92,11 +93,11 @@ public final class User {
         punishment.save();
     }
 
-    public void addXP(int amount) {
+    public void addXP(long amount) {
         if (Bools.doubleXP)
             amount *= 2;
 
-        addInt(DataType.XP, amount);
+        addLong(DataType.XP, amount);
         LevelUtil.checkForLevelUp(this);
     }
 
@@ -110,10 +111,6 @@ public final class User {
                 initializer.getScoreboardHandler().updateScoreboard(player);
             }
         }.runTask(initializer.getCrownMain());
-    }
-
-    public int getInt(final DataType type) {
-        return data.containsKey(type) ? (int) data.get(type) : (int) type.getDefaultValue();
     }
 
     public long getLong(final DataType type) {
@@ -132,23 +129,8 @@ public final class User {
         return data.containsKey(type) ? (boolean) data.get(type) : (boolean) type.getDefaultValue();
     }
 
-    public void addInt(final DataType type, final int amount) {
-        data.put(type, (data.containsKey(type) ? (Math.max((int) data.get(type) + amount, 0)) : amount));
-        updateData();
-    }
-
     public void addLong(final DataType type, final long amount) {
         data.put(type, (data.containsKey(type) ? ((long) data.get(type) + amount < 0 ? 0 : (long) data.get(type) + amount) : amount));
-        updateData();
-    }
-
-    public void removeInt(final DataType type, final int amount) {
-        if(type == DataType.CROWNS) {
-            data.put(type, (data.containsKey(type) ? ((int) data.get(type) - amount) : 0));
-        } else {
-            data.put(type, (data.containsKey(type) ? (Math.max((int) data.get(type) - amount, 0)) : 0));
-        }
-
         updateData();
     }
 
@@ -159,11 +141,6 @@ public final class User {
 
     public void clearList(final DataType type) {
         data.put(type, Collections.emptyList());
-        updateData();
-    }
-
-    public void setInt(final DataType type, final int amount) {
-        data.put(type, amount);
         updateData();
     }
 

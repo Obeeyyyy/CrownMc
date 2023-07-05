@@ -110,6 +110,12 @@ public final class CrashCommand implements CommandExecutor, Listener {
         final Player player = event.getPlayer();
 
         if(sign.getLine(0).equalsIgnoreCase("§8▰§7▱ §a§lCrash §7▱§8▰")) {
+            if (crashHandler.getJoiningCrash().contains(player)) {
+                messageUtil.sendMessage(player, "Schreibe den §a§ogewünschten Betrag§7 in den Chat§8.");
+                messageUtil.sendMessage(player, "Schreibe §c§ocancel§7 um den Vorgang abzubrechen§8.");
+                return;
+            }
+
             if(crashHandler.getCrash().getBets().containsKey(player.getUniqueId())) {
                 crashHandler.getCrash().leaveCrash(player);
                 return;

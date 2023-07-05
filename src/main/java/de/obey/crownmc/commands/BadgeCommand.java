@@ -81,6 +81,7 @@ public final class BadgeCommand implements CommandExecutor, Listener {
                     player.sendMessage("§8  -> §7CreationDate§8: §r" + badge.getCreationDate());
                     player.sendMessage("§8  -> §7Description§8: §r" + badge.getDescription());
                     player.sendMessage("§8  -> §7ShowItem§8: §r" + badge.getShowItem().getType().name());
+                    player.sendMessage("§8  -> §7Slot§8: §r" + badge.getSlot());
                 });
 
                 return false;
@@ -99,6 +100,7 @@ public final class BadgeCommand implements CommandExecutor, Listener {
                         "/badge get <name>",
                         "/badge setitem <name>",
                         "/badge setdate <name> <text>",
+                        "/badge setslot <name> <id>",
                         "/badge setprefix <name> <text>",
                         "/badge setdesc <name> <text>",
                         "/badge giveall <name>",
@@ -251,6 +253,28 @@ public final class BadgeCommand implements CommandExecutor, Listener {
                 return false;
             }
 
+            if(args[0].equalsIgnoreCase("setslot")) {
+
+                final Badge badge = badgeHandler.getBadgeFromName(args[1]);
+
+                if (badge == null) {
+                    messageUtil.sendMessage(sender, "Die Badge " + args[2] + " existiert nicht§8.");
+                    return false;
+                }
+
+                try {
+                    final int slot = Integer.parseInt(args[2]);
+
+                    badge.setSlot(slot);
+                    messageUtil.sendMessage(player, "Du hast die Sotierung für die Badge " + badge.getName() + " geupdated§8.");
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gebe eine Zahl an§8.");
+                }
+
+                return false;
+            }
+
             if (args[0].equalsIgnoreCase("removebadge")) {
 
                 if (!messageUtil.hasPlayedBefore(sender, args[1]))
@@ -376,11 +400,14 @@ public final class BadgeCommand implements CommandExecutor, Listener {
                 "/badge resetbadgecount",
                 "/badge create <name>",
                 "/badge delete <name>",
+                "/badge get <name>",
                 "/badge setitem <name>",
                 "/badge setdate <name> <text>",
+                "/badge setslot <name> <id>",
                 "/badge setprefix <name> <text>",
                 "/badge setdesc <name> <text>",
                 "/badge giveall <name>",
+                "/badge removeall <name>",
                 "/badge givebade <player> <name>",
                 "/badge removebadge <player> <name>"
         );
@@ -398,6 +425,7 @@ public final class BadgeCommand implements CommandExecutor, Listener {
 
         event.setCancelled(true);
 
+        final ItemStack item = player.getItemInHand();
         final String name = ChatColor.stripColor(player.getItemInHand().getItemMeta().getLore().get(4));
         final Badge badge = badgeHandler.getBadgeFromName(name);
 
@@ -407,6 +435,9 @@ public final class BadgeCommand implements CommandExecutor, Listener {
         }
 
         userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+            if(item != player.getItemInHand())
+                return;
+
             if (user.getBadges().getBadges().containsKey(badge.getName())) {
                 messageUtil.sendMessage(player, "Du hast die " + name + " Badge schon§8.");
                 return;

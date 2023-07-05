@@ -161,7 +161,7 @@ public final class KitCommand implements CommandExecutor, Listener {
 
             if (args[0].equalsIgnoreCase("setprice")) {
                 try {
-                    final long amount = Long.parseLong(args[2]);
+                    final double amount = Double.parseDouble(args[2]);
 
                     kit.setBuyOutForSecondPrice(amount);
                     kit.saveKitData();
@@ -299,7 +299,7 @@ public final class KitCommand implements CommandExecutor, Listener {
                 return;
             }
 
-            final long price = user.getCooldowns().getRemainingMillis(kit.getName()) / 1000 * kit.getBuyOutForSecondPrice();
+            final long price = (long)(user.getCooldowns().getRemainingMillis(kit.getName()) / 1000 * kit.getBuyOutForSecondPrice());
 
             if (!messageUtil.hasEnougthMoney(user, price))
                 return;

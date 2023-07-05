@@ -12,11 +12,7 @@ import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +26,7 @@ public final class EssentialCommands implements CommandExecutor {
 
     public final static Map<Player, Player> tpas = new HashMap<>();
     public final static Map<Player, Player> tpaHeres = new HashMap<>();
+
     @NonNull
     private final Initializer initializer;
 
@@ -483,6 +480,23 @@ public final class EssentialCommands implements CommandExecutor {
                 }
 
                 if (args[0].equalsIgnoreCase("accept")) {
+
+                    final Location nether = initializer.getLocationHandler().getLocation("nether");
+                    final Location end = initializer.getLocationHandler().getLocation("end");
+
+                    if(nether != null && player.getLocation().getWorld() == nether.getWorld()) {
+                        initializer.getMessageUtil().sendMessage(player, "Du befindest in der §c§lNether§7 Dimension§8, §7teleport Anfragen können hier nicht angenommen werden§8.");
+                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                        return false;
+                    }
+
+                    if(end != null && player.getLocation().getWorld() == end.getWorld()) {
+                        initializer.getMessageUtil().sendMessage(player, "Du befindest in der §f§lEnd§7 Dimension§8, §7teleport Anfragen können hier nicht angenommen werden§8.");
+                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                        return false;
+                    }
+
+
                     tpas.remove(target);
 
                     initializer.getLocationHandler().teleportToLocation(target, player.getLocation());
@@ -565,8 +579,22 @@ public final class EssentialCommands implements CommandExecutor {
                 }
 
                 if (args[0].equalsIgnoreCase("accept")) {
-                    tpaHeres.remove(target);
+                    final Location nether = initializer.getLocationHandler().getLocation("nether");
+                    final Location end = initializer.getLocationHandler().getLocation("end");
 
+                    if(nether != null && target.getLocation().getWorld() == nether.getWorld()) {
+                        initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich in der §c§lNether§7 Dimension§8, §7du kannst nicht zu ihm teleportiert werden§8.");
+                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                        return false;
+                    }
+
+                    if(end != null && target.getLocation().getWorld() == end.getWorld()) {
+                        initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich in der §f§lEnd§7 Dimension§8, §7du kannst nicht zu ihm teleportiert werden§8.");
+                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                        return false;
+                    }
+
+                    tpaHeres.remove(target);
                     initializer.getLocationHandler().teleportToLocation(player, target.getLocation());
                     return false;
                 }

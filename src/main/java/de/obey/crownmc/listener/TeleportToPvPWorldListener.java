@@ -42,18 +42,16 @@ public final class TeleportToPvPWorldListener implements Listener {
 
         if (player.getLocation().getBlock().getType() == Material.ENDER_PORTAL) {
             event.setCancelled(true);
-            player.teleport(pvp);
-            player.setAllowFlight(false);
-            player.setFlying(false);
+            locationHandler.teleportToLocationNameInstant(player, "pvp");
             player.sendTitle("§4§l⚠ §c§lAchtung §4§l⚠", "§7Du bist nun in der §c§oPvP§8-§c§oZone§8.");
+
             return;
         }
 
         if (player.getLocation().getY() < 100) {
             event.setCancelled(true);
-            player.teleport(pvp);
-            player.setAllowFlight(false);
-            player.setFlying(false);
+            locationHandler.teleportToLocationNameInstant(player, "pvp");
+            player.sendTitle("§4§l⚠ §c§lAchtung §4§l⚠", "§7Du bist nun in der §c§oPvP§8-§c§oZone§8.");
         }
 
     }

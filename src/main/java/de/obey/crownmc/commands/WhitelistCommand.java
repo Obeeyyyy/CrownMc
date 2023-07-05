@@ -32,7 +32,7 @@ public final class WhitelistCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "editwhitelist", true))
+        if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "editwhitelist", true))
             return false;
 
         if (args.length == 0) {

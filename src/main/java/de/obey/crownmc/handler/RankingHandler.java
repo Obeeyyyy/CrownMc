@@ -395,7 +395,7 @@ public final class RankingHandler {
             if (what.equals("kills")) {
                 inventory.setItem(slot, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7" + player.getName() + "§8 (§a#" + rank + "§8)")
-                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Kills§8: §e" + initializer.getMessageUtil().formatLong(user.getInt(DataType.KILLS)))
+                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Kills§8: §e" + initializer.getMessageUtil().formatLong(user.getLong(DataType.KILLS)))
                         .setSkullOwner(player.getName())
                         .build());
 
@@ -403,10 +403,10 @@ public final class RankingHandler {
             }
 
             if (what.equals("elopoints")) {
-                final int elopunkte = user.getInt(DataType.ELOPOINTS);
+                final long elopunkte = user.getLong(DataType.ELOPOINTS);
                 inventory.setItem(slot, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7" + player.getName() + "§8 (§a#" + rank + "§8)")
-                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Elopunkte§8: §e" + initializer.getMessageUtil().formatLong(elopunkte), "§8    ×§7 Elorang§8: §r" + initializer.getEloHandler().getEloRangFromEloPoints(user.getInt(DataType.ELOPOINTS)))
+                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Elopunkte§8: §e" + initializer.getMessageUtil().formatLong(elopunkte), "§8    ×§7 Elorang§8: §r" + initializer.getEloHandler().getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)))
                         .setSkullOwner(player.getName())
                         .build());
 
@@ -416,7 +416,7 @@ public final class RankingHandler {
             if (what.equals("killstreak")) {
                 inventory.setItem(slot, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7" + player.getName() + "§8 (§a#" + rank + "§8)")
-                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Höchste Killstreak§8: §e" + initializer.getMessageUtil().formatLong(user.getInt(DataType.KILLSTREAKRECORD)))
+                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Höchste Killstreak§8: §e" + initializer.getMessageUtil().formatLong(user.getLong(DataType.KILLSTREAKRECORD)))
                         .setSkullOwner(player.getName())
                         .build());
 
@@ -424,7 +424,7 @@ public final class RankingHandler {
             }
 
             if (what.equals("votes")) {
-                final int votes = user.getInt(DataType.VOTES);
+                final long votes = user.getLong(DataType.VOTES);
                 inventory.setItem(slot, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7" + player.getName() + "§8 (§a#" + rank + "§8)")
                         .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Votes§8: §e" + initializer.getMessageUtil().formatLong(votes))
@@ -435,7 +435,7 @@ public final class RankingHandler {
             }
 
             if (what.equals("xp")) {
-                final int xp = user.getInt(DataType.XP);
+                final long xp = user.getLong(DataType.XP);
                 inventory.setItem(slot, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7" + player.getName() + "§8 (§a#" + rank + "§8)")
                         .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 XP§8: §e" + initializer.getMessageUtil().formatLong(xp))
@@ -458,7 +458,7 @@ public final class RankingHandler {
             if (what.equals("crowns")) {
                 inventory.setItem(slot, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7" + player.getName() + "§8 (§a#" + rank + "§8)")
-                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Crowns§8: §e" + initializer.getMessageUtil().formatLong(user.getInt(DataType.CROWNS)) + "§8.")
+                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Crowns§8: §e" + initializer.getMessageUtil().formatLong(user.getLong(DataType.CROWNS)) + "§8.")
                         .setSkullOwner(player.getName())
                         .build());
             }

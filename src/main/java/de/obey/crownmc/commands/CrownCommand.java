@@ -8,7 +8,6 @@ package de.obey.crownmc.commands;
  without permission from me, obey, the creator of this code.
 */
 
-import com.intellectualcrafters.plot.config.C;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.*;
@@ -50,12 +49,12 @@ public final class CrownCommand implements CommandExecutor, Listener {
         if(args.length == 0) {
             userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
 
-                if(user.getInt(DataType.CROWNS) == 0) {
+                if(user.getLong(DataType.CROWNS) == 0) {
                     messageUtil.sendMessage(sender, "Kauf dir §6Crowns§7 in unserem §8/§6§lStore§8.!");
                     return;
                 }
 
-                messageUtil.sendMessage(sender, "Du hast §e§o" + messageUtil.formatLong(user.getInt(DataType.CROWNS)) + "§7 Crowns§8.");
+                messageUtil.sendMessage(sender, "Du hast §e§o" + messageUtil.formatLong(user.getLong(DataType.CROWNS)) + "§7 Crowns§8.");
             });
 
             return false;
@@ -67,7 +66,7 @@ public final class CrownCommand implements CommandExecutor, Listener {
 
             final OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
-            userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> messageUtil.sendMessage(sender, target.getName() + " hat §e§o" + messageUtil.formatLong(user.getInt(DataType.CROWNS)) + "§7 Crowns§8."));
+            userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> messageUtil.sendMessage(sender, target.getName() + " hat §e§o" + messageUtil.formatLong(user.getLong(DataType.CROWNS)) + "§7 Crowns§8."));
 
             return false;
         }
@@ -125,7 +124,7 @@ public final class CrownCommand implements CommandExecutor, Listener {
             if (args[0].equalsIgnoreCase("add")) {
 
                 userHandler.getUser(Bukkit.getOfflinePlayer(args[1]).getUniqueId()).thenAcceptAsync(user -> {
-                    user.addInt(DataType.CROWNS, finalAmount);
+                    user.addLong(DataType.CROWNS, finalAmount);
                     messageUtil.sendMessage(sender, args[1] + " hat §e§o" + messageUtil.formatLong(finalAmount) + "§7 Crowns bekommen§8.");
                 });
                 return false;
@@ -134,7 +133,7 @@ public final class CrownCommand implements CommandExecutor, Listener {
             if (args[0].equalsIgnoreCase("remove")) {
 
                 userHandler.getUser(Bukkit.getOfflinePlayer(args[1]).getUniqueId()).thenAcceptAsync(user -> {
-                    user.removeInt(DataType.CROWNS, finalAmount);
+                    user.removeLong(DataType.CROWNS, finalAmount);
                     messageUtil.sendMessage(sender, args[1] + " hat §e§o" + messageUtil.formatLong(finalAmount) + "§7 Crowns verloren§8.");
                 });
 
@@ -144,7 +143,7 @@ public final class CrownCommand implements CommandExecutor, Listener {
             if (args[0].equalsIgnoreCase("set")) {
 
                 userHandler.getUser(Bukkit.getOfflinePlayer(args[1]).getUniqueId()).thenAcceptAsync(user -> {
-                    user.setInt(DataType.CROWNS, finalAmount);
+                    user.setLong(DataType.CROWNS, finalAmount);
                     messageUtil.sendMessage(sender, args[1] + " hat jetzt §e§o" + messageUtil.formatLong(finalAmount) + "§7 Crowns§8.");
                 });
 
@@ -181,7 +180,7 @@ public final class CrownCommand implements CommandExecutor, Listener {
 
         InventoryUtil.removeItemInHand(player, multiplier);
 
-        userHandler.getUserInstant(player.getUniqueId()).addInt(DataType.CROWNS, amount * multiplier);
+        userHandler.getUserInstant(player.getUniqueId()).addLong(DataType.CROWNS, amount * multiplier);
         messageUtil.sendMessage(player, "Du hast §f§o" + messageUtil.formatLong((long) amount * multiplier) + "§6¢§7 eingelöst§8.");
         player.playSound(player.getLocation(), Sound.FIREWORK_LAUNCH, 0.8f, 0.5f);
     }

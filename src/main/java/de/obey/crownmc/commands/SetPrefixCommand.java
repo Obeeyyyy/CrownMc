@@ -25,7 +25,7 @@ public final class SetPrefixCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "*", true))
+        if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "*", true))
             return false;
 
         if (args.length >= 1) {
@@ -38,7 +38,7 @@ public final class SetPrefixCommand implements CommandExecutor {
                 }
             }
 
-            initializer.getServerConfig().setPrefix(ChatColor.translateAlternateColorCodes('&', newPrefix));
+            initializer.getServerConfig().setPrefix(newPrefix.replace("&", "§"));
             initializer.getMessageUtil().sendMessage(sender, "Neuer prefix: " + newPrefix + "testmessage");
 
             return false;

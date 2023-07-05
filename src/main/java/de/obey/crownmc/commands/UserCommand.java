@@ -65,7 +65,7 @@ public final class UserCommand implements CommandExecutor {
 
                 userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
                     userHandler.saveData(user);
-                    messageUtil.sendMessage(sender, user.getOfflinePlayer().getName() + " §8(§f§o" + user.getInt(DataType.ID) + "§8)§7 wurde gespeichert§8.");
+                    messageUtil.sendMessage(sender, user.getOfflinePlayer().getName() + " §8(§f§o" + user.getLong(DataType.ID) + "§8)§7 wurde gespeichert§8.");
                 });
 
                 return false;
@@ -73,7 +73,7 @@ public final class UserCommand implements CommandExecutor {
 
             if (args[0].equalsIgnoreCase("load")) {
 
-                userHandler.loadData(target.getUniqueId(), true).thenAcceptAsync(user -> messageUtil.sendMessage(sender, user.getOfflinePlayer().getName() + " §8(§f§o" + user.getInt(DataType.ID) + "§8)§7 wurde neu geladen§8."));
+                userHandler.loadData(target.getUniqueId(), true).thenAcceptAsync(user -> messageUtil.sendMessage(sender, user.getOfflinePlayer().getName() + " §8(§f§o" + user.getLong(DataType.ID) + "§8)§7 wurde neu geladen§8."));
 
                 return false;
             }
@@ -81,7 +81,7 @@ public final class UserCommand implements CommandExecutor {
             if (args[0].equalsIgnoreCase("getdata")) {
 
                 userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
-                    messageUtil.sendMessage(sender, user.getOfflinePlayer().getName() + " §8(§f§o" + user.getInt(DataType.ID) + "§8)§7 :");
+                    messageUtil.sendMessage(sender, user.getOfflinePlayer().getName() + " §8(§f§o" + user.getLong(DataType.ID) + "§8)§7 :");
 
                     user.getData().keySet().forEach(data -> {
                         sender.sendMessage("§8- §7" + data.getSavedAs() + " §8(§e" + (data.getStoreType() == StoreType.CONFIG ? "CFG" : "SQL") + "§8) = §f§o" + user.getData().get(data));
@@ -174,7 +174,7 @@ public final class UserCommand implements CommandExecutor {
                 try {
 
                     userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
-                        messageUtil.sendMessage(sender, target.getName() + " hat " + dataType.getSavedAs() + " = " + user.getInt(dataType));
+                        messageUtil.sendMessage(sender, target.getName() + " hat " + dataType.getSavedAs() + " = " + user.getLong(dataType));
 
                         if (user.getPlayer() != null)
                             scoreboardHandler.updateScoreboard(user.getPlayer());
@@ -285,7 +285,7 @@ public final class UserCommand implements CommandExecutor {
 
                     userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
                         user.getData().put(dataType, amount);
-                        messageUtil.sendMessage(sender, target.getName() + " set " + dataType.getSavedAs() + " = " + user.getInt(dataType));
+                        messageUtil.sendMessage(sender, target.getName() + " set " + dataType.getSavedAs() + " = " + user.getLong(dataType));
 
                         if (user.getPlayer() != null)
                             scoreboardHandler.updateScoreboard(user.getPlayer());

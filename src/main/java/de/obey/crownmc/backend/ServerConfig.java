@@ -96,7 +96,7 @@ public final class ServerConfig {
 
         whitelist = cfg.getBoolean("whitelist");
         betawhitelist = cfg.getBoolean("betawhitelist");
-        prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString("prefix"));
+        prefix = cfg.getString("prefix");
         host = cfg.getString("mysql.host");
         username = cfg.getString("mysql.username");
         database = cfg.getString("mysql.database");
@@ -216,14 +216,12 @@ public final class ServerConfig {
         cfg.set("baseMoneyKillstreak", baseMoneyKillstreak);
         cfg.set("baseXPkillstreak", baseXPkillstreak);
         cfg.set("baseEloKillstreak", baseEloKillstreak);
-        cfg.set("levelupMoney", levelUpMoney);
+        cfg.set("levelUpMoney", levelUpMoney);
         cfg.set("netherprice", netherPrice);
         cfg.set("endprice", endPrice);
 
         if (domainJoins.size() > 0) {
-            domainJoins.keySet().forEach(domain -> {
-                cfg.set("domains." + domain, domainJoins.get(domain));
-            });
+            domainJoins.keySet().forEach(domain -> cfg.set("domains." + domain, domainJoins.get(domain)));
         } else {
             cfg.set("domains.45,142,114,29", 0);
         }

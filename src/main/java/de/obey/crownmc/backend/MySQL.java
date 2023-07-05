@@ -63,7 +63,7 @@ public final class MySQL {
     }
 
     private void createTables() {
-        execute("CREATE TABLE IF NOT EXISTS users(id int, uuid text, money bigint, crowns int, kills int, deaths int, bounty bigint, level int, xp int, killstreak int, killstreakrecord int, elopoints int, votes int, playtime bigint, destroyedBlocks BIGINT, destroyedEventBlocks BIGINT)");
+        execute("CREATE TABLE IF NOT EXISTS users(id bigint, uuid text, money bigint, crowns bigint, kills bigint, deaths bigint, bounty bigint, level bigint, xp bigint, killstreak bigint, killstreakrecord bigint, elopoints bigint, votes bigint, playtime bigint, destroyedBlocks bigint, destroyedEventBlocks bigint)");
         execute("CREATE TABLE IF NOT EXISTS clans(name text, leader text, trophies int, kills int, deaths int);");
         System.out.println("CREATED TABLES");
     }

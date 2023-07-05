@@ -147,8 +147,24 @@ public final class ProtectionListener implements Listener {
             }
         }
 
-        if(!worldProtectionHandler.canBuild(event.getPlayer()) && !worldProtectionHandler.canInteract(event.getPlayer()))
-            event.setCancelled(true);
+        if(event.getClickedBlock() != null && (
+                event.getClickedBlock().getType().name().contains("CHEST") ||
+                event.getClickedBlock().getType().name().contains("DOOR") ||
+                event.getClickedBlock().getType() == Material.ITEM_FRAME ||
+                event.getClickedBlock().getType() == Material.HOPPER ||
+                event.getClickedBlock().getType() == Material.FURNACE ||
+                event.getClickedBlock().getType() == Material.DISPENSER ||
+                event.getClickedBlock().getType() == Material.DROPPER ||
+                event.getClickedBlock().getType() == Material.BEACON ||
+                event.getClickedBlock().getType() == Material.BREWING_STAND ||
+                event.getClickedBlock().getType() == Material.WORKBENCH ||
+                event.getClickedBlock().getType() == Material.ENCHANTMENT_TABLE ||
+                event.getClickedBlock().getType() == Material.ANVIL ||
+                event.getClickedBlock().getType() == Material.ARMOR_STAND
+                )) {
+            if (!worldProtectionHandler.canBuild(event.getPlayer()) && !worldProtectionHandler.canInteract(event.getPlayer()))
+                event.setCancelled(true);
+        }
     }
 
     @EventHandler

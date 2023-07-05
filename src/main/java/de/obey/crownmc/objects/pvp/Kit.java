@@ -27,7 +27,7 @@ public final class Kit {
     private final File kitFile;
 
     private long kitCooldown = 0;
-    private long buyOutForSecondPrice = 0;
+    private double buyOutForSecondPrice = 0;
 
     private String permission = "crown.*";
     private ArrayList<ItemStack> items = new ArrayList<>();
@@ -65,7 +65,7 @@ public final class Kit {
             items = (ArrayList<ItemStack>) cfg.getList("items");
 
         if (cfg.contains("price"))
-            buyOutForSecondPrice = cfg.getLong("price");
+            buyOutForSecondPrice = cfg.getDouble("price");
 
         if (cfg.contains("slot"))
             showSlot = cfg.getInt("slot");

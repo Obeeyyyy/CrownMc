@@ -35,7 +35,7 @@ public final class IgnoresCommand implements CommandExecutor {
 
         final Player player = (Player) sender;
 
-        if (!PermissionUtil.hasPermission(player, "ignores", true))
+        if (!PermissionUtil.hasPermission(player, "ignore", true))
             return false;
 
         if (args.length != 0) {

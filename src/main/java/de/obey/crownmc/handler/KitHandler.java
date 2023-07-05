@@ -137,12 +137,19 @@ public final class KitHandler {
         user.getCooldowns().setCooldown(kit.getName(), System.currentTimeMillis() + kit.getKitCooldown());
 
         if (!kit.getItems().isEmpty())
-            kit.getItems().forEach(item -> {
-                InventoryUtil.addItem(player, item.clone());
-            });
+            kit.getItems().forEach(item -> InventoryUtil.addItem(player, item.clone()));
 
         player.playSound(player.getLocation(), Sound.HORSE_ARMOR, 1, 1);
-        messageUtil.sendMessage(player, "Du hast das §8'§e§l" + kit.getPrefix() + "§8'§7 Kit ausgerüstet§8.");
+        messageUtil.sendMessage(player, "Du hast §8'§e§l" + kit.getPrefix() + "§8'§7 ausgerüstet§8.");
+    }
+
+    public void equipKit(final Player player, final Kit kit) {
+
+        if (!kit.getItems().isEmpty())
+            kit.getItems().forEach(item -> InventoryUtil.addItem(player, item.clone()));
+
+        player.playSound(player.getLocation(), Sound.HORSE_ARMOR, 1, 1);
+        messageUtil.sendMessage(player, "Du hast §8'§e§l" + kit.getPrefix() + "§8'§7 ausgerüstet§8.");
     }
 
     public Kit getKitBySlot(final int slot) {
@@ -237,7 +244,7 @@ public final class KitHandler {
                                         "§8 - §7Abholbar in§8: §e§o" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds(remainingSeconds),
                                         "",
                                         "§8▰§7▱ §6§lSofort abholen ? §8(§7Linksklick§8)",
-                                        "§8 - §7Preis§8: §e§o" + messageUtil.formatLong(kit.getBuyOutForSecondPrice() * remainingSeconds) + "§6§l$",
+                                        "§8 - §7Preis§8: §e§o" + messageUtil.formatLong((long) (kit.getBuyOutForSecondPrice() * remainingSeconds)) + "§6§l$",
                                         "",
                                         "§8▰§7▱ §6§lRechtsklick",
                                         "§8 - §7Öffne die Kit Preview§8.",

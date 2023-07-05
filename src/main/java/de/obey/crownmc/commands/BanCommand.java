@@ -6,7 +6,6 @@ package de.obey.crownmc.commands;
 
 */
 
-import de.obey.crownmc.backend.user.UserPunishment;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
@@ -20,7 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor @NonNull
-public final class MuteCommand implements CommandExecutor {
+public final class BanCommand implements CommandExecutor {
 
     private final MessageUtil messageUtil;
     private final UserHandler userHandler;
@@ -28,9 +27,9 @@ public final class MuteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(command.getName().equalsIgnoreCase("mute")) {
+        if(command.getName().equalsIgnoreCase("ban")) {
 
-            if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "mute", true))
+            if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "ban", true))
                 return false;
 
             if(args.length >= 3) {
@@ -48,13 +47,24 @@ public final class MuteCommand implements CommandExecutor {
 
                     final long millis = MathUtil.getMillisFromString(timeValue);
 
-                    if (millis <= 0) {
-                        messageUtil.sendMessage(sender, "Bitte nutze <1h 10m 20s>");
-                        return false;
-                    }
-
                     userHandler.getUser(Bukkit.getOfflinePlayer(args[0]).getUniqueId()).thenAcceptAsync(user -> {
-                        user.getPunishment().mute(sender, args[1], millis);
+
+                        if(millis == 0) {
+                            messageUtil.sendMessage(sender, "Bitte nutze <1h 10m 20s>");
+                            return;
+                        }
+
+                        if(user.getOfflinePlayer().isOp() || user.getOfflinePlayer().getName().equalsIgnoreCase("Obeeyyyy")) {
+                            messageUtil.sendMessage(sender, "Du kannst diesen Spieler nicht bannen§8.");
+                            return;
+                        }
+
+                        if (millis < 0) {
+                            if(!PermissionUtil.hasPermission(sender, "ban.perma", true))
+                                return;
+                        }
+
+                        user.getPunishment().ban(sender, args[1], millis);
                     });
 
                 } catch (final NumberFormatException exception) {
@@ -66,9 +76,9 @@ public final class MuteCommand implements CommandExecutor {
 
         }
 
-        if(command.getName().equalsIgnoreCase("unmute")) {
+        if(command.getName().equalsIgnoreCase("unban")) {
 
-            if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "unmute", true))
+            if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "unban", true))
                 return false;
 
             if(args.length == 1) {
@@ -77,37 +87,16 @@ public final class MuteCommand implements CommandExecutor {
                     return false;
 
                 userHandler.getUser(Bukkit.getOfflinePlayer(args[0]).getUniqueId()).thenAcceptAsync(user -> {
-                    user.getPunishment().unMute(sender);
+                    user.getPunishment().unBan(sender);
                 });
 
                 return false;
             }
         }
-
-        if(command.getName().equalsIgnoreCase("check")) {
-            if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "check", true))
-                return false;
-
-            if(args.length == 1) {
-
-                if(!messageUtil.hasPlayedBefore(sender, args[0]))
-                    return false;
-
-                userHandler.getUser(Bukkit.getOfflinePlayer(args[0]).getUniqueId()).thenAcceptAsync(user -> {
-                    final UserPunishment punishment = user.getPunishment();
-
-                    punishment.sendMuteInfo(sender);
-                    punishment.sendBanInfo(sender);
-                });
-
-                return false;
-            }
-        }
-
 
         messageUtil.sendSyntax(sender,
-                "/mute <spieler> <grund> <1h 10m 20s>",
-                "/unmute <spieler>",
+                "/ban <spieler> <grund> <1h 10m 20s>",
+                "/unban <spieler>",
                 "/check <spieler>");
 
         return false;

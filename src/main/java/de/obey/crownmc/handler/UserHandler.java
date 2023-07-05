@@ -74,9 +74,11 @@ public final class UserHandler {
                 if (user.getOfflinePlayer().isOnline())
                     return;
 
-                // if the user was not online for 30 minutes the user will be removed from the cache
-                if (user.isUsedForRanking() || System.currentTimeMillis() - user.getLong(DataType.LASTSEEN) <= 1000 * 60 * 30)
-                    return;
+                try {
+                    // if the user was not online for 30 minutes the user will be removed from the cache
+                    if (user.isUsedForRanking() || System.currentTimeMillis() - user.getLong(DataType.LASTSEEN) <= 1000 * 60 * 30)
+                        return;
+                } catch (final NullPointerException e) {}
 
                 userCache.remove(user.getOfflinePlayer().getUniqueId());
             });
@@ -125,23 +127,21 @@ public final class UserHandler {
                 }
 
                 // Setting user data
-                user.setInt(DataType.ID, ID);
+                user.setLong(DataType.ID, ID);
                 user.setLong(DataType.JOINED, System.currentTimeMillis());
                 user.setLong(DataType.LASTSEEN, System.currentTimeMillis());
                 user.setLong(DataType.LOGINSTREAKUPDATED, System.currentTimeMillis());
-                user.setLong(DataType.LOGINLASTREWARD, System.currentTimeMillis() - 1000L);
                 user.setString(DataType.FIRSTJOINDATE, format.format(new Date()));
-                user.setLong(DataType.LASTLUCKYSPIN, 1000L);
                 user.setBoolean(DataType.REGISTERED, true);
 
                 // Creating mysql table row
                 final ResultSet check = mySQL.getResultSet("SELECT id FROM users WHERE uuid='" + player.getUniqueId().toString() + "'");
                 try {
                     if (check.next()) {
-                        mySQL.execute("UPDATE users SET id='" + user.getInt(DataType.ID) + "' WHERE uuid='" + player.getUniqueId().toString() + "'");
+                        mySQL.execute("UPDATE users SET id='" + user.getLong(DataType.ID) + "' WHERE uuid='" + player.getUniqueId().toString() + "'");
                     } else {
                         mySQL.execute("INSERT INTO users(id, uuid, money, kills, deaths, bounty, level, xp, killstreak, killstreakrecord, elopoints, votes, playtime, destroyedBlocks, destroyedEventBlocks) " +
-                                "VALUES ('" + user.getInt(DataType.ID) + "'," +  /* id */
+                                "VALUES ('" + user.getLong(DataType.ID) + "'," +  /* id */
                                 " '" + user.getOfflinePlayer().getUniqueId().toString() + "'," + /* uuid */
                                 " '10000', " + /* money */
                                 " '0', " + /* kills */
@@ -229,7 +229,19 @@ public final class UserHandler {
             // Loading data from file
             for (DataType value : DataType.values()) {
                 if (value.getStoreType() == StoreType.CONFIG) {
-                    user.getData().put(value, cfg.contains(value.getSavedAs()) ? cfg.get(value.getSavedAs()) : value.getDefaultValue());
+
+                    if(cfg.contains(value.getSavedAs())) {
+                        final long data = cfg.getLong(value.getSavedAs(), -1);
+
+                        if(data == -1) {
+                            user.getData().put(value, cfg.get(value.getSavedAs()));
+                        } else {
+                            user.getData().put(value, data);
+                        }
+
+                    } else {
+                        user.getData().put(value, value.getDefaultValue());
+                    }
                 }
             }
 
@@ -243,18 +255,18 @@ public final class UserHandler {
 
             try {
                 if (results.next()) {
-                    user.setInt(DataType.ID, results.getInt("id"));
+                    user.setLong(DataType.ID, results.getInt("id"));
                     user.setLong(DataType.MONEY, results.getLong("money"));
-                    user.setInt(DataType.CROWNS, results.getInt("crowns"));
+                    user.setLong(DataType.CROWNS, results.getInt("crowns"));
                     user.setLong(DataType.BOUNTY, results.getLong("bounty"));
-                    user.setInt(DataType.KILLS, results.getInt("kills"));
-                    user.setInt(DataType.DEATHS, results.getInt("deaths"));
-                    user.setInt(DataType.ELOPOINTS, results.getInt("elopoints"));
-                    user.setInt(DataType.XP, results.getInt("xp"));
-                    user.setInt(DataType.LEVEL, results.getInt("level"));
-                    user.setInt(DataType.KILLSTREAK, results.getInt("killstreak"));
-                    user.setInt(DataType.KILLSTREAKRECORD, results.getInt("killstreakrecord"));
-                    user.setInt(DataType.VOTES, results.getInt("votes"));
+                    user.setLong(DataType.KILLS, results.getInt("kills"));
+                    user.setLong(DataType.DEATHS, results.getInt("deaths"));
+                    user.setLong(DataType.ELOPOINTS, results.getInt("elopoints"));
+                    user.setLong(DataType.XP, results.getInt("xp"));
+                    user.setLong(DataType.LEVEL, results.getInt("level"));
+                    user.setLong(DataType.KILLSTREAK, results.getInt("killstreak"));
+                    user.setLong(DataType.KILLSTREAKRECORD, results.getInt("killstreakrecord"));
+                    user.setLong(DataType.VOTES, results.getInt("votes"));
                     user.setLong(DataType.PLAYTIME, results.getLong("playtime"));
                     user.setLong(DataType.DESTROYEDBLOCKS, results.getLong(DataType.DESTROYEDBLOCKS.getSavedAs()));
                     user.setLong(DataType.DESTROYEDEVENTBLOCKS, results.getLong(DataType.DESTROYEDEVENTBLOCKS.getSavedAs()));
@@ -292,16 +304,16 @@ public final class UserHandler {
 
             mySQL.execute("UPDATE users SET " +
                     "money='" + user.getLong(DataType.MONEY) + "', " +
-                    "crowns='" + user.getInt(DataType.CROWNS) + "', " +
-                    "kills='" + user.getInt(DataType.KILLS) + "', " +
-                    "deaths='" + user.getInt(DataType.DEATHS) + "', " +
+                    "crowns='" + user.getLong(DataType.CROWNS) + "', " +
+                    "kills='" + user.getLong(DataType.KILLS) + "', " +
+                    "deaths='" + user.getLong(DataType.DEATHS) + "', " +
                     "bounty='" + user.getLong(DataType.BOUNTY) + "', " +
-                    "level='" + user.getInt(DataType.LEVEL) + "', " +
-                    "xp='" + user.getInt(DataType.XP) + "', " +
-                    "killstreak='" + user.getInt(DataType.KILLSTREAK) + "', " +
-                    "killstreakrecord='" + user.getInt(DataType.KILLSTREAKRECORD) + "', " +
-                    "elopoints='" + user.getInt(DataType.ELOPOINTS) + "', " +
-                    "votes='" + user.getInt(DataType.VOTES) + "', " +
+                    "level='" + user.getLong(DataType.LEVEL) + "', " +
+                    "xp='" + user.getLong(DataType.XP) + "', " +
+                    "killstreak='" + user.getLong(DataType.KILLSTREAK) + "', " +
+                    "killstreakrecord='" + user.getLong(DataType.KILLSTREAKRECORD) + "', " +
+                    "elopoints='" + user.getLong(DataType.ELOPOINTS) + "', " +
+                    "votes='" + user.getLong(DataType.VOTES) + "', " +
                     "playtime='" + user.getPlaytime().getCurrentPlaytime() + "', " +
                     "destroyedBlocks='" + user.getLong(DataType.DESTROYEDBLOCKS) + "', " +
                     "destroyedEventBlocks='" + user.getLong(DataType.DESTROYEDEVENTBLOCKS) + "' " +

@@ -17,26 +17,26 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public enum DataType {
 
-    ID("id", StoreType.MYSQL, 0),
+    ID("id", StoreType.MYSQL, 0L),
     MONEY("money", StoreType.MYSQL, 2500L),
-    CROWNS("crowns", StoreType.MYSQL, 0),
-    PLAYTIME("playtime", StoreType.MYSQL, 1L),
+    CROWNS("crowns", StoreType.MYSQL, 0L),
+    PLAYTIME("playtime", StoreType.MYSQL, 0L),
     PLAYTIMESAVED("playtimesaved", StoreType.CONFIG, 0L),
     BOUNTY("bounty", StoreType.MYSQL, 0L),
-    KILLS("kills", StoreType.MYSQL, 0),
-    DEATHS("deaths", StoreType.MYSQL, 0),
-    ELOPOINTS("elopoints", StoreType.MYSQL, 3000),
-    VOTES("votes", StoreType.MYSQL, 0),
-    KILLSTREAK("killstreak", StoreType.MYSQL, 0),
-    KILLSTREAKRECORD("killstreakrecord", StoreType.MYSQL, 0),
-    XP("xp", StoreType.MYSQL, 0),
-    LEVEL("level", StoreType.MYSQL, 1),
+    KILLS("kills", StoreType.MYSQL, 0L),
+    DEATHS("deaths", StoreType.MYSQL, 0L),
+    ELOPOINTS("elopoints", StoreType.MYSQL, 3000L),
+    VOTES("votes", StoreType.MYSQL, 0L),
+    KILLSTREAK("killstreak", StoreType.MYSQL, 0L),
+    KILLSTREAKRECORD("killstreakrecord", StoreType.MYSQL, 0L),
+    XP("xp", StoreType.MYSQL, 0L),
+    LEVEL("level", StoreType.MYSQL, 1L),
     DESTROYEDBLOCKS("destroyedBlocks", StoreType.MYSQL, 0L),
     DESTROYEDEVENTBLOCKS("destroyedEventBlocks", StoreType.MYSQL, 0L),
-    VOTESTREAK("votestreak", StoreType.CONFIG, 0),
-    LOGINSTREAK("loginstreak", StoreType.CONFIG, 1),
-    LOGINSTREAKUPDATED("loginstreakupdated", StoreType.CONFIG, 10000L),
-    LOGINLASTREWARD("loginlastreward", StoreType.CONFIG, 1000000L),
+    VOTESTREAK("votestreak", StoreType.CONFIG, 0L),
+    LOGINSTREAK("loginstreak", StoreType.CONFIG, 1L),
+    LOGINSTREAKUPDATED("loginstreakupdated", StoreType.CONFIG, 0L),
+    LOGINLASTREWARD("loginlastreward", StoreType.CONFIG, 0L),
     FIRSTJOINDATE("firstjoindate", StoreType.CONFIG, null),
     TMOTE("tmote", StoreType.CONFIG, ""),
     JOINMESSAGE("joinmessage", StoreType.CONFIG, ""),
@@ -56,8 +56,8 @@ public enum DataType {
     REGISTERED("registered", StoreType.CONFIG, true),
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
     IGNORES("ignores", StoreType.CONFIG, new ArrayList<>()),
-    LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 6000L),
-    LASTVOTE("lastvote", StoreType.CONFIG, 6000L);
+    LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 0L),
+    LASTVOTE("lastvote", StoreType.CONFIG, 0L);
 
 
     private final String savedAs;

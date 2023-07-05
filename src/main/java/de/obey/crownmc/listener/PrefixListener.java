@@ -171,6 +171,7 @@ public final class PrefixListener implements Listener {
 
             if (user.getPrefix().getPrefixList().contains(prefix)) {
                 messageUtil.sendMessage(player, "Du hast diesen Prefix schon freigeschlatet§8.");
+                messageUtil.sendMessage(player, "Nutze §8/§eprefix §7um ihn zu aktivieren§8.");
                 player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
                 return;
             }

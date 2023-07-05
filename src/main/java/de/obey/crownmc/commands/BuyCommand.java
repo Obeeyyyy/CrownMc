@@ -47,7 +47,7 @@ public final class BuyCommand implements CommandExecutor {
                     final int amount = Integer.parseInt(args[2]);
 
                     userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
-                        user.addInt(DataType.CROWNS, amount);
+                        user.addLong(DataType.CROWNS, amount);
 
                         messageUtil.broadcast(target.getName() + " hat sich §e§o" + messageUtil.formatLong(amount) + "§7 Crowns in unserem §8§l/§6§lstore §7gekauft§8.");
 
@@ -74,12 +74,12 @@ public final class BuyCommand implements CommandExecutor {
                     userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
 
                         messageUtil.sendMessage(sender, "§4§lREFUND §f" + target.getName() + " CROWNS " + amount);
-                        if(user.getInt(DataType.CROWNS) < amount) {
+                        if(user.getLong(DataType.CROWNS) < amount) {
                             messageUtil.sendMessage(sender, "§4§lWARN §fhat nicht genug crowns");
                             Bukkit.dispatchCommand(sender, "ban " + target.getName() + " chargeback");
                         }
 
-                        user.removeInt(DataType.CROWNS, amount);
+                        user.removeLong(DataType.CROWNS, amount);
 
                         if (target.isOnline())
                             messageUtil.sendMessage(target.getPlayer(), "§c§oDeine Zahlung wurde zurückgezogen§8.");

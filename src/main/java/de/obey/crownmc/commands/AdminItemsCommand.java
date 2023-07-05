@@ -6,7 +6,9 @@ package de.obey.crownmc.commands;
 
 */
 
+import de.obey.crownmc.handler.KitHandler;
 import de.obey.crownmc.handler.RangHandler;
+import de.obey.crownmc.objects.pvp.Kit;
 import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
@@ -29,6 +31,7 @@ import java.util.UUID;
 public final class AdminItemsCommand implements CommandExecutor {
 
     private final RangHandler rangHandler;
+    private final KitHandler kitHandler;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -116,6 +119,24 @@ public final class AdminItemsCommand implements CommandExecutor {
                                 "§8 - §71ne Woche zu erhalten§8.",
                                 "")
                 .build());
+
+        inventory.addItem(new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                        .setDisplayname("§c§lStat Reset")
+                        .setLore("",
+                                "§c§lInformation",
+                                "§8  -§7 Dieses Item erlaubt es dir deine KD auf 0 zu setzen§8.",
+                                "")
+                        .setTextur("M2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==", UUID.randomUUID())
+                .build());
+
+        for (final Kit kit : kitHandler.getKitCache().values()) {
+            inventory.addItem(new ItemBuilder(Material.IRON_BARDING)
+                            .setDisplayname("§8» §7Kit Gutschein")
+                            .setLore("",
+                                    "§f§lInformation",
+                                    "  §8- §7Kit§8:§f " + kit.getName().toUpperCase())
+                    .build());
+        }
 
         player.openInventory(inventory);
 

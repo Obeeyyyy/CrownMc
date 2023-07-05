@@ -88,6 +88,11 @@ public final class JoinListener implements Listener {
         if (userHandler.getRegistering().contains(player)) {
             player.getInventory().clear();
 
+            player.getInventory().setHelmet(null);
+            player.getInventory().setChestplate(null);
+            player.getInventory().setLeggings(null);
+            player.getInventory().setBoots(null);
+
             final YamlConfiguration serverCfg = serverConfig.getCfg();
             final ArrayList<ItemStack> contents = serverCfg.contains("firstjoin") ? (ArrayList<ItemStack>) serverCfg.getList("firstjoin") : new ArrayList<>();
 
@@ -114,10 +119,10 @@ public final class JoinListener implements Listener {
                     if (System.currentTimeMillis() - user.getLong(DataType.LOGINSTREAKUPDATED) >= 86400000) {
                         if (System.currentTimeMillis() - user.getLong(DataType.LASTSEEN) >= 172798000) {
                             // BREAK STREAK
-                            user.setInt(DataType.LOGINSTREAK, 1);
+                            user.setLong(DataType.LOGINSTREAK, 1);
                         } else {
                             // CONTINUE STREAK
-                            user.addInt(DataType.LOGINSTREAK, 1);
+                            user.addLong(DataType.LOGINSTREAK, 1);
                         }
 
                         user.setLong(DataType.LOGINSTREAKUPDATED, System.currentTimeMillis());
@@ -138,7 +143,7 @@ public final class JoinListener implements Listener {
                     player.sendMessage(" §8- §7Online Shop§8: §e§ostore.crownmc.de");
                     player.sendMessage("");
                     player.sendMessage(" §8- §7Du warst §f§o" + (MathUtil.getHoursAndMinutesAndSecondsFromSeconds((System.currentTimeMillis() - user.getLong(DataType.LASTSEEN)) / 1000)) + "§coffline.");
-                    player.sendMessage(" §8- §7Loginstreak§8: §f§o" + user.getInt(DataType.LOGINSTREAK) + "§8.");
+                    player.sendMessage(" §8- §7Loginstreak§8: §f§o" + user.getLong(DataType.LOGINSTREAK) + "§8.");
                     player.sendMessage(" §8- §7Nächster Tag in §a§o" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((86400000 - (System.currentTimeMillis() - user.getLong(DataType.LOGINSTREAKUPDATED))) / 1000));
                     player.sendMessage("");
                     player.sendMessage("§8§l§m-----------------------------------");
@@ -147,7 +152,7 @@ public final class JoinListener implements Listener {
 
                 user.setPacketReader(new PacketReader(player));
 
-                messageUtil.log("#> " + player.getName() + " JOINED ( " + messageUtil.formatLong(user.getLong(DataType.MONEY)) + "$, " + user.getInt(DataType.KILLS) + "/" + user.getInt(DataType.DEATHS) + " )");
+                messageUtil.log("#> " + player.getName() + " JOINED ( " + messageUtil.formatLong(user.getLong(DataType.MONEY)) + "$, " + user.getLong(DataType.KILLS) + "/" + user.getLong(DataType.DEATHS) + " )");
 
                 new BukkitRunnable() {
                     @Override

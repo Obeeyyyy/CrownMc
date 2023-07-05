@@ -75,6 +75,7 @@ public final class BadgeHandler {
             return;
 
         badgeMap.values().forEach(badge -> badge.save(serverConfig.getCfg()));
+        System.out.println("Saving (" + badgeMap.size() +") Badges.");
 
         serverConfig.save();
     }

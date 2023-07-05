@@ -65,7 +65,7 @@ public final class LocationHandler {
         final World world = Bukkit.getWorld(splitted[1]);
 
         if(world == null) {
-            messageUtil.sendMessage(Bukkit.getConsoleSender(), "Welt: " + splitted[1] + " existiert nicht§8.");
+            messageUtil.warn("World '" + splitted[1] + "' does not exist.");
             return null;
         }
 
@@ -118,8 +118,11 @@ public final class LocationHandler {
 
         player.teleport(location);
         player.playSound(player.getLocation(), Sound.ENDERMAN_TELEPORT, 1, 1);
-        player.setAllowFlight(false);
-        player.setFlying(false);
+
+        if(player.getGameMode() == GameMode.SURVIVAL) {
+            player.setAllowFlight(false);
+            player.setFlying(false);
+        }
     }
 
     public void teleportToLocationName(final Player player, final String locationName) {

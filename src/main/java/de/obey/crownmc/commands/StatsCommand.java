@@ -71,12 +71,12 @@ public final class StatsCommand implements CommandExecutor {
             sender.sendMessage("");
             sender.sendMessage("§8▰§7▱ §6§lInformationen");
             sender.sendMessage("");
-            sender.sendMessage("  §8- §7Name§8: §e§o" + user.getOfflinePlayer().getName() + " §8(§6§l#§e§o" + user.getInt(DataType.ID) + "§8)");
-            sender.sendMessage("  §8- §7Level§8: §f§o" + user.getInt(DataType.LEVEL) + " §8(§f§o" + messageUtil.formatLong(user.getInt(DataType.XP)) + "§8/§f§l" + messageUtil.formatLong(LevelUtil.getXPForNextLevel(user.getInt(DataType.LEVEL) + 1)) + "§8)");
-            sender.sendMessage("  §8- §7Balance§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.MONEY)) + "§6§l$ §8- §7Crowns§8: §e§o" + messageUtil.formatLong(user.getInt(DataType.CROWNS)) + "§6§l¢" );
+            sender.sendMessage("  §8- §7Name§8: §e§o" + user.getOfflinePlayer().getName() + " §8(§6§l#§e§o" + user.getLong(DataType.ID) + "§8)");
+            sender.sendMessage("  §8- §7Level§8: §f§o" + user.getLong(DataType.LEVEL) + " §8(§f§o" + messageUtil.formatLong(user.getLong(DataType.XP)) + "§8/§f§l" + messageUtil.formatLong(LevelUtil.getXPForNextLevel(user.getLong(DataType.LEVEL) + 1)) + "§8)");
+            sender.sendMessage("  §8- §7Balance§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.MONEY)) + "§6§l$ §8- §7Crowns§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.CROWNS)) + "§6§l¢" );
             sender.sendMessage("  §8- §7Bounty§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.BOUNTY)) + "§6§l$");
-            sender.sendMessage("  §8- §7Votes§8: §a§o" + messageUtil.formatLong(user.getInt(DataType.VOTES)) + " §8- §7Votestreak§8: §2§l" + messageUtil.formatLong(user.getInt(DataType.VOTESTREAK)));
-            sender.sendMessage("  §8- §7Loginstreak§8: §a§o" + messageUtil.formatLong(user.getInt(DataType.LOGINSTREAK)));
+            sender.sendMessage("  §8- §7Votes§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.VOTES)) + " §8- §7Votestreak§8: §2§l" + messageUtil.formatLong(user.getLong(DataType.VOTESTREAK)));
+            sender.sendMessage("  §8- §7Loginstreak§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.LOGINSTREAK)));
             sender.sendMessage("  §8- §7Beigetreten am§8: §f§o" + user.getString(DataType.FIRSTJOINDATE));
             sender.sendMessage("  §8- §7Status§8: " + (user.getOfflinePlayer().isOnline() ? "§a§oOnline §7seit§f§o " + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((System.currentTimeMillis() - user.getLong(DataType.JOINED)) / 1000) : "§c§oOffline §7seit§f§o " + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((System.currentTimeMillis() - user.getLong(DataType.LASTSEEN)) / 1000)));
             sender.sendMessage("  §8- §7Spielzeit§8:§f§o " + MathUtil.getDaysAndHoursAndMinutesAndSecondsFromSeconds(user.getPlaytime().getCurrentPlaytime()));
@@ -86,17 +86,17 @@ public final class StatsCommand implements CommandExecutor {
         sender.sendMessage("§8▰§7▱ §6§lPvP Stats " + (pvpstats ? "§8( §e§o" + user.getOfflinePlayer().getName() + " §8)" : ""));
         sender.sendMessage("");
 
-        final int kills = user.getInt(DataType.KILLS), deaths = user.getInt(DataType.DEATHS);
+        final long kills = user.getLong(DataType.KILLS), deaths = user.getLong(DataType.DEATHS);
 
         sender.sendMessage("  §8- §7K/D§8: §a§o" + messageUtil.formatLong(kills) + "§8/§c§o" + messageUtil.formatLong(deaths) + " §8(§f§o" + formatKD(kills, deaths) + "§8)");
-        sender.sendMessage("  §8- §7Elopunkte§8: §a§o" + messageUtil.formatLong(user.getInt(DataType.ELOPOINTS)) + " §8( " + eloHandler.getEloRangFromEloPoints(user.getInt(DataType.ELOPOINTS)) + " §8)");
-        sender.sendMessage("  §8- §7Killstreak§8: §a§o" + messageUtil.formatLong(user.getInt(DataType.KILLSTREAK)) + " §7Rekord§8: §a§o" + messageUtil.formatLong(user.getInt(DataType.KILLSTREAKRECORD)));
+        sender.sendMessage("  §8- §7Elopunkte§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.ELOPOINTS)) + " §8( " + eloHandler.getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)) + " §8)");
+        sender.sendMessage("  §8- §7Killstreak§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.KILLSTREAK)) + " §7Rekord§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.KILLSTREAKRECORD)));
         sender.sendMessage("");
         sender.sendMessage("§8§l§m-----------------------------------");
         sender.sendMessage("");
     }
 
-    private String formatKD(final int kills, final int deaths) {
+    private String formatKD(final long kills, final long deaths) {
         final double kd = kills > 0 ? (deaths > 0 ? ((float)(kills / deaths)) + 0.0D : kills) : 0;
         final DecimalFormat format = new DecimalFormat("0.0#", new DecimalFormatSymbols(Locale.ENGLISH));
         return format.format(kd);

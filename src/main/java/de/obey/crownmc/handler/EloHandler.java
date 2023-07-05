@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public final class EloHandler {
 
-    public String getEloRangFromEloPoints(final int points) {
+    public String getEloRangFromEloPoints(final long points) {
 
         if (points >= 20000) return "§4§lMASTER";
 

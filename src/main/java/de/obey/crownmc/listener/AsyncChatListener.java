@@ -102,7 +102,7 @@ public final class AsyncChatListener implements Listener {
             return;
 
         if(user.getPunishment().isMuted()) {
-            messageUtil.sendMessage(player, "Du bist noch für §8'§e" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds(user.getPunishment().getRemainingMillis()/1000) + "§8'§7 gemutet§8.");
+            messageUtil.sendMessage(player, "Du bist noch für §8'§e" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds(user.getPunishment().getRemainingMuteMillis()/1000) + "§8'§7 gemutet§8.");
             return;
         }
 

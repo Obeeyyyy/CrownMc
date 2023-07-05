@@ -19,28 +19,28 @@ public final class LevelUtil {
     private MessageUtil messageUtil;
 
     public void checkForLevelUp(final User user) {
-        final int level = user.getInt(DataType.LEVEL);
-        final int xp = user.getInt(DataType.XP);
+        final long level = user.getLong(DataType.LEVEL);
+        final long xp = user.getLong(DataType.XP);
 
-        final int xpForNextLevel = getXPForNextLevel(level + 1);
+        final long xpForNextLevel = getXPForNextLevel(level + 1);
 
         if(xp >= xpForNextLevel) {
             levelUP(user, xp - xpForNextLevel, level + 1);
         }
     }
 
-    public int getXPForNextLevel(final int level) {
-        return (int) (500 * Math.pow(level, 2) - (500 * level));
+    public long getXPForNextLevel(final long level) {
+        return (long) (500 * Math.pow(level, 2) - (500 * level));
     }
 
-    public void levelUP(final User user, final int extraXp, final int nextLevel) {
+    public void levelUP(final User user, final long extraXp, final long nextLevel) {
         if(messageUtil == null)
             messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
 
-        final int moneyReward = CrownMain.getInstance().getInitializer().getServerConfig().getLevelUpMoney() * nextLevel;
+        final long moneyReward = CrownMain.getInstance().getInitializer().getServerConfig().getLevelUpMoney() * nextLevel;
 
-        user.addInt(DataType.LEVEL, 1);
-        user.setInt(DataType.XP, extraXp);
+        user.addLong(DataType.LEVEL, 1);
+        user.setLong(DataType.XP, extraXp);
         user.addLong(DataType.MONEY, moneyReward);
 
         if(!user.getOfflinePlayer().isOnline())

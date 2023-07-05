@@ -25,7 +25,7 @@ public final class ToggleCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "toggle", true))
+        if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "toggle", true))
             return false;
 
         if (args.length == 1) {

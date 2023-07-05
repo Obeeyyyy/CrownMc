@@ -62,7 +62,7 @@ public final class MessageUtil {
         return true;
     }
 
-    public boolean hasPlayedBefore(final CommandSender sender, final String name) {
+    public boolean hasPlayedBefore(final String name) {
         if (userHandler == null)
             userHandler = CrownMain.getInstance().getInitializer().getUserHandler();
 
@@ -71,12 +71,15 @@ public final class MessageUtil {
 
         final OfflinePlayer player = Bukkit.getOfflinePlayer(name);
 
-        if (!userHandler.isRegistered(player)) {
+        return userHandler.isRegistered(player);
+    }
+
+    public boolean hasPlayedBefore(final CommandSender sender, final String name) {
+        if (!hasPlayedBefore(name)) {
             sender.sendMessage(serverConfig.getPrefix() + "Der Spieler §8'§f§o" + name + "§8'§7 war noch §c§onie §7auf dem Server§8.");
 
             if (sender instanceof Player)
                 ((Player) sender).playSound(((Player) sender).getLocation(), Sound.EXPLODE, 0.5f, 1);
-
             return false;
         }
 
@@ -107,9 +110,9 @@ public final class MessageUtil {
 
     public boolean hasEnougthCrowns(final User user, final int amount) {
 
-        if (user.getInt(DataType.CROWNS) < amount) {
+        if (user.getLong(DataType.CROWNS) < amount) {
             user.getPlayer().playSound(user.getPlayer().getLocation(), Sound.EXPLODE, 0.5f, 1);
-            sendMessage(user.getPlayer(), "Du hast nicht genug Crowns§8. (§c§o-" + formatLong(amount - user.getInt(DataType.CROWNS)) + "§8)");
+            sendMessage(user.getPlayer(), "Du hast nicht genug Crowns§8. (§c§o-" + formatLong(amount - user.getLong(DataType.CROWNS)) + "§8)");
             return false;
         }
 
@@ -127,6 +130,10 @@ public final class MessageUtil {
     public void log(final String message) {
         //Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
         Bukkit.getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', message));
+    }
+
+    public void warn(final String message) {
+        Bukkit.getLogger().log(Level.WARNING, ChatColor.translateAlternateColorCodes('&', message));
     }
 
     public void sendHoverTextCommandToTeamMembers(final String message, final String command) {

@@ -35,15 +35,27 @@ public final class EnderChestCommand implements CommandExecutor {
 
         final Player player = (Player) sender;
 
-        if (!PermissionUtil.hasPermission(player, "enderchest", true))
-            return false;
-
         if (args.length == 0) {
+
+            if (!PermissionUtil.hasPermission(player, "enderchest", true))
+                return false;
+
             initializer.getUserHandler().getUserInstant(player.getUniqueId()).getEnderchest().openEnderchestSite(player, 1);
             return false;
         }
 
         if (args.length == 1) {
+
+            if(args[0].equalsIgnoreCase("help")) {
+                initializer.getMessageUtil().sendSyntax(sender, "/ec <spieler>",
+                        "/ec trusted",
+                        "/ec trust <spieler>",
+                        "/ec untrust <spieler>");
+                return false;
+            }
+
+            if (!PermissionUtil.hasPermission(player, "enderchest.other", true))
+                return false;
 
             if (args[0].equalsIgnoreCase("trusted") || args[0].equalsIgnoreCase("list")) {
 

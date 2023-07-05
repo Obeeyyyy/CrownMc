@@ -75,26 +75,26 @@ public final class DeathListener implements Listener {
         final User killerUser = userHandler.getUserInstant(killer.getUniqueId());
 
         // Punishment start
-        user.addInt(DataType.DEATHS, 1);
+        user.addLong(DataType.DEATHS, 1);
         user.removeLong(DataType.MONEY, serverConfig.getDeathMoneyLose());
-        user.removeInt(DataType.ELOPOINTS, serverConfig.getDeathEloLose());
+        user.removeLong(DataType.ELOPOINTS, serverConfig.getDeathEloLose());
         // Punishment end
 
 
         // Reward stuff start
-        int killerUserKillstreak;
+        long killerUserKillstreak;
 
-        int moneyReward = serverConfig.getKillMoneyReward(),
+        long moneyReward = serverConfig.getKillMoneyReward(),
                 eloReward =  serverConfig.getKillEloReward(),
                 xpReward = serverConfig.getKillXPReward();
 
         killFarmHandler.check(player, killer);
         if (!killFarmHandler.isBlocked(player)) {
 
-            killerUser.addInt(DataType.KILLS, 1);
-            killerUser.addInt(DataType.KILLSTREAK, 1);
+            killerUser.addLong(DataType.KILLS, 1);
+            killerUser.addLong(DataType.KILLSTREAK, 1);
 
-            killerUserKillstreak = killerUser.getInt(DataType.KILLSTREAK);
+            killerUserKillstreak = killerUser.getLong(DataType.KILLSTREAK);
 
             if((killerUserKillstreak / 5) % 2 == 0) { // wenn kill streak 5, 10, 15 , 20 usw
                 moneyReward += (serverConfig.getBaseMoneyKillstreak() * (killerUserKillstreak/5L));
@@ -117,12 +117,12 @@ public final class DeathListener implements Listener {
             if(killerUserKillstreak >= 250)
                 killerUser.getBadges().addBadge("ks250");
 
-            if (killerUser.getInt(DataType.KILLSTREAKRECORD) < killerUserKillstreak) {
-                killerUser.setInt(DataType.KILLSTREAKRECORD, killerUserKillstreak);
+            if (killerUser.getLong(DataType.KILLSTREAKRECORD) < killerUserKillstreak) {
+                killerUser.setLong(DataType.KILLSTREAKRECORD, killerUserKillstreak);
                 messageUtil.sendMessage(killer, "Du hast einen neuen persönlichen §6§lKillstreakrekord§7 aufgestellt§8. §e§o" + killerUserKillstreak + "§7 " + (killerUserKillstreak > 1 ? "Kills" : "Kill") + " in Folge §8!");
             }
 
-            killerUser.addInt(DataType.ELOPOINTS, eloReward);
+            killerUser.addLong(DataType.ELOPOINTS, eloReward);
             killerUser.addLong(DataType.MONEY, moneyReward);
             killerUser.addXP(xpReward);
         }
@@ -142,7 +142,7 @@ public final class DeathListener implements Listener {
                             "",
                             "§8▰§7▱  §6§lWie erhalte ich mein Kopfgeld §8?",
                             "  §8- §7Das §eKopfgeld §7kann am Spawn",
-                            "  §8- §7bei §6§oMert §7abgeholt werden§8.")
+                            "  §8- §7bei §5§lReaper §7abgeholt werden§8.")
                     .setSkullOwner(player.getName())
                     .build());
         }
@@ -178,17 +178,17 @@ public final class DeathListener implements Listener {
             public void run() {
                 Combat combat = combatHandler.isInCombat(player);
                 if (combat != null) {
-                    final int playerUserKillstreak = user.getInt(DataType.KILLSTREAK);
+                    final long playerUserKillstreak = user.getLong(DataType.KILLSTREAK);
                     messageUtil.sendMessage(player, "Du wurdest von " + killer.getName() + " §8(§f§o" +
                             "" + format.format((killer.getHealth() / 2)) + "§4§l❤§8)§7 getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (playerUserKillstreak > 0 ? " §7Du hattest eine §e§o" + playerUserKillstreak + "§7er Killstreak§8." : ""));
                     combat.end();
                 }
 
-                user.setInt(DataType.KILLSTREAK, 0);
+                user.setLong(DataType.KILLSTREAK, 0);
 
                 combat = combatHandler.isInCombat(killer);
                 if (combat != null) {
-                    messageUtil.sendMessage(killer, "Du hast " + player.getName() + " getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (killerUser.getInt(DataType.KILLSTREAK) > 0 ? " §7Deine Killstreak§8: §6§o" + killerUser.getInt(DataType.KILLSTREAK) + "§7 Kills§8." : ""));
+                    messageUtil.sendMessage(killer, "Du hast " + player.getName() + " getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (killerUser.getLong(DataType.KILLSTREAK) > 0 ? " §7Deine Killstreak§8: §6§o" + killerUser.getLong(DataType.KILLSTREAK) + "§7 Kills§8." : ""));
                     killer.playSound(player.getLocation(), Sound.SILVERFISH_KILL, 0.5f, 100);
                     combat.end();
                 }

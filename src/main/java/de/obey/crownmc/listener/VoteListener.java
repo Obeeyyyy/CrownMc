@@ -10,7 +10,6 @@ import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import de.obey.crownmc.Initializer;
 import de.obey.crownmc.backend.enums.DataType;
-import de.obey.crownmc.objects.VoteParty;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -34,17 +33,17 @@ public final class VoteListener implements Listener {
         final OfflinePlayer target = Bukkit.getOfflinePlayer(vote.getUsername());
 
         initializer.getUserHandler().getUser(target.getUniqueId()).thenAcceptAsync(user -> {
-            user.addInt(DataType.VOTES, 1);
+            user.addLong(DataType.VOTES, 1);
 
             if(System.currentTimeMillis() - user.getLong(DataType.LASTVOTE) > 86400000)
-                user.setInt(DataType.VOTESTREAK, 0);
+                user.setLong(DataType.VOTESTREAK, 0);
 
-            user.addInt(DataType.VOTESTREAK, 1);
+            user.addLong(DataType.VOTESTREAK, 1);
             user.setLong(DataType.LASTVOTE, System.currentTimeMillis());
 
             if(target.isOnline()) {
                 initializer.getServerConfig().vote(target.getPlayer());
-                initializer.getMessageUtil().sendMessage(target.getPlayer(), "Votestreak§8: §a§o" + user.getInt(DataType.VOTESTREAK) + "§7 Votes§8.");
+                initializer.getMessageUtil().sendMessage(target.getPlayer(), "Votestreak§8: §a§o" + user.getLong(DataType.VOTESTREAK) + "§7 Votes§8.");
             }
         });
 

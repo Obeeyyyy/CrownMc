@@ -431,7 +431,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                     if (!messageUtil.hasEnougthCrowns(user, Math.toIntExact(finalAmount * shopItem.getPrice())))
                         return;
 
-                    user.removeInt(DataType.CROWNS, Math.toIntExact(shopItem.getPrice() * finalAmount));
+                    user.removeLong(DataType.CROWNS, Math.toIntExact(shopItem.getPrice() * finalAmount));
 
                     shopItem.setCount(shopItem.getCount() + finalAmount);
                     kategory.updateInventory(event.getInventory());

@@ -103,7 +103,7 @@ public final class UserLoginStreak {
     }
 
     public void updateInventory() {
-        int streak = user.getInt(DataType.LOGINSTREAK);
+        long streak = user.getLong(DataType.LOGINSTREAK);
         final long lastRedeemed = user.getLong(DataType.LOGINLASTREWARD);
 
         if(streak > maxStreak)
@@ -127,7 +127,7 @@ public final class UserLoginStreak {
             if(isRewardSlot(slot)) {
 
                 // reward schon eingelöst
-                if(System.currentTimeMillis() - lastRedeemed <= 86400000L * ((streak - i) == 0 ? 1 : streak - i)) {
+                if(System.currentTimeMillis() - 86400000L <= lastRedeemed * ((streak - i) == 0 ? 1 : streak - i)) {
                     inventory.setItem(slot, getRewardItemClaimed(i, streak));
                     continue;
                 }
@@ -142,7 +142,7 @@ public final class UserLoginStreak {
 
     }
 
-    private ItemStack getGreen(final int day, final int streak) {
+    private ItemStack getGreen(final int day, final long streak) {
         return new ItemBuilder(Material.STAINED_GLASS_PANE,1, (byte) 5)
                 .setDisplayname("§a§lTag §8(§7 " + day + " §8)")
                 .setLore("",
@@ -152,7 +152,7 @@ public final class UserLoginStreak {
                 .build();
     }
 
-    private ItemStack getFence(final int day, final int streak) {
+    private ItemStack getFence(final int day, final long streak) {
         return new ItemBuilder(Material.IRON_FENCE)
                 .setDisplayname("§c§lTag §8(§7 " + day + " §8)")
                 .setLore("",
@@ -162,7 +162,7 @@ public final class UserLoginStreak {
                 .build();
     }
 
-    private ItemStack getRewardItemReady(final int day, final int streak) {
+    private ItemStack getRewardItemReady(final int day, final long streak) {
         return new ItemBuilder(Material.STORAGE_MINECART)
                 .setDisplayname("§a§lTag §8(§7 " + day + " §8)")
                 .setLore("",
@@ -178,7 +178,7 @@ public final class UserLoginStreak {
                 .build();
     }
 
-    private ItemStack getRewardItemClaimed(final int day, final int streak) {
+    private ItemStack getRewardItemClaimed(final int day, final long streak) {
         return new ItemBuilder(Material.HOPPER_MINECART)
                 .setDisplayname("§a§lTag §8(§7 " + day + " §8)")
                 .setLore("",
@@ -192,7 +192,7 @@ public final class UserLoginStreak {
                 .build();
     }
 
-    private ItemStack getRewardItemNotReady(final int day, final int streak) {
+    private ItemStack getRewardItemNotReady(final int day, final long streak) {
         return new ItemBuilder(Material.POWERED_MINECART)
                 .setDisplayname("§c§lTag §8(§7 " + day + " §8)")
                 .setLore("",
@@ -207,7 +207,7 @@ public final class UserLoginStreak {
     }
 
     public void claimReward(final int day) {
-        final int streak = user.getInt(DataType.LOGINSTREAK);
+        final long streak = user.getLong(DataType.LOGINSTREAK);
 
         if(streak > day) {
             user.setLong(DataType.LOGINLASTREWARD, System.currentTimeMillis() - ((streak-day) * 86400000L ));

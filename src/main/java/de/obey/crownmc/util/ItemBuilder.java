@@ -225,7 +225,12 @@ public final class ItemBuilder {
     }
 
     public ItemBuilder setEnchantments(final Map<Enchantment, Integer> enchantments) {
-        enchantments.keySet().forEach(enchantment -> meta.addEnchant(enchantment, enchantments.get(enchantment), true));
+        enchantments.keySet().forEach(enchantment -> {
+            meta.addEnchant(enchantment, enchantments.get(enchantment), true);
+
+            if(leatherMeta != null)
+                leatherMeta.addEnchant(enchantment, enchantments.get(enchantment), true);
+        });
 
         return this;
     }
@@ -239,7 +244,7 @@ public final class ItemBuilder {
         if (skullMeta != null)
             skullMeta.addItemFlags(flags);
 
-        if (skullMeta != null)
+        if (leatherMeta != null)
             leatherMeta.addItemFlags(flags);
 
         return this;

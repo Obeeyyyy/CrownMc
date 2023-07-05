@@ -21,7 +21,7 @@ public final class Badge {
     private String prefix, creationDate, name;
     private String description = "Change dis";
     private ItemStack showItem;
-    private int owned = 0;
+    private int owned = 0, slot = 0;
 
     public Badge(final String name, final YamlConfiguration cfg) {
         this.name = name;
@@ -44,12 +44,14 @@ public final class Badge {
 
         if (cfg.contains("badges." + name + ".owned"))
             owned = cfg.getInt("badges." + name + ".owned");
+
+        if (cfg.contains("badges." + name + ".slot"))
+            slot = cfg.getInt("badges." + name + ".slot");
     }
 
     public void add() {
         owned++;
     }
-
 
     public void remove() {
         if(owned > 0)
@@ -62,5 +64,6 @@ public final class Badge {
         cfg.set("badges." + name + ".description", description);
         cfg.set("badges." + name + ".showitem", showItem);
         cfg.set("badges." + name + ".owned", owned);
+        cfg.set("badges." + name + ".slot", slot);
     }
 }
