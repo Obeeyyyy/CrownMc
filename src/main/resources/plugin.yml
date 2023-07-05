@@ -174,3 +174,6 @@ commands:
   ban:
   unban:
   roulette:
+  shield:
+  frieden:
+    aliases: [friede, peace]

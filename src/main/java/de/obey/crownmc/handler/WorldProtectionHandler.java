@@ -79,6 +79,9 @@ public final class WorldProtectionHandler {
 
         if (what.equalsIgnoreCase("homes"))
             worldProtection.setHomes(!worldProtection.isHomes());
+
+        if (what.equalsIgnoreCase("projectiles"))
+            worldProtection.setProjectiles(!worldProtection.isProjectiles());
     }
 
     public boolean canBuild(final Player player) {
@@ -99,10 +102,10 @@ public final class WorldProtectionHandler {
         return protection == null || protection.isPvp();
     }
 
-    public boolean canFightMobs(final Player player) {
-        final WorldProtection protection = getWorldProtection(player.getWorld());
+    public boolean canProjectile(final World world)  {
+        final WorldProtection protection = getWorldProtection(world);
 
-        return protection == null || protection.isPve();
+        return protection == null || protection.isProjectiles();
     }
 
     public boolean canFightMobs(final World world) {

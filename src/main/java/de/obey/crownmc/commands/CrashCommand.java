@@ -69,11 +69,6 @@ public final class CrashCommand implements CommandExecutor, Listener {
                     }
                 }
 
-                if (amount > 100000000) {
-                    messageUtil.sendMessage(player, "Bitte gebe einen Betrag an der keiner als 100 Millionen ist§8.");
-                    return false;
-                }
-
                 crashHandler.getCrash().joinCrash(player, amount);
 
                 return false;

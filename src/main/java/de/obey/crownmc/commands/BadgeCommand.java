@@ -420,23 +420,23 @@ public final class BadgeCommand implements CommandExecutor, Listener {
 
         final Player player = event.getPlayer();
 
-        if (!InventoryUtil.isItemInHandStartsWith(player, "§f§lBADGE"))
+        if (!InventoryUtil.isItemInHandStartsWith(player, "§f§lBADGE "))
             return;
 
         event.setCancelled(true);
 
-        final ItemStack item = player.getItemInHand();
-        final String name = ChatColor.stripColor(player.getItemInHand().getItemMeta().getLore().get(4));
-        final Badge badge = badgeHandler.getBadgeFromName(name);
-
-        if (badge == null) {
-            messageUtil.sendMessage(player, "Die Badge " + name + " existiert nicht§8.");
-            return;
-        }
-
         userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
-            if(item != player.getItemInHand())
+
+            if (!InventoryUtil.isItemInHandStartsWith(player, "§f§lBADGE "))
                 return;
+
+            final String name = ChatColor.stripColor(player.getItemInHand().getItemMeta().getLore().get(4));
+            final Badge badge = badgeHandler.getBadgeFromName(name);
+
+            if (badge == null) {
+                messageUtil.sendMessage(player, "Die Badge " + name + " existiert nicht§8.");
+                return;
+            }
 
             if (user.getBadges().getBadges().containsKey(badge.getName())) {
                 messageUtil.sendMessage(player, "Du hast die " + name + " Badge schon§8.");

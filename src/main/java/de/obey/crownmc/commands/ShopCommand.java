@@ -150,7 +150,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
 
                     category.getItems().forEach(shopItem -> {
                         player.sendMessage("§8 - §3ID§8:§b" + shopItem.getID());
-                        player.sendMessage("§8   ->§7 material§8:§f " + shopItem.getItemStack().getType().name());
+                        player.sendMessage("§8   ->§7 item§8:§f " + (shopItem.getItemStack().hasItemMeta() ? (shopItem.getItemStack().getItemMeta().hasDisplayName() ? shopItem.getItemStack().getItemMeta().getDisplayName() : shopItem.getItemStack().getType().name()) : shopItem.getItemStack().getType().name()));
                         player.sendMessage("§8   ->§7 amount§8:§f " + shopItem.getItemStack().getAmount());
                         player.sendMessage("§8   ->§7 slot§8:§f " + shopItem.getSlot());
                         player.sendMessage("§8   ->§7 price§8:§f " + shopItem.getPrice());

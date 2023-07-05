@@ -25,17 +25,17 @@ public final class SlowChatCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "slowchat", true))
+        if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "slowchat", true))
             return false;
 
         if (!Bools.slowchat) {
             Bools.slowchat = true;
-            messageUtil.broadcast("Slowchat wurde von §e§o" + sender.getName() + " §aaktiviert§7.");
+            messageUtil.broadcast("Slowchat wurde von §e§o" + sender.getName() + " §aaktiviert§8.");
             return false;
         }
 
         Bools.slowchat = false;
-        messageUtil.broadcast("Slowchat wurde von §e§o" + sender.getName() + " §cdeaktiviert§7.");
+        messageUtil.broadcast("Slowchat wurde von §e§o" + sender.getName() + " §cdeaktiviert§8.");
 
         return false;
     }

@@ -9,6 +9,7 @@ package de.obey.crownmc.commands;
 */
 
 import de.obey.crownmc.handler.RouletteHandler;
+import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
@@ -22,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 @RequiredArgsConstructor @NonNull
@@ -145,10 +147,37 @@ public final class RouletteCommand implements CommandExecutor, Listener {
             try {
                 final int id = Integer.parseInt(sign.getLine(1).split(" ")[1]);
 
-                rouletteHandler.joinRoulette(id, event.getPlayer(), 100, "green");
+                rouletteHandler.openTable(id, event.getPlayer());
 
             } catch (final NumberFormatException exception) {}
         }
     }
+
+    @EventHandler
+    public void on(final InventoryClickEvent event) {
+        if(!InventoryUtil.startsWithInventoryTitle(event.getInventory(), "§f§lTisch§7 "))
+            return;
+
+        event.setCancelled(true);
+
+        if(!InventoryUtil.startsWithInventoryTitle(event.getClickedInventory(), "§f§lTisch§7 "))
+            return;
+
+        final int table = Integer.parseInt(event.getInventory().getName().split(" ")[1]);
+        final Player player = (Player) event.getWhoClicked();
+
+        // rot
+        if(event.getSlot() == 29) {
+            rouletteHandler.joiningRoulette.put(player, "red");
+            rouletteHandler.joinedTable.put(player, table);
+
+            player.closeInventory();
+
+            messageUtil.sendMessage(player, "Schreibe den §a§ogewünschten Betrag§7 in den Chat§8.");
+            messageUtil.sendMessage(player, "Schreibe §c§ocancel§7 um den Vorgang abzubrechen§8.");
+        }
+
+    }
+
 
 }

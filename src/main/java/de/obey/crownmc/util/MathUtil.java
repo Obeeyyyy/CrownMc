@@ -125,7 +125,9 @@ public final class MathUtil {
     public long getLongFromStringwithSuffix(final String text) {
         if (text.contains("k")) {
             try {
-                return Long.parseLong(text.replace("k", "")) * 1000;
+                String number = text.replace("k", "").replace(",", ".");
+                double value = Double.parseDouble(number) * 1000;
+                return (long) value;
             } catch (final NumberFormatException exception) {
                 return -1;
             }
@@ -133,7 +135,9 @@ public final class MathUtil {
 
         if (text.contains("mrd")) {
             try {
-                return Long.parseLong(text.toLowerCase().replace("mrd", "")) * 1000000000;
+                String number = text.toLowerCase().replace("mrd", "").replace(",", ".");
+                double value = Double.parseDouble(number) * 1_000_000_000;
+                return (long) value;
             } catch (final NumberFormatException exception) {
                 return -1;
             }
@@ -141,7 +145,9 @@ public final class MathUtil {
 
         if (text.contains("brd")) {
             try {
-                return Long.parseLong(text.toLowerCase().replace("brd", "")) * 1000000000000000L;
+                String number = text.toLowerCase().replace("brd", "").replace(",", ".");
+                double value = Double.parseDouble(number) * 1_000_000_000_000_000L;
+                return (long) value;
             } catch (final NumberFormatException exception) {
                 return -1;
             }
@@ -149,7 +155,9 @@ public final class MathUtil {
 
         if (text.contains("mio") || text.contains("m")) {
             try {
-                return Long.parseLong(text.replace("m", "").replace("mio", "")) * 1000000;
+                String number = text.replace("m", "").replace("mio", "").replace(",", ".");
+                double value = Double.parseDouble(number) * 1_000_000;
+                return (long) value;
             } catch (final NumberFormatException exception) {
                 return -1;
             }
@@ -157,7 +165,9 @@ public final class MathUtil {
 
         if (text.contains("b")) {
             try {
-                return Long.parseLong(text.toLowerCase().replace("b", "")) * 1000000000000L;
+                String number = text.toLowerCase().replace("b", "").replace(",", ".");
+                double value = Double.parseDouble(number) * 1_000_000_000_000L;
+                return (long) value;
             } catch (final NumberFormatException exception) {
                 return -1;
             }
@@ -165,7 +175,9 @@ public final class MathUtil {
 
         if (text.contains("t")) {
             try {
-                return Long.parseLong(text.toLowerCase().replace("t", "")) * 1000000000000000000L;
+                String number = text.toLowerCase().replace("t", "").replace(",", ".");
+                double value = Double.parseDouble(number) * 1_000_000_000_000_000_000L;
+                return (long) value;
             } catch (final NumberFormatException exception) {
                 return -1;
             }

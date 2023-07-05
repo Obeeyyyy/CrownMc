@@ -6,12 +6,15 @@ package de.obey.crownmc.listener;
 
 */
 
+import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.commands.FreezeCommand;
 import de.obey.crownmc.commands.GodCommand;
 import de.obey.crownmc.handler.CombatHandler;
+import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.handler.WorldProtectionHandler;
 import de.obey.crownmc.objects.pvp.Combat;
 import de.obey.crownmc.util.Bools;
+import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
@@ -29,6 +33,8 @@ import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingPlaceEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 @RequiredArgsConstructor
 public final class ProtectionListener implements Listener {
@@ -39,6 +45,17 @@ public final class ProtectionListener implements Listener {
     private final CombatHandler combatHandler;
     @NonNull
     private final WorldProtectionHandler worldProtectionHandler;
+    @NonNull
+    private final UserHandler userHandler;
+
+    @EventHandler
+    public void on(final ProjectileLaunchEvent event) {
+
+        if(worldProtectionHandler.getWorldProtection(event.getEntity().getWorld()) != null) {
+            if (!worldProtectionHandler.getWorldProtection(event.getEntity().getWorld()).isProjectiles())
+                event.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void on(final BlockPlaceEvent event) {
@@ -122,46 +139,81 @@ public final class ProtectionListener implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void on(final PlayerInteractEvent event) {
 
+        if (event.getItem() == null || event.getItem().getType() == Material.AIR)
+            return;
+
+        final Player player = event.getPlayer();
+
         // Cancel Bucket , AmorStand, Frame
-        if(event.getItem() != null && event.getItem().getType() != Material.AIR) {
-            if (event.getItem().getType().name().toLowerCase().contains("bucket") ||
-                    event.getItem().getType() == Material.ARMOR_STAND ||
-                    event.getItem().getType() == Material.ITEM_FRAME ||
-                    event.getItem().getType() == Material.PAINTING) {
-                if (!worldProtectionHandler.canBuild(event.getPlayer()))
-                    event.setCancelled(true);
 
-                return;
+        if (event.getItem().getType().name().toLowerCase().contains("bucket") ||
+                event.getItem().getType() == Material.ARMOR_STAND ||
+                event.getItem().getType() == Material.ITEM_FRAME ||
+                event.getItem().getType() == Material.PAINTING) {
+            if (!worldProtectionHandler.canBuild(event.getPlayer()))
+                event.setCancelled(true);
 
-                // Cancel Enderpearls
-            } else if (event.getItem() != null && event.getItem().getType() != Material.AIR && event.getItem().getType() == Material.ENDER_PEARL) {
-                if (!worldProtectionHandler.canEp(event.getPlayer())) {
-                    event.setCancelled(true);
-                    return;
-                }
-
-                return;
-            }
+            return;
         }
 
-        if(event.getClickedBlock() != null && (
+        if (event.getItem().getType() == Material.ENDER_PEARL) {
+            if (!worldProtectionHandler.canEp(player)) {
+                event.setCancelled(true);
+                player.updateInventory();
+                return;
+            }
+
+            return;
+        }
+
+        if (event.getItem().getType() == Material.SNOW_BALL || event.getItem().getType() == Material.EYE_OF_ENDER) {
+
+            if (!worldProtectionHandler.canProjectile(player.getWorld())) {
+                event.setCancelled(true);
+                event.getPlayer().updateInventory();
+                return;
+            }
+
+            if (!InventoryUtil.isItemInHandWithDisplayname(player, "§3§lSwitcher"))
+                return;
+
+            event.setCancelled(true);
+            player.updateInventory();
+
+            InventoryUtil.removeItemInHand(player, 1);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    final Vector direction = player.getLocation().getDirection();
+                    direction.multiply(1.5);
+                    final Snowball snowball = player.launchProjectile(Snowball.class, direction);
+                    snowball.setCustomName("switcher");
+                    snowball.setShooter(player);
+                }
+            }.runTaskLater(CrownMain.getInstance(), 1);
+
+            return;
+        }
+
+        if (event.getClickedBlock() != null && (
                 event.getClickedBlock().getType().name().contains("CHEST") ||
-                event.getClickedBlock().getType().name().contains("DOOR") ||
-                event.getClickedBlock().getType() == Material.ITEM_FRAME ||
-                event.getClickedBlock().getType() == Material.HOPPER ||
-                event.getClickedBlock().getType() == Material.FURNACE ||
-                event.getClickedBlock().getType() == Material.DISPENSER ||
-                event.getClickedBlock().getType() == Material.DROPPER ||
-                event.getClickedBlock().getType() == Material.BEACON ||
-                event.getClickedBlock().getType() == Material.BREWING_STAND ||
-                event.getClickedBlock().getType() == Material.WORKBENCH ||
-                event.getClickedBlock().getType() == Material.ENCHANTMENT_TABLE ||
-                event.getClickedBlock().getType() == Material.ANVIL ||
-                event.getClickedBlock().getType() == Material.ARMOR_STAND
-                )) {
+                        event.getClickedBlock().getType().name().contains("DOOR") ||
+                        event.getClickedBlock().getType() == Material.ITEM_FRAME ||
+                        event.getClickedBlock().getType() == Material.HOPPER ||
+                        event.getClickedBlock().getType() == Material.FURNACE ||
+                        event.getClickedBlock().getType() == Material.DISPENSER ||
+                        event.getClickedBlock().getType() == Material.DROPPER ||
+                        event.getClickedBlock().getType() == Material.BEACON ||
+                        event.getClickedBlock().getType() == Material.BREWING_STAND ||
+                        event.getClickedBlock().getType() == Material.WORKBENCH ||
+                        event.getClickedBlock().getType() == Material.ENCHANTMENT_TABLE ||
+                        event.getClickedBlock().getType() == Material.ANVIL ||
+                        event.getClickedBlock().getType() == Material.ARMOR_STAND
+        )) {
             if (!worldProtectionHandler.canBuild(event.getPlayer()) && !worldProtectionHandler.canInteract(event.getPlayer()))
                 event.setCancelled(true);
         }
@@ -269,6 +321,12 @@ public final class ProtectionListener implements Listener {
         if (!Bools.pvp && !PermissionUtil.hasPermission(attacker, "toggle.bypass", false)) {
             messageUtil.sendMessage(attacker, "PvP ist §c§odeaktiviert§7.");
             event.setCancelled(true);
+            return;
+        }
+
+        if(userHandler.getUserInstant(attacker.getUniqueId()).getUserPeace().hasPeaceWith(damaged)) {
+            event.setCancelled(true);
+            messageUtil.sendMessage(attacker, "Zwischen dir und " + damaged.getName() + " herrscht Frieden§8.");
             return;
         }
 

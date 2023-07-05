@@ -207,6 +207,12 @@ public final class Crash {
         if (!messageUtil.hasEnougthMoney(user, bet))
             return;
 
+
+        if (bet > 100000000) {
+            messageUtil.sendMessage(player, "Bitte gebe einen Betrag an der keiner als 100 Millionen ist§8.");
+            return;
+        }
+
         crashHandler.getJoiningCrash().remove(player);
 
         user.removeLong(DataType.MONEY, bet);

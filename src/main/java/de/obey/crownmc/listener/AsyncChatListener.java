@@ -45,6 +45,7 @@ public final class AsyncChatListener implements Listener {
     private final CoinflipHandler coinflipHandler;
     private final CrashHandler crashHandler;
     private final JackPotHandler jackPotHandler;
+    private final RouletteHandler rouletteHandler;
     private final PlotAPI plotAPI;
 
     private boolean checkPlotChat(final Player player) {
@@ -95,6 +96,11 @@ public final class AsyncChatListener implements Listener {
         if (jackPotHandler.isCreatingJackpot(player, message))
             return;
         /* Setting Jackpot coins end */
+
+        /* Joining Roulette*/
+        if (rouletteHandler.isJoiningRoulette(player, message))
+            return;
+        /* Joining Roulette */
 
         final User user = userHandler.getUserInstant(player.getUniqueId());
 

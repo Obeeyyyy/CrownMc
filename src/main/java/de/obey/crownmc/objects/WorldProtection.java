@@ -14,7 +14,7 @@ public final class WorldProtection {
 
     @Getter
     @Setter
-    private boolean pvp, build, mobspawn, blockexplosion, enderpearl, interact, fly, pve, homes;
+    private boolean pvp, build, mobspawn, blockexplosion, enderpearl, interact, fly, pve, homes, projectiles;
 
     private final String worldName;
 
@@ -30,6 +30,7 @@ public final class WorldProtection {
         fly = cfg.getBoolean("worlds." + worldName + ".fly");
         pve = cfg.getBoolean("worlds." + worldName + ".pve");
         homes = cfg.getBoolean("worlds." + worldName + ".homes");
+        projectiles = cfg.getBoolean("worlds." + worldName + ".projectiles");
     }
 
     public void saveWorldProtection(final YamlConfiguration cfg) {
@@ -42,6 +43,7 @@ public final class WorldProtection {
         cfg.set("worlds." + worldName + ".fly", fly);
         cfg.set("worlds." + worldName + ".pve", pve);
         cfg.set("worlds." + worldName + ".homes", homes);
+        cfg.set("worlds." + worldName + ".projectiles", projectiles);
     }
 
 }

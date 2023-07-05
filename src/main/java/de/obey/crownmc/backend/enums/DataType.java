@@ -11,6 +11,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Getter
 @NonNull
@@ -57,24 +58,12 @@ public enum DataType {
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
     IGNORES("ignores", StoreType.CONFIG, new ArrayList<>()),
     LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 0L),
-    LASTVOTE("lastvote", StoreType.CONFIG, 0L);
-
+    LASTVOTE("lastvote", StoreType.CONFIG, 0L),
+    PEACELIST("peacelist", StoreType.CONFIG, new ArrayList<String>());
 
     private final String savedAs;
     private final StoreType storeType;
     private final Object defaultValue;
-
-    public static DataType getTypeFromSavedAs(final String savedAs) {
-        for (final DataType value : DataType.values()) {
-            if (value.getStoreType() != StoreType.CONFIG)
-                continue;
-
-            if (value.getSavedAs().equalsIgnoreCase(savedAs))
-                return value;
-        }
-
-        return null;
-    }
 
     public static DataType getTypeFromName(final String savedAs) {
         for (final DataType value : DataType.values()) {

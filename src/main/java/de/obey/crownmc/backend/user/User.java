@@ -46,6 +46,7 @@ public final class User {
     private UserBank bank;
     private UserPunishment punishment;
     private UserLoginStreak loginStreak;
+    private UserPeace userPeace;
 
     private PacketReader packetReader;
 
@@ -80,6 +81,7 @@ public final class User {
         this.bank = new UserBank(this);
         this.punishment = new UserPunishment(this);
         this.loginStreak = new UserLoginStreak(this);
+        this.userPeace = new UserPeace(this);
     }
 
     public void saveObjects() {
@@ -91,6 +93,7 @@ public final class User {
         plot.save();
         bank.save();
         punishment.save();
+        userPeace.save();
     }
 
     public void addXP(long amount) {

@@ -134,9 +134,18 @@ public final class AdminItemsCommand implements CommandExecutor {
                             .setDisplayname("§8» §7Kit Gutschein")
                             .setLore("",
                                     "§f§lInformation",
-                                    "  §8- §7Kit§8:§f " + kit.getName().toUpperCase())
+                                    "  §8- §7Kit§8:§f " + kit.getName().toUpperCase(),
+                                    "")
                     .build());
         }
+
+        inventory.addItem(new ItemBuilder(Material.SNOW_BALL)
+                        .setDisplayname("§3§lSwitcher")
+                        .setLore("",
+                        "§3§lInformation",
+                        "  §8- §7Dieses Item ermöglicht es dir die Position mit anderen zu tauschen§8.",
+                                "")
+                .build());
 
         player.openInventory(inventory);
 
