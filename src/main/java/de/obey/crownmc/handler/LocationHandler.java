@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.objects.effects.TeleportEffect;
 import de.obey.crownmc.util.FileUtil;
+import de.obey.crownmc.util.LocationUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.Getter;
@@ -43,7 +44,7 @@ public final class LocationHandler {
             return;
 
         for (String key : cfg.getConfigurationSection("locations").getKeys(false)) {
-            final Location location = decode(cfg.getString("locations." + key));
+            final Location location = LocationUtil.decode(cfg.getString("locations." + key));
 
             if(location == null) continue;
 
@@ -52,37 +53,12 @@ public final class LocationHandler {
         }
     }
 
-    private String encode(final Location location) {
-        return "#" + location.getWorld().getName() + "#" + location.getX() + "#" + location.getY() + "#" + location.getZ() + "#" + location.getYaw() + "#" + location.getPitch();
-    }
-
-    private Location decode(final String value) {
-
-        //#world#x#y#z#yaw#pitch
-
-        final String[] splitted = value.split("#");
-
-        final World world = Bukkit.getWorld(splitted[1]);
-
-        if(world == null) {
-            messageUtil.warn("World '" + splitted[1] + "' does not exist.");
-            return null;
-        }
-
-        final Location location = new Location(world, Float.parseFloat(splitted[2]), Float.parseFloat(splitted[3]), Float.parseFloat(splitted[4]));
-
-        location.setYaw(Float.parseFloat(splitted[5]));
-        location.setPitch(Float.parseFloat(splitted[6]));
-
-        return location;
-    }
-
     public void setLocation(final String name, final Location location) {
         locations.put(name, location);
 
         final YamlConfiguration cfg = FileUtil.getCfg(file);
 
-        cfg.set("locations." + name, encode(location));
+        cfg.set("locations." + name, LocationUtil.encode(location));
 
         FileUtil.saveToFile(file, cfg);
     }

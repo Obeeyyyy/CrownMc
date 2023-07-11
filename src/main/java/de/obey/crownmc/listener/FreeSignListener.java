@@ -75,8 +75,8 @@ public final class FreeSignListener implements Listener {
         if(signCooldowns.containsKey(sign)) {
             final long millis = signCooldowns.get(sign);
             if(millis > System.currentTimeMillis()) {
-                player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
-                messageUtil.sendMessage(player, "Du kannst dieses Schild in " + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((millis - System.currentTimeMillis()) / 1000) + " wieder nutzen§8.");
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                messageUtil.sendMessage(player, "Du kannst dieses Schild in " + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((millis - System.currentTimeMillis()) / 1000) + "wieder nutzen§8.");
                 return;
             }
         }

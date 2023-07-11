@@ -54,7 +54,7 @@ public final class FriedenCommand implements CommandExecutor {
                         return;
                     }
 
-                    messageUtil.sendMessage(player, "Du hast Frieden mit §8(§f" + friedeListSize + "§8) :");
+                    messageUtil.sendMessage(player, "Du hast Frieden mit §8(§f" + friedeListSize + "§8)§7 Spielern§8 :");
                     for (final String uuid : user.getUserPeace().getPeaceList()) {
                         player.sendMessage("§8  - §7" + Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getName());
                     }
@@ -79,7 +79,7 @@ public final class FriedenCommand implements CommandExecutor {
             userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
                 if (user.getUserPeace().hasPeaceWith(target)) {
                     messageUtil.sendMessage(player, "Du hast bereits Frieden mit §f§o" + target.getName() + "§8.");
-                    new MessageBuilder("§8» §7Klicke hier, um den Frieden mit §f§o" + target.getName() + "§7 zu §c§obeenden§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/friede remove " + player.getName()).send(target);
+                    new MessageBuilder("§8» §7Klicke hier, um den Frieden mit §f§o" + target.getName() + "§7 zu §c§obeenden§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/friede remove " + player.getName()).send(player);
                     player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
                     return;
                 }
@@ -149,7 +149,7 @@ public final class FriedenCommand implements CommandExecutor {
                 final Player target = Bukkit.getPlayer(args[1]);
                 final ArrayList<Player> requests = peaceRequests.containsKey(target) ? peaceRequests.get(target) : new ArrayList<>();
 
-                if(!requests.contains(player)) {
+                if (!requests.contains(player)) {
                     messageUtil.sendMessage(player, "Du hast kein Friedensangebot von §f§o" + target.getName() + "§8.");
                     player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
                     return false;
@@ -159,14 +159,14 @@ public final class FriedenCommand implements CommandExecutor {
                 peaceRequests.put(target, requests);
 
                 userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
-                   user.getUserPeace().getPeaceList().add(target.getUniqueId().toString());
-                   messageUtil.sendMessage(player, "Du hast Frieden mit §f§o" + target.getName() + "§7 geschlossen§8.");
-                   player.playSound(player.getLocation(), Sound.VILLAGER_YES, 0.5f, 1);
+                    user.getUserPeace().makePeaceWith(target);
+                    messageUtil.sendMessage(player, "Du hast Frieden mit §f§o" + target.getName() + "§7 geschlossen§8.");
+                    player.playSound(player.getLocation(), Sound.VILLAGER_YES, 0.5f, 1);
                 });
 
-                userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
-                    user.getUserPeace().getPeaceList().add(player.getUniqueId().toString());
-                    messageUtil.sendMessage(target, "§f§o" + target.getName() + "§7 hat dein Friedensangebot §a§oangenommen§8.");
+                userHandler.getUser(target.getUniqueId()).thenAcceptAsync(targetUser -> {
+                    targetUser.getUserPeace().makePeaceWith(player);
+                    messageUtil.sendMessage(target, "§f§o" + player.getName() + "§7 hat dein Friedensangebot §a§oangenommen§8.");
                     target.playSound(target.getLocation(), Sound.VILLAGER_YES, 0.5f, 1);
                 });
 

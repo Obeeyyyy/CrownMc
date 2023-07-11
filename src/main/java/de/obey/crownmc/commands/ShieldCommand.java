@@ -16,6 +16,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -92,23 +93,28 @@ public final class ShieldCommand implements CommandExecutor, Listener {
         if(shielded.isEmpty())
             return;
 
-        for (final Player shield : shielded) {
-
-            if(shield.getName().equals(player.getName()))
+        for (final Entity entity : player.getWorld().getEntities()) {
+            if(!(entity instanceof Player))
                 continue;
 
-            if(shield.getWorld() != player.getWorld())
+            final Player other = (Player) entity;
+
+            if(player.getName().equalsIgnoreCase(other.getName()))
                 continue;
 
-            if(shield.getLocation().distance(player.getLocation()) > 5)
+            if(PermissionUtil.hasPermission(player, "shield.bypass", false))
                 continue;
 
-            final Vector direction = player.getLocation().subtract(shield.getLocation()).toVector();
+            if(!shielded.contains(other))
+                return;
+
+            if(player.getLocation().distance(other.getLocation()) > 5)
+                continue;
+
+            final Vector direction = player.getLocation().subtract(other.getLocation()).toVector();
             direction.setY(0.5);
             direction.normalize().multiply(1.2);
             player.setVelocity(direction);
-
-            break;
         }
     }
 }

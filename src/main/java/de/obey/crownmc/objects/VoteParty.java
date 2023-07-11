@@ -15,9 +15,12 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Giant;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.Random;
 
 public final class VoteParty {
 
@@ -71,7 +74,7 @@ public final class VoteParty {
             public void run() {
 
                 if(itemDrops >= 5) {
-                    messageUtil.broadcast("§8(  " + prefix + "§8)§7 Die VoteParty ist beendet§8.");
+                    spawnBossMob();
                     cancel();
                     return;
                 }
@@ -83,18 +86,52 @@ public final class VoteParty {
                     itemDrops++;
 
                     for (final Location location : votePartyHandler.getLocations()) {
-                        for (final Entity entity : location.getWorld().getEntities()) {
-                            if(!(entity instanceof Player))
-                                continue;
-
-                            ((Player) entity).playSound(location, Sound.FIREWORK_BLAST, 1, 1);
-                            ((Player) entity).playEffect(location, Effect.ENDER_SIGNAL, 1);
-                        }
+                        playeSoundForEveryOne(location, Sound.FIREWORK_LARGE_BLAST2);
+                        playEffectForEveryone(location, Effect.ENDER_SIGNAL);
                         location.getWorld().dropItem(location, votePartyHandler.getRandomItem());
                     }
                 }
             }
         }.runTaskTimer(CrownMain.getInstance(), 5, 5);
+    }
+
+    private void spawnBossMob() {
+        messageUtil.broadcast("§8(" + prefix + "§8) §7Gleich erscheint ein Boss Mob§9.");
+
+        runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                final Location location = votePartyHandler.getLocations().get(new Random().nextInt(votePartyHandler.getLocations().size()));
+                final Giant giant = location.getWorld().spawn(location, Giant.class);
+
+                giant.setMaxHealth(2000);
+                giant.setHealth(2000);
+
+                giant.setCustomNameVisible(true);
+                giant.setCustomName(giant.getHealth() + "§c§l❤");
+            }
+        }.runTaskLater(CrownMain.getInstance(), 60);
+    }
+
+    private void playEffectForEveryone(final Location location, final Effect effect) {
+        for (Entity entity : location.getWorld().getEntities()) {
+
+            if(!(entity instanceof Player))
+                continue;
+
+            ((Player) entity).playEffect(location, effect, 1);
+        }
+    }
+
+    private void playeSoundForEveryOne(final Location location, final Sound sound) {
+        for (Entity entity : location.getWorld().getEntities()) {
+
+            if(!(entity instanceof Player))
+                continue;
+
+            ((Player) entity).playSound(location, sound, 0.5f, 1);
+        }
     }
 
     public void shutdown() {

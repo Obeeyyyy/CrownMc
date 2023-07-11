@@ -7,6 +7,7 @@ package de.obey.crownmc.commands;
 */
 
 import de.obey.crownmc.handler.EloHandler;
+import de.obey.crownmc.objects.pvp.EloRang;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,10 @@ public final class EloCommand implements CommandExecutor {
         player.sendMessage("");
         player.sendMessage("§8▰§7▱ §9§lRang §8┃ §9§lPunkte");
         player.sendMessage("");
-        for (int i = 0; i <= 20000; i += 1000)
-            player.sendMessage("§8 - " + eloHandler.getEloRangFromEloPoints(i) + " §8┃ §f§o" + messageUtil.formatLong(i));
+
+        for (final EloRang rang : EloRang.values())
+            player.sendMessage("§8 - " + rang.getPrefix() + " §8┃ §f§o" + messageUtil.formatLong(rang.getEloPoints()));
+
         player.sendMessage("");
         player.sendMessage("§8§l§m-----------------------------------");
 

@@ -6,26 +6,25 @@ package de.obey.crownmc.handler;
 
 */
 
+import de.obey.crownmc.objects.pvp.EloRang;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public final class EloHandler {
 
-    public String getEloRangFromEloPoints(final long points) {
+    public EloRang getEloRangFromEloPoints(final long points) {
 
-        if (points >= 20000) return "§4§lMASTER";
+        EloRang foundRang = null;
+        long foundPoints = 0;
 
-        if (points >= 5000) return "§f§lSILBER III";
+        for (EloRang rang : EloRang.values()) {
+            if(rang.getEloPoints() <= points && rang.getEloPoints() > foundPoints) {
+                foundRang = rang;
+                foundPoints = rang.getEloPoints();
+            }
+        }
 
-        if (points >= 4000) return "§f§lSILBER II";
-
-        if (points >= 3000) return "§f§lSILBER I";
-
-        if (points >= 2000) return "§e§lBRONZE III";
-
-        if (points >= 1000) return "§e§lBRONZE II";
-
-        return "§e§lBRONZE I";
+        return foundRang;
     }
 
 

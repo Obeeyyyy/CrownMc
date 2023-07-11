@@ -8,7 +8,6 @@ package de.obey.crownmc.backend.user;
  without permission from me, obey, the creator of this code.
 */
 
-import de.obey.crownmc.backend.enums.DataType;
 import lombok.Getter;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -24,7 +23,7 @@ public final class UserPeace {
 
     public UserPeace(final User user) {
         this.user = user;
-        peaceList = (List<String>) user.getList(DataType.PEACELIST);
+        peaceList = user.getCfg().getStringList("peacelist");
     }
 
     public boolean hasPeaceWith(final Player target) {
@@ -35,7 +34,14 @@ public final class UserPeace {
         return peaceList.contains(target.getUniqueId().toString());
     }
 
+    public void makePeaceWith(final Player target) {
+
+        if(!peaceList.contains(target.getUniqueId().toString()))
+            peaceList.add(target.getUniqueId().toString());
+
+    }
+
     public void save() {
-        user.setList(DataType.PEACELIST, peaceList);
+        user.getCfg().set("peacelist", peaceList);
     }
 }

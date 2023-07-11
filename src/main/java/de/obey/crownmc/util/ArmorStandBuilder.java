@@ -54,7 +54,56 @@ public final class ArmorStandBuilder {
         return this;
     }
 
-    public ArmorStandBuilder addStand() {
+    public ArmorStandBuilder addStandAbove(final double offset) {
+        if(location == null)
+            return this;
+
+        final ArmorStand stand = location.getWorld().spawn(location, ArmorStand.class);
+
+        location.add(0, offset, 0);
+        stand.setGravity(false);
+        stand.setVisible(false);
+        stands.add(stand);
+
+        stand.setCustomName(identifier);
+
+        return this;
+    }
+
+
+    public ArmorStandBuilder addStandAbove() {
+        if(location == null)
+            return this;
+
+        final ArmorStand stand = location.getWorld().spawn(location, ArmorStand.class);
+
+        location.add(0, 0.25, 0);
+        stand.setGravity(false);
+        stand.setVisible(false);
+        stands.add(stand);
+
+        stand.setCustomName(identifier);
+
+        return this;
+    }
+
+    public ArmorStandBuilder addStandAbove(final int amount) {
+
+        for (int i = 0; i < amount; i++)
+            addStandAbove(0.25);
+
+        return this;
+    }
+
+    public ArmorStandBuilder addStandAbove(final int amount, final double offset) {
+
+        for (int i = 0; i < amount; i++)
+            addStandAbove(offset);
+
+        return this;
+    }
+
+    public ArmorStandBuilder addStandUnder() {
         if(location == null)
             return this;
 
@@ -65,13 +114,39 @@ public final class ArmorStandBuilder {
         stand.setVisible(false);
         stands.add(stand);
 
+        stand.setCustomName(identifier);
+
         return this;
     }
 
-    public ArmorStandBuilder addStand(final int amount) {
+    public ArmorStandBuilder addStandUnder(final double offset) {
+        if(location == null)
+            return this;
+
+        final ArmorStand stand = location.getWorld().spawn(location, ArmorStand.class);
+
+        location.add(0, -offset, 0);
+        stand.setGravity(false);
+        stand.setVisible(false);
+        stands.add(stand);
+
+        stand.setCustomName(identifier);
+
+        return this;
+    }
+
+    public ArmorStandBuilder addStandUnder(final int amount) {
 
         for (int i = 0; i < amount; i++)
-            addStand();
+            addStandUnder(0.25);
+
+        return this;
+    }
+
+    public ArmorStandBuilder addStandUnder(final int amount, final double offset) {
+
+        for (int i = 0; i < amount; i++)
+            addStandUnder(offset);
 
         return this;
     }
@@ -97,7 +172,7 @@ public final class ArmorStandBuilder {
         return this;
     }
 
-    public ArmorStandBuilder setItem(final int stand, final Material material) {
+    public ArmorStandBuilder spawnItemDrop(final int stand, final Material material) {
         if (stands.size() < stand)
             return this;
 
@@ -110,6 +185,18 @@ public final class ArmorStandBuilder {
 
         drop.setPickupDelay(Integer.MAX_VALUE);
         as.setPassenger(drop);
+
+        return this;
+    }
+
+    public ArmorStandBuilder setHelmet(final int stand, final Material material) {
+        if (stands.size() < stand)
+            return this;
+
+        final ArmorStand as = stands.get(stand - 1);
+        final ItemStack item = new ItemStack(material);
+
+        as.setHelmet(item);
 
         return this;
     }

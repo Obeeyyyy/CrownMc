@@ -7,6 +7,7 @@ package de.obey.crownmc.commands;
 */
 
 import de.obey.crownmc.backend.ServerConfig;
+import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.FileUtil;
 import de.obey.crownmc.util.InventoryUtil;
@@ -140,10 +141,16 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
                     return;
                 }
 
-                userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
-                    final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
-                    user.getLoginStreak().openPreview(player, tag);
-                });
+                final User user = userHandler.getUserInstant(player.getUniqueId());
+
+                if(user == null)
+                    return;
+
+                final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
+
+                player.closeInventory();
+                user.getLoginStreak().openPreview(player, tag);
+
                 return;
             }
 
@@ -155,29 +162,38 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
                     return;
                 }
 
-                userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
-                    final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
-                    user.getLoginStreak().openPreview(player, tag);
-                });
+                final User user = userHandler.getUserInstant(player.getUniqueId());
+
+                if(user == null)
+                    return;
+
+                final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
+
+                player.closeInventory();
+                user.getLoginStreak().openPreview(player, tag);
 
                 return;
             }
 
             if (event.getCurrentItem().getType() == Material.STORAGE_MINECART) {
-                userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
-                    final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
 
-                    if (event.isLeftClick()) {
-                        user.getLoginStreak().claimReward(tag);
+                final User user = userHandler.getUserInstant(player.getUniqueId());
 
-                        player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE, 0.6f, 1);
-                        messageUtil.sendMessage(player, "Du hast die Belohnung für Tag §e§o" + tag + "§7 erhalten§8.");
+                if (user == null)
+                    return;
 
-                        return;
-                    }
+                final int tag = Integer.parseInt(event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[2]);
 
-                    user.getLoginStreak().openPreview(player, tag);
-                });
+                if (event.isLeftClick()) {
+                    user.getLoginStreak().claimReward(tag);
+
+                    player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE, 0.6f, 1);
+                    messageUtil.sendMessage(player, "Du hast die Belohnung für Tag §e§o" + tag + "§7 erhalten§8.");
+
+                    return;
+                }
+
+                user.getLoginStreak().openPreview(player, tag);
             }
 
             return;
@@ -188,14 +204,15 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
 
             final Player player = (Player) event.getWhoClicked();
 
-            if (event.getSlot() == 53)
-                userHandler.getUser(event.getWhoClicked().getUniqueId()).thenAccept(user -> {
+            if (event.getSlot() == 53) {
+                final User user = userHandler.getUserInstant(player.getUniqueId());
 
-                    player.openInventory(user.getLoginStreak().getInventory());
-                    player.updateInventory();
+                if (user == null)
+                    return;
 
-                });
+                player.openInventory(user.getLoginStreak().getInventory());
+                player.updateInventory();
+            }
         }
-
     }
 }

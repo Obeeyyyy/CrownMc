@@ -30,7 +30,7 @@ public final class KillFarmHandler {
 
     public void check(final Player player, Player killer) {
         if (lastDeath.containsKey(player)) {
-            if (System.currentTimeMillis() - lastDeath.get(player) <= 60000) {
+            if (System.currentTimeMillis() - lastDeath.get(player) <= 30000) {
 
                 if (!deathAmount.containsKey(player)) {
                     deathAmount.put(player, 1);
@@ -40,7 +40,7 @@ public final class KillFarmHandler {
 
                 killers.put(player, killer);
 
-                if (deathAmount.containsKey(player) && deathAmount.get(player) >= 2) {
+                if (deathAmount.containsKey(player) && deathAmount.get(player) >= 5) {
                     blocked.add(player.getUniqueId());
 
                     messageUtil.sendMessageToTeamMembers("§4§lKillfarm-Warn §8§l× §c" + player.getName() + " §7Tode§8: §c§ox§f§o" + deathAmount.get(player));
@@ -48,7 +48,7 @@ public final class KillFarmHandler {
                     messageUtil.sendMessageToTeamMembers("    §8> §c§lZeit §7zwischen den §c§lKills§8: §f" + MathUtil.getMinutesAndSecondsFromSeconds((System.currentTimeMillis() - lastDeath.get(player)) / 1000));
                 }
             } else {
-                if (System.currentTimeMillis() - lastDeath.get(player) >= 120000) {
+                if (System.currentTimeMillis() - lastDeath.get(player) >= 60000) {
                     if (deathAmount.containsKey(player)) {
                         deathAmount.remove(player);
                         blocked.remove(player.getUniqueId());

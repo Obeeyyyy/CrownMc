@@ -9,6 +9,7 @@ package de.obey.crownmc.commands;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.InventoryUtil;
+import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
@@ -89,18 +90,33 @@ public final class GiveAllCommand implements CommandExecutor {
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("money")) {
 
+                long amount = 0L;
+
                 try {
-                    final long amount = Long.parseLong(args[1]);
+                    amount = Long.parseLong(args[1]);
+
+                    if (amount <= 0) {
+                        messageUtil.sendMessage(sender, "Bitte gebe eine Zahl an die größer als 0 ist.");
+                        return false;
+                    }
+
+                } catch (final NumberFormatException exception) {
+
+                    amount = MathUtil.getLongFromStringwithSuffix(args[1]);
+
+                    if (amount <= 0) {
+                        messageUtil.sendMessage(sender, "Bitte gebe eine Zahl an, oder benutze folgende Abkürzungen. (k, m, mrd, b, brd, t)");
+                        return false;
+                    }
+                }
+
+                final long finalAmount = amount;
 
                     Bukkit.getOnlinePlayers().forEach(online -> {
-                        userHandler.getUserInstant(online.getUniqueId()).addLong(DataType.MONEY, amount);
+                        userHandler.getUserInstant(online.getUniqueId()).addLong(DataType.MONEY, finalAmount);
                     });
 
                     messageUtil.broadcast("Alle Spieler haben §e§o" + messageUtil.formatLong(amount) + "§6§l$§7 bekommen§8.");
-
-                } catch (final NumberFormatException exception) {
-                    messageUtil.sendMessage(sender, "Bitte gebe eine Zahl an§8.");
-                }
 
                 return false;
             }

@@ -46,7 +46,7 @@ public final class VoteCommand implements CommandExecutor, Listener {
 
             player.sendMessage("§8§l§m---------------------------------------------");
             player.sendMessage("");
-            player.sendMessage(" §8» ┃ §a§l Vote 1 §8:§f§o http://vote1.crownmc.de");
+            player.sendMessage(" §8» ┃ §a§l Vote 1 §8:§f§o https://minecraft-server.eu/vote/index/22B8F/" + player.getName());
             player.sendMessage(" §8» ┃ §a§l Vote 2 §8:§f§o http://vote2.crownmc.de");
             player.sendMessage(" §8» ┃ §a§l Vote 3 §8:§f§o http://vote3.crownmc.de");
             player.sendMessage("");

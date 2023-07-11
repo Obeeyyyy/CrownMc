@@ -3,9 +3,6 @@ authors: [ Obey, EntixOG, richardwhateverr ]
 version: 4.0
 main: de.obey.crownmc.CrownMain
 
-depend:
-  - JDA
-
 commands:
   whitelist:
     aliases: [ wl ]
@@ -177,3 +174,4 @@ commands:
   shield:
   frieden:
     aliases: [friede, peace]
+  pvpaltar:

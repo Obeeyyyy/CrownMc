@@ -89,7 +89,7 @@ public final class StatsCommand implements CommandExecutor {
         final long kills = user.getLong(DataType.KILLS), deaths = user.getLong(DataType.DEATHS);
 
         sender.sendMessage("  §8- §7K/D§8: §a§o" + messageUtil.formatLong(kills) + "§8/§c§o" + messageUtil.formatLong(deaths) + " §8(§f§o" + formatKD(kills, deaths) + "§8)");
-        sender.sendMessage("  §8- §7Elopunkte§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.ELOPOINTS)) + " §8( " + eloHandler.getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)) + " §8)");
+        sender.sendMessage("  §8- §7Elopunkte§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.ELOPOINTS)) + " §8( " + eloHandler.getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)).getPrefix() + " §8)");
         sender.sendMessage("  §8- §7Killstreak§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.KILLSTREAK)) + " §7Rekord§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.KILLSTREAKRECORD)));
         sender.sendMessage("");
         sender.sendMessage("§8§l§m-----------------------------------");

@@ -10,6 +10,7 @@ package de.obey.crownmc.listener;
 
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.backend.enums.DataType;
+import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.handler.LocationHandler;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.InventoryUtil;
@@ -110,15 +111,14 @@ public final class PortalMeisterListener implements Listener {
                 return;
             }
 
-            userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+            final User user = userHandler.getUserInstant(player.getUniqueId());
 
-                if(!messageUtil.hasEnougthMoney(user, (long) serverConfig.getNetherPrice()))
-                    return;
+            if(!messageUtil.hasEnougthMoney(user, (long) serverConfig.getNetherPrice()))
+                return;
 
-                user.removeLong(DataType.MONEY, serverConfig.getNetherPrice());
-                player.teleport(nether);
-                player.playSound(player.getLocation(), Sound.PORTAL_TRAVEL, 0.5f, 1);
-            });
+            user.removeLong(DataType.MONEY, serverConfig.getNetherPrice());
+            player.teleport(nether);
+            player.playSound(player.getLocation(), Sound.PORTAL_TRAVEL, 0.5f, 1);
 
             return;
         }
@@ -132,15 +132,14 @@ public final class PortalMeisterListener implements Listener {
                 return;
             }
 
-            userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+            final User user = userHandler.getUserInstant(player.getUniqueId());
 
-                if(!messageUtil.hasEnougthMoney(user, (long) serverConfig.getEndPrice()))
-                    return;
+            if(!messageUtil.hasEnougthMoney(user, (long) serverConfig.getEndPrice()))
+                return;
 
-                user.removeLong(DataType.MONEY, serverConfig.getEndPrice());
-                player.teleport(end);
-                player.playSound(player.getLocation(), Sound.PORTAL_TRAVEL, 0.2f, 1);
-            });
+            user.removeLong(DataType.MONEY, serverConfig.getEndPrice());
+            player.teleport(end);
+            player.playSound(player.getLocation(), Sound.PORTAL_TRAVEL, 0.2f, 1);
         }
     }
 

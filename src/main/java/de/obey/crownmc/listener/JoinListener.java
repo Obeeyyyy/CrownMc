@@ -176,7 +176,12 @@ public final class JoinListener implements Listener {
                         // SPAWN TP
                         if(user.is(DataType.SPAWNTELEPORT)) {
                             if (locationHandler.getLocation("spawn") != null) {
-                                event.getPlayer().teleport(locationHandler.getLocation("spawn"));
+                                new BukkitRunnable() {
+                                    @Override
+                                    public void run() {
+                                        event.getPlayer().teleport(locationHandler.getLocation("spawn"));
+                                    }
+                                }.runTaskLater(CrownMain.getInstance(), 1);
                             }
                         }
                     }

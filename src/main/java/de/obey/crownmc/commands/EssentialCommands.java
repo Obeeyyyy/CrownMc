@@ -374,7 +374,7 @@ public final class EssentialCommands implements CommandExecutor {
                 }
             }
 
-            if (!PermissionUtil.hasPermission(player, "gamemode.others", true))
+            if (!PermissionUtil.hasPermission(player, "gamemode.other", true))
                 return false;
 
             if (args.length == 2) {

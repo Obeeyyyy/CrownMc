@@ -18,9 +18,12 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Giant;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -96,5 +99,24 @@ public final class VotePartyCommand implements CommandExecutor, Listener {
             votePartyHandler.setItems(items);
             messageUtil.sendMessage(event.getPlayer(), "VoteParty Items gespeichert.");
         }
+    }
+
+    @EventHandler
+    public void on(final EntityDamageEvent event) {
+        if(!(event.getEntity() instanceof Giant))
+            return;
+
+        event.getEntity().setCustomName(((Giant) event.getEntity()).getHealth() + "§c§l❤");
+    }
+
+    @EventHandler
+    public void on(final EntityDamageByEntityEvent event) {
+        if(!(event.getEntity() instanceof Giant))
+            return;
+
+        if((event.getDamager() instanceof Player))
+            return;
+
+        messageUtil.sendMessage(event.getDamager(), "" + ((Giant) event.getEntity()).getHealth() + "§c§l❤");
     }
 }

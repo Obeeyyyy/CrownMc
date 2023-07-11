@@ -56,10 +56,9 @@ public enum DataType {
     RESPAWNKIT("respawnkitstate", StoreType.CONFIG, true),
     REGISTERED("registered", StoreType.CONFIG, true),
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
-    IGNORES("ignores", StoreType.CONFIG, new ArrayList<>()),
+    IGNORES("ignores", StoreType.CONFIG, null),
     LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 0L),
-    LASTVOTE("lastvote", StoreType.CONFIG, 0L),
-    PEACELIST("peacelist", StoreType.CONFIG, new ArrayList<String>());
+    LASTVOTE("lastvote", StoreType.CONFIG, 0L);
 
     private final String savedAs;
     private final StoreType storeType;

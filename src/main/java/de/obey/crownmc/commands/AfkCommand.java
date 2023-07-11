@@ -13,6 +13,7 @@ import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -119,9 +120,14 @@ public final class AfkCommand implements CommandExecutor, Listener {
     @EventHandler
     public void onMove(final PlayerMoveEvent event) {
         if(afkList.contains(event.getPlayer())) {
+
+            if(event.getTo().getBlock().getType() == Material.WATER || event.getFrom().getBlock().getType() == Material.WATER)
+                return;
+
+            endAFK(event.getPlayer());
+
             afkList.remove(event.getPlayer());
             messageUtil.sendMessage(event.getPlayer(), "Du bist jetzt nicht mehr AFK§8.");
-            endAFK(event.getPlayer());
             scoreboardHandler.updateEverythingForEveryone();
         }
 

@@ -501,7 +501,7 @@ public final class ScoreboardHandler {
                 stats.setSuffix(user.getLong(DataType.KILLS) + "§8 × §c" + user.getLong(DataType.DEATHS));
 
                 final Team pvprank = scoreboard.getTeam("rank");
-                pvprank.setSuffix(eloHandler.getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)));
+                pvprank.setSuffix(eloHandler.getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)).getPrefix());
 
                 final Team votes = scoreboard.getTeam("votes");
                 votes.setSuffix(messageUtil.formatLong(user.getLong(DataType.VOTES)));

@@ -26,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -40,6 +39,7 @@ public final class RouletteHandler {
     @NonNull
     private final UserHandler userHandler;
 
+    @Getter
     private final HashMap<Integer, RouletteTable> tables = new HashMap<>();
 
     @Getter
@@ -146,13 +146,13 @@ public final class RouletteHandler {
     }
 
     public void joinRoulette(final int id, final Player player, final long amount, final String color) {
-        joinedTable.clear();
-        joiningRoulette.clear();
-
         userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
 
             if(!messageUtil.hasEnougthMoney(user, amount))
                 return;
+
+            joiningRoulette.remove(player);
+            joinedTable.remove(player);
 
             final RouletteTable table = getTable(id);
 
@@ -184,6 +184,10 @@ public final class RouletteHandler {
 
     }
 
+    public void pay(final UUID uuid, final long amount) {
+        userHandler.getUser(uuid).thenAcceptAsync(user -> user.addLong(DataType.MONEY, amount));
+    }
+
     public void openTable(final int id, final Player player) {
         final Inventory inventory = Bukkit.createInventory(null, 9*5, "§f§lTisch§7 " + id);
 
@@ -202,7 +206,7 @@ public final class RouletteHandler {
                         .setDisplayname("§c§lRot")
                         .setLore("",
                                 "§c§lInformation",
-                                "§8  - §7Multiplikator§8:§f 1.5x",
+                                "§8  - §7Multiplikator§8:§f " + getMultiplier("red") + "x",
                                 "§8  - §7Chance§8: §f50%")
                         .setTextur("Njk1M2IxMmEwOTQ2YjYyOWI0YzA4ODlkNDFmZDI2ZWQyNmZiNzI5ZDRkNTE0YjU5NzI3MTI0YzM3YmI3MGQ4ZCJ9fX0=", UUID.randomUUID())
                 .build());
@@ -212,7 +216,7 @@ public final class RouletteHandler {
                 .setDisplayname("§0§lSchwarz")
                 .setLore("",
                         "§0§lInformation",
-                        "§8  - §7Multiplikator§8:§f 1.8x",
+                        "§8  - §7Multiplikator§8:§f " + getMultiplier("black") + "x",
                         "§8  - §7Chance§8: §f41.6%")
                 .setTextur("Y2ZhNGRkYTZkMTlhMWZlMmQ5ODhkNjVkZWM1MzQyOTUwNTMwODE2NmM5MDY3YjY4YTQ3NzBjYTVjNDM2Y2Y5NCJ9fX0=", UUID.randomUUID())
                 .build());
@@ -222,13 +226,26 @@ public final class RouletteHandler {
                 .setDisplayname("§a§lGrün")
                 .setLore("",
                         "§a§lInformation",
-                        "§8  - §7Multiplikator§8:§f 2.5x",
+                        "§8  - §7Multiplikator§8:§f " + getMultiplier("green") + "x",
                         "§8  - §7Chance§8: §f8.4%")
                 .setTextur("Nzc0NzJkNjA4ODIxZjQ1YTg4MDUzNzZlYzBjNmZmY2I3ODExNzgyOWVhNWY5NjAwNDFjMmEwOWQxMGUwNGNiNCJ9fX0=", UUID.randomUUID())
                 .build());
 
         player.openInventory(inventory);
         player.playSound(player.getLocation(), Sound.CHEST_OPEN, 0.5f, 1);
+    }
+
+    public double getMultiplier(final String color) {
+        if (color.equalsIgnoreCase("red"))
+            return 1.5;
+
+        if(color.equalsIgnoreCase("black"))
+            return 1.8;
+
+        if(color.equalsIgnoreCase("green"))
+            return 2.5;
+
+        return 1;
     }
 
     public String getPrefixFromColor(final String color) {

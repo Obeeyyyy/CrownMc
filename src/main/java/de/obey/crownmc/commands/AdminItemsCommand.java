@@ -112,7 +112,7 @@ public final class AdminItemsCommand implements CommandExecutor {
         inventory.addItem(new ItemBuilder(Material.BOOK)
                         .addEnchantment(Enchantment.DURABILITY, 1)
                         .addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                        .setDisplayname("§6§lCrown §7Rang §8(§f1 Woche§8)")
+                        .setDisplayname("§6§lCrown §7Rang §8(§f1 Monat§8)")
                         .setLore("",
                                 "§8▰§7▱ §e§lRechtsklick",
                                 "§8 - §7Um den §6Crown §7Rang für ",

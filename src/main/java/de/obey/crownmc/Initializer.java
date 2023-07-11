@@ -64,6 +64,7 @@ public final class Initializer {
     private VotePartyHandler votePartyHandler;
     private JackPotHandler jackPotHandler;
     private RouletteHandler rouletteHandler;
+    private PvPAltarHandler pvPAltarHandler;
 
     private PlotAPI plotAPI;
 
@@ -214,6 +215,7 @@ public final class Initializer {
         crownMain.getCommand("roulette").setExecutor(new RouletteCommand(messageUtil, rouletteHandler));
         crownMain.getCommand("shield").setExecutor(shieldCommand);
         crownMain.getCommand("frieden").setExecutor(new FriedenCommand(messageUtil, userHandler));
+        crownMain.getCommand("pvpaltar").setExecutor(new PvPAltarCommand(messageUtil, pvPAltarHandler));
     }
 
     private void loadListener() {
@@ -436,6 +438,7 @@ public final class Initializer {
                     votePartyHandler = new VotePartyHandler();
                     jackPotHandler = new JackPotHandler();
                     rouletteHandler = new RouletteHandler(locationHandler, messageUtil, userHandler);
+                    pvPAltarHandler = new PvPAltarHandler(messageUtil);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
@@ -455,6 +458,7 @@ public final class Initializer {
                     votePartyHandler.loadLocations();
                     crashHandler.setupArmorStands();
                     rouletteHandler.loadTables();
+                    pvPAltarHandler.loadAllPvPAltars();
                 }
 
                 if (ticks == 7) {
@@ -494,6 +498,7 @@ public final class Initializer {
         votePartyHandler.shutdown();
         jackPotHandler.shutdown();
         rouletteHandler.shutdown();
+        pvPAltarHandler.shutdown();
 
         for (final Player onlinePlayer : Bukkit.getOnlinePlayers())
             onlinePlayer.kickPlayer("§c§oDer Server startet neu.");

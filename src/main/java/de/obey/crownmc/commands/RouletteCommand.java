@@ -51,6 +51,22 @@ public final class RouletteCommand implements CommandExecutor, Listener {
 
                 return false;
             }
+
+            if(args[0].equalsIgnoreCase("tables")) {
+
+                if(rouletteHandler.getTables().isEmpty()) {
+                    messageUtil.sendMessage(sender, "Es existieren noch keine Tische§7.");
+                    return false;
+                }
+
+                messageUtil.sendMessage(sender, "Alle Tische (§f" + rouletteHandler.getTables().size() + "§8) §8:");
+                for (Integer id : rouletteHandler.getTables().keySet()) {
+                    player.sendMessage("§8 - §7Tisch §f" + id);
+                    player.sendMessage("     > State§8: §f" + rouletteHandler.getTable(id).getState());
+                }
+
+                return false;
+            }
         }
 
         if(args.length == 2) {
@@ -108,6 +124,7 @@ public final class RouletteCommand implements CommandExecutor, Listener {
         }
 
         messageUtil.sendSyntax(sender,
+                "/roulette tables",
                 "/roulette delete <id>",
                 "/roulette create <id>",
                 "/roulette respawn",
@@ -166,9 +183,20 @@ public final class RouletteCommand implements CommandExecutor, Listener {
         final int table = Integer.parseInt(event.getInventory().getName().split(" ")[1]);
         final Player player = (Player) event.getWhoClicked();
 
-        // rot
-        if(event.getSlot() == 29) {
-            rouletteHandler.joiningRoulette.put(player, "red");
+
+        if(event.getSlot() == 29 || event.getSlot() == 31 || event.getSlot() == 33) {
+            // rot
+            if(event.getSlot() == 29)
+                rouletteHandler.joiningRoulette.put(player, "red");
+
+            //black
+            if(event.getSlot() == 31)
+                rouletteHandler.joiningRoulette.put(player, "black");
+
+            //green
+            if(event.getSlot() == 33)
+                rouletteHandler.joiningRoulette.put(player, "green");
+
             rouletteHandler.joinedTable.put(player, table);
 
             player.closeInventory();

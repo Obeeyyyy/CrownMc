@@ -130,18 +130,18 @@ public final class DailyPotHandler {
         new BukkitRunnable() {
             @Override
             public void run() {
-                stands = new ArmorStandBuilder(dailypotLocation).addStand(1)
+                stands = new ArmorStandBuilder(dailypotLocation).addStandUnder(1)
 
                         .setCustomName(1, "§8▰§7▱ §9§lDAILYPOT§7 ▱§8▰").addLocation(0, -0.25f, 0)
-                        .addStand(1)
+                        .addStandUnder(1)
                         .setCustomName(2, "§8┃» §7Letzter Gewinner§8: §c§oloading").addLocation(0, -0.25f, 0)
-                        .addStand(1)
+                        .addStandUnder(1)
                         .setCustomName(3, "§8┃» §7Teilnahme Gebühr§8: §c§oloading").addLocation(0, -0.25f, 0)
-                        .addStand(3)
+                        .addStandUnder(3)
                         .setCustomName(5, "§8┃» §7Geld im Pot§8: §c§oloading")
                         .setCustomName(4, "§8┃» §7Chance§8: §c§oloading").addLocation(0, -0.25f, 0)
                         .setCustomName(6, "§8┃» §7Teilnehmer§8: §c§oloading")
-                        .addStand(1)
+                        .addStandUnder(1)
                         .setCustomName(7, "§8┃» §7Pot öffnet sich in§8: §c§oloading");
             }
         }.runTaskLater(CrownMain.getInstance(), 10);

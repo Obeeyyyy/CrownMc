@@ -36,6 +36,7 @@ public final class SaveCommand implements CommandExecutor {
         initializer.getUserHandler().getUserCache().values().forEach(initializer.getUserHandler()::saveData);
         initializer.getServerConfig().save();
         initializer.getDailyPotHandler().save();
+        initializer.getPvPAltarHandler().save();
 
         initializer.getMessageUtil().sendMessage(sender, "Saved data.");
 

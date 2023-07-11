@@ -180,7 +180,7 @@ public final class RespawnKitCommand implements CommandExecutor, Listener {
                     try {
                         final int level = Integer.parseInt(args[2]);
                         final RespawnKitItem kitItem = serverConfig.getRespawnKitItems().get(type);
-                        kitItem.getLevelItems().put(level, new ItemBuilder(Material.BARRIER).build());
+                        kitItem.getLevelItems().remove(level);
                         messageUtil.sendMessage(sender, "Item für  " + type + "." + level + " resettet§8.");
                     } catch (final NumberFormatException exception) {
                         messageUtil.sendMessage(sender, "Level muss eine Zahl sein§8.");

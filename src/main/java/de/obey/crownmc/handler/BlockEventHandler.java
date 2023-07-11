@@ -80,13 +80,12 @@ public class BlockEventHandler {
             return;
 
         standBuilder = new ArmorStandBuilder(location)
-                .addStand(1)
+                .addStandUnder(1)
 
                 .setCustomName(1, "§8▰§7▱ §a§lBlockEvent§7 ▱§8▰")
-                .setItem(1, Material.getMaterial(initializer.getServerConfig().getDestroyEventGoal()))
-
+                .spawnItemDrop(1, Material.getMaterial(initializer.getServerConfig().getDestroyEventGoal()))
                 .addLocation(0, -0.75, 0)
-                .addStand(9)
+                .addStandUnder(9)
 
                 .setCustomName(4, "§8┃» §7Aktueller Block§8:§7 " +
                         initializer.getServerConfig().getDestroyEventGoal().replace('_', ' '))

@@ -69,7 +69,7 @@ public final class Crash {
         graphLocation = crashHandler.getCrashLocationGraph().clone();
 
         mainHolo = new ArmorStandBuilder(crashHandler.getCrashLocationOne(), "§0")
-                .addStand(5)
+                .addStandUnder(5)
                 .setCustomName(1, "§f§oWarte auf §aSpieler§8.")
                 .setCustomName(2, "§fNutze §a/crash §fum zu spielen§8.")
                 .setCustomName(3, "!!!!").setCustomNameVisible(3, false)
@@ -153,7 +153,7 @@ public final class Crash {
         mainHolo.delete();
         mainHolo.setLocation(crashHandler.getCrashLocationOne());
 
-        mainHolo.addStand(4)
+        mainHolo.addStandUnder(4)
                 .setCustomName(1, "§f§oWarte auf §aSpieler§8.")
                 .setCustomName(2, "§fNutze §a/crash §fum zu spielen§8.")
                 .setCustomName(3, "!!!!").setCustomNameVisible(3, false)
@@ -161,7 +161,7 @@ public final class Crash {
 
         int standNumber = 5;
         for (Double aDouble : multiplierLog) {
-            mainHolo.addStand().setCustomName(standNumber, "§f[x" + getColor(aDouble) + Double.parseDouble(format.format(aDouble).replace(",", ".")) + "§f]");
+            mainHolo.addStandUnder().setCustomName(standNumber, "§f[x" + getColor(aDouble) + Double.parseDouble(format.format(aDouble).replace(",", ".")) + "§f]");
             standNumber++;
         }
     }
@@ -169,18 +169,18 @@ public final class Crash {
     private void setPlayersHolo() {
         playersHolo.delete();
         playersHolo.setLocation(crashHandler.getCrashLocationTwo());
-        playersHolo.addStand(1 + bets.size())
+        playersHolo.addStandUnder(1 + bets.size())
                 .setCustomName(1, "§aSpieler:");
 
         int standNumber = 2;
         for (UUID uuid : bets.keySet()) {
-            playersHolo.addStand().setCustomName(standNumber, "§f" + Bukkit.getOfflinePlayer(uuid).getName() + "§8 - §e§o" +  NumberFormat.getInstance().format(bets.get(uuid)) + "§6§l$");
+            playersHolo.addStandUnder().setCustomName(standNumber, "§f" + Bukkit.getOfflinePlayer(uuid).getName() + "§8 - §e§o" +  NumberFormat.getInstance().format(bets.get(uuid)) + "§6§l$");
             standNumber++;
         }
 
         if(playerBetLog.size() > 0) {
             for (final Player player : playerMultiplierLog.keySet()) {
-                playersHolo.addStand().setCustomName(standNumber, "§f" + player.getName() + "§8 - §2+§a§l" +  NumberFormat.getInstance().format(playerBetLog.get(player)) + "§2§l$ §f[x" + getColor(playerMultiplierLog.get(player)) + playerMultiplierLog.get(player) + "§f]");
+                playersHolo.addStandUnder().setCustomName(standNumber, "§f" + player.getName() + "§8 - §2+§a§l" +  NumberFormat.getInstance().format(playerBetLog.get(player)) + "§2§l$ §f[x" + getColor(playerMultiplierLog.get(player)) + playerMultiplierLog.get(player) + "§f]");
                 standNumber++;
             }
         }
@@ -253,7 +253,7 @@ public final class Crash {
             }.runTaskTimer(CrownMain.getInstance(), 0, 20);
 
         } else { // wartezeit lief schon
-            playersHolo.addStand()
+            playersHolo.addStandUnder()
                     .setCustomName(1 + bets.size(), "§f" + player.getName() + "§8 : §e§o" + NumberFormat.getInstance().format(bet) + "§6§l$");
         }
     }
@@ -268,7 +268,7 @@ public final class Crash {
     private void startCrash() {
         multiplier = 0.0;
         mainHolo.delete();
-        mainHolo.addStand().setCustomName(1, "§fx" + getColor(0.0) + "0.0");
+        mainHolo.addStandUnder().setCustomName(1, "§fx" + getColor(0.0) + "0.0");
 
         graphLocation = crashHandler.getCrashLocationGraph().clone();
 

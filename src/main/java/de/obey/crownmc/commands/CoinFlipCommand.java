@@ -77,43 +77,40 @@ public final class CoinFlipCommand implements CommandExecutor, Listener {
 
                 return false;
             }
+
+            long amount = 0L;
+
+            try {
+                amount = Long.parseLong(args[1]);
+
+                if (amount < 100) {
+                    messageUtil.sendMessage(sender, "Der Wetteinsatz muss mind. 100$ hoch sein§8.");
+                    return false;
+                }
+
+                coinflipHandler.createCoinFlip(player, amount);
+
+            } catch (final NumberFormatException exception) {
+
+                amount = MathUtil.getLongFromStringwithSuffix(args[1]);
+
+                if (amount <= 0) {
+                    messageUtil.sendMessage(sender, "Bitte gebe eine Zahl an, oder benutze folgende Abkürzungen§8. (§7k, m, mrd, b, brd, t§8)");
+                    return false;
+                }
+
+                if (amount < 100) {
+                    messageUtil.sendMessage(player, "Der Wetteinsatz muss mind. 100$ hoch sein§8.");
+                    return false;
+                }
+
+                coinflipHandler.createCoinFlip(player, amount);
+            }
+
+            return false;
         }
 
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("erstellen")) {
-
-                long amount = 0L;
-
-                try {
-                    amount = Long.parseLong(args[1]);
-
-                    if (amount < 100) {
-                        messageUtil.sendMessage(sender, "Der Wetteinsatz muss mind. 100$ hoch sein§8.");
-                        return false;
-                    }
-
-                    coinflipHandler.createCoinFlip(player, amount);
-
-                } catch (final NumberFormatException exception) {
-
-                    amount = MathUtil.getLongFromStringwithSuffix(args[1]);
-
-                    if (amount <= 0) {
-                        messageUtil.sendMessage(sender, "Bitte gebe eine Zahl an, oder benutze folgende Abkürzungen§8. (§7k, m, mrd, b, brd, t§8)");
-                        return false;
-                    }
-
-                    if (amount < 100) {
-                        messageUtil.sendMessage(player, "Der Wetteinsatz muss mind. 100$ hoch sein§8.");
-                        return false;
-                    }
-
-                    coinflipHandler.createCoinFlip(player, amount);
-                }
-
-                return false;
-            }
-
             if(args[0].equalsIgnoreCase("remove")) {
                 if(!PermissionUtil.hasPermission(sender, "admin", true))
                     return false;

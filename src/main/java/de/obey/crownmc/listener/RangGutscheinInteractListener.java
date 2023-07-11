@@ -72,7 +72,7 @@ public final class RangGutscheinInteractListener implements Listener {
             return;
         }
 
-        if(InventoryUtil.isItemInHandWithDisplayname(player, "§6§lCrown §7Rang §8(§f1 Woche§8)")) {
+        if(InventoryUtil.isItemInHandWithDisplayname(player, "§6§lCrown §7Rang §8(§f1 Monat§8)")) {
             event.setCancelled(true);
 
             if(player.hasPermission("group.crown")) {
@@ -81,11 +81,11 @@ public final class RangGutscheinInteractListener implements Listener {
                 return;
             }
 
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " group addtemp crown 1w");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " group addtemp crown 1m");
             CrownMain.getInstance().getInitializer().getScoreboardHandler().updateScoreboard(player);
             InventoryUtil.removeItemInHand(player, 1);
 
-            messageUtil.sendMessage(player, "Du hast den Crown Rang für eine Woche erhalten§8.");
+            messageUtil.sendMessage(player, "Du hast den Crown Rang für einen Monat erhalten§8.");
             player.playSound(player.getLocation(), Sound.ENDERMAN_DEATH,1 , 0.1f);
 
             return;

@@ -230,6 +230,17 @@ public final class UserHandler {
             for (DataType value : DataType.values()) {
                 if (value.getStoreType() == StoreType.CONFIG) {
 
+                    if(value == DataType.IGNORES) {
+                        if(cfg.contains(value.getSavedAs())) {
+                            user.getData().put(value, cfg.getList(value.getSavedAs()));
+                            continue;
+                        }
+
+                        user.getData().put(value, new ArrayList<>());
+
+                        continue;
+                    }
+
                     if(cfg.contains(value.getSavedAs())) {
                         final long data = cfg.getLong(value.getSavedAs(), -1);
 
