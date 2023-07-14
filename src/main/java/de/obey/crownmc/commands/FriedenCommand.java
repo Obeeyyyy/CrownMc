@@ -8,6 +8,7 @@ package de.obey.crownmc.commands;
  without permission from me, obey, the creator of this code.
 */
 
+import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.MessageBuilder;
 import de.obey.crownmc.util.MessageUtil;
@@ -25,6 +26,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RequiredArgsConstructor
 public final class FriedenCommand implements CommandExecutor {
@@ -75,6 +77,17 @@ public final class FriedenCommand implements CommandExecutor {
             }
 
             final Player target = Bukkit.getPlayer(args[0]);
+
+            final AtomicBoolean state = new AtomicBoolean(true);
+            userHandler.getUser(target.getUniqueId()).thenAccept(user -> {
+                if(!user.is(DataType.PEACEREQUESTS))
+                    state.set(false);
+            });
+
+            if(!state.get()) {
+                messageUtil.sendMessage(sender, target.getName() + " akzeptiert keine Friedensangebote§8.");
+                return false;
+            }
 
             userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
                 if (user.getUserPeace().hasPeaceWith(target)) {

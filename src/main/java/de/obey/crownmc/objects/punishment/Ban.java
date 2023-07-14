@@ -1,4 +1,4 @@
-package de.obey.crownmc.objects;
+package de.obey.crownmc.objects.punishment;
 /*
 
     Author - Obey -> CrownMc
@@ -8,20 +8,21 @@ package de.obey.crownmc.objects;
  without permission from me, obey, the creator of this code.
 */
 
+import de.obey.crownmc.CrownMain;
 import lombok.Getter;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 @Getter
 public class Ban {
 
-    final String id, author, reason;
-    final long duration;
+    final int id;
+    final String author;
+    final BanReason banReason;
 
-    public Ban(final String id, final YamlConfiguration cfg) {
+    public Ban(final int id, final YamlConfiguration cfg) {
         this.id = id;
         author = cfg.getString("bans." + id + ".author");
-        reason = cfg.getString("bans." + id + ".reason");
-        duration = cfg.getLong("bans." + id + ".duration");
+        banReason = CrownMain.getInstance().getInitializer().getBanHandler().getReadsonFromID(cfg.getInt("bans." + id + ".reason"));
     }
 
 }

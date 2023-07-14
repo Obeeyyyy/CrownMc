@@ -106,7 +106,10 @@ public final class ShieldCommand implements CommandExecutor, Listener {
                 continue;
 
             if(!shielded.contains(other))
-                return;
+                continue;
+
+            if(other.getWorld() != player.getWorld())
+                continue;
 
             if(player.getLocation().distance(other.getLocation()) > 5)
                 continue;

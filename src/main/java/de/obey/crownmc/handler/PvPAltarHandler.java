@@ -14,6 +14,7 @@ import de.obey.crownmc.util.MessageUtil;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.HashMap;
@@ -80,6 +81,16 @@ public final class PvPAltarHandler {
         altar.spawnAltar();
 
         pvpAltarMap.put(id, altar);
+    }
+
+    public void startPvPAltar(final int id, final Player player) {
+        final PvPAltar altar = pvpAltarMap.get(id);
+
+        if(altar == null) {
+            messageUtil.sendMessage(player, "Der PvPAltar ist defekt, bitte kontaktiere ein Teammitglied§8.");
+            return;
+        }
+
     }
 
 }

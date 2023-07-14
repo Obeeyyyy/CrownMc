@@ -31,6 +31,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.painting.PaintingBreakByEntityEvent;
 import org.bukkit.event.painting.PaintingPlaceEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -54,7 +55,7 @@ public final class ProtectionListener implements Listener {
         if(worldProtectionHandler.getWorldProtection(event.getEntity().getWorld()) != null) {
             if (!worldProtectionHandler.getWorldProtection(event.getEntity().getWorld()).isProjectiles()) {
 
-                if(event.getEntity() instanceof ThrownExpBottle)
+                if(event.getEntity() instanceof ThrownExpBottle || event.getEntity() instanceof ThrownPotion)
                     return;
 
                 event.setCancelled(true);
@@ -71,6 +72,18 @@ public final class ProtectionListener implements Listener {
     @EventHandler
     public void on(final BlockBreakEvent event) {
         if(!worldProtectionHandler.canBuild(event.getPlayer()))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(final ItemDespawnEvent event) {
+        if(event.getEntity().getTicksLived() >= 20*60*20)
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void on(final PlayerDropItemEvent event) {
+        if(!worldProtectionHandler.canDrop(event.getPlayer()))
             event.setCancelled(true);
     }
 
@@ -149,34 +162,18 @@ public final class ProtectionListener implements Listener {
 
         final Player player = event.getPlayer();
 
-        if (event.getItem() != null && event.getItem().getType() == Material.AIR) {
+        if (event.getItem() != null && event.getItem().getType() != Material.AIR) {
             // Cancel Bucket , AmorStand, Frame
 
             if (event.getItem().getType().name().toLowerCase().contains("bucket") ||
                     event.getItem().getType() == Material.ARMOR_STAND ||
                     event.getItem().getType() == Material.ITEM_FRAME ||
                     event.getItem().getType() == Material.PAINTING) {
+
                 if (!worldProtectionHandler.canBuild(event.getPlayer()))
                     event.setCancelled(true);
 
                 return;
-            }
-
-            if (event.getItem().getType() == Material.ENDER_PEARL) {
-                if (!worldProtectionHandler.canEp(player)) {
-                    event.setCancelled(true);
-                    player.updateInventory();
-                    return;
-                }
-
-                return;
-            }
-
-            if(event.getItem().getType() == Material.ARMOR_STAND) {
-                if(!worldProtectionHandler.canBuild(player)) {
-                    event.setCancelled(true);
-                    return;
-                }
             }
 
             if (event.getItem().getType() == Material.SNOW_BALL || event.getItem().getType() == Material.EYE_OF_ENDER) {
@@ -208,6 +205,24 @@ public final class ProtectionListener implements Listener {
 
                 return;
             }
+
+            if (event.getItem().getType() == Material.ENDER_PEARL) {
+                if (!worldProtectionHandler.canEp(player)) {
+                    event.setCancelled(true);
+                    player.updateInventory();
+                    return;
+                }
+
+                return;
+            }
+
+            if (event.getItem().getType() == Material.ARMOR_STAND) {
+                if (!worldProtectionHandler.canBuild(player)) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+
         }
 
         if (event.getClickedBlock() != null && (

@@ -82,6 +82,9 @@ public final class WorldProtectionHandler {
 
         if (what.equalsIgnoreCase("projectiles"))
             worldProtection.setProjectiles(!worldProtection.isProjectiles());
+
+        if (what.equalsIgnoreCase("itemdrops"))
+            worldProtection.setItemDrops(!worldProtection.isItemDrops());
     }
 
     public boolean canBuild(final Player player) {
@@ -124,6 +127,12 @@ public final class WorldProtectionHandler {
         final WorldProtection protection = getWorldProtection(player.getWorld());
 
         return protection == null || protection.isEnderpearl();
+    }
+
+    public boolean canDrop(final Player player) {
+        final WorldProtection protection = getWorldProtection(player.getWorld());
+
+        return protection == null || protection.isItemDrops();
     }
 
     public WorldProtection getWorldProtection(final World world) {

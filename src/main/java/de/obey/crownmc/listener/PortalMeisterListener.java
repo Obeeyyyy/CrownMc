@@ -118,7 +118,7 @@ public final class PortalMeisterListener implements Listener {
 
             user.removeLong(DataType.MONEY, serverConfig.getNetherPrice());
             player.teleport(nether);
-            player.playSound(player.getLocation(), Sound.PORTAL_TRAVEL, 0.5f, 1);
+            player.playSound(player.getLocation(), Sound.PORTAL_TRAVEL, 0.1f, 1);
 
             return;
         }

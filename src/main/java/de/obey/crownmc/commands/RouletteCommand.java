@@ -166,7 +166,7 @@ public final class RouletteCommand implements CommandExecutor, Listener {
 
                 rouletteHandler.openTable(id, event.getPlayer());
 
-            } catch (final NumberFormatException exception) {}
+            } catch (final NumberFormatException ignored) {}
         }
     }
 

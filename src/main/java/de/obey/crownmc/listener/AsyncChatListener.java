@@ -47,6 +47,7 @@ public final class AsyncChatListener implements Listener {
     private final JackPotHandler jackPotHandler;
     private final RouletteHandler rouletteHandler;
     private final PlotAPI plotAPI;
+    private final WarpAugeListener warpAugeListener;
 
     private boolean checkPlotChat(final Player player) {
         if (Bukkit.getPluginManager().getPlugin("PlotSquared") == null)
@@ -101,6 +102,11 @@ public final class AsyncChatListener implements Listener {
         if (rouletteHandler.isJoiningRoulette(player, message))
             return;
         /* Joining Roulette */
+
+        /* WarpAuge check */
+        if(warpAugeListener.isSettingLocation(player, event.getMessage()))
+            return;
+        /* WarpAuge check done */
 
         final User user = userHandler.getUserInstant(player.getUniqueId());
 
@@ -175,8 +181,15 @@ public final class AsyncChatListener implements Listener {
             if (SupportCommand.isInSupportChat(online.getUniqueId()) != null && SupportCommand.isInSupportChat(online.getUniqueId()).getState() == 1)
                 return;
 
-            if (userHandler.getUserInstant(online.getUniqueId()).getList(DataType.IGNORES).contains(player.getUniqueId().toString()))
-                return;
+            final User onlineUser = userHandler.getUserInstant(online.getUniqueId());
+
+            if(onlineUser != null ){
+                if(onlineUser.getList(DataType.IGNORES) != null ) {
+                    if(onlineUser.getList(DataType.IGNORES).contains(player.getUniqueId().toString())) {
+                        return;
+                    }
+                }
+            }
 
             if (PermissionUtil.hasPermission(player, "chatlines", false) && userHandler.getUserInstant(player.getUniqueId()).is(DataType.CHATLINESSTATE)) {
                 online.sendMessage("§8»");

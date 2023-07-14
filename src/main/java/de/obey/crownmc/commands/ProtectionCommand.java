@@ -66,6 +66,7 @@ public final class ProtectionCommand implements CommandExecutor {
                 player.sendMessage("§8- §7PvE§8: §f" + worldProtection.isPve());
                 player.sendMessage("§8- §7Homes§8: §f" + worldProtection.isHomes());
                 player.sendMessage("§8- §7Projectiles§8: §f" + worldProtection.isProjectiles());
+                player.sendMessage("§8- §7ItemDrops§8: §f" + worldProtection.isItemDrops());
 
                 return false;
             }
@@ -105,6 +106,7 @@ public final class ProtectionCommand implements CommandExecutor {
                         args[2].equalsIgnoreCase("pve") ||
                         args[2].equalsIgnoreCase("homes") ||
                         args[2].equalsIgnoreCase("projectiles") ||
+                        args[2].equalsIgnoreCase("itemdrops") ||
                         args[2].equalsIgnoreCase("mobspawn")) {
                     worldProtectionHandler.toggle(args[1], args[2]);
                     messageUtil.sendMessage(player, args[2] + " in der Welt " + args[1] + " getoggled§8.");
@@ -116,7 +118,7 @@ public final class ProtectionCommand implements CommandExecutor {
 
         messageUtil.sendSyntax(player, "/protection kill <type>",
                 "/protection info <world>",
-                "/protection toggle <world> <pvp, build, mobspawn, blockexplosion, interact, ep, fly, pve, homes, projectiles>");
+                "/protection toggle <world> <pvp, build, mobspawn, blockexplosion, interact, ep, fly, pve, homes, projectiles, itemdrops>");
 
         return false;
     }

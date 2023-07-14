@@ -57,6 +57,7 @@ public final class ConfigCommand implements CommandExecutor {
                 messageUtil.sendMessage(sender, " - levelUpMoney: " + serverConfig.getLevelUpMoney());
                 messageUtil.sendMessage(sender, " - netherPrice: " + serverConfig.getNetherPrice());
                 messageUtil.sendMessage(sender, " - endPrice: " + serverConfig.getEndPrice());
+                messageUtil.sendMessage(sender, " - soulReward: " + serverConfig.getSoulReward());
                 sender.sendMessage("");
 
                 messageUtil.sendMessage(sender, "Blocked Commands:");
@@ -131,6 +132,9 @@ public final class ConfigCommand implements CommandExecutor {
 
                     if (args[1].equalsIgnoreCase("endprice"))
                         serverConfig.setEndPrice(amount);
+
+                    if (args[1].equalsIgnoreCase("soulreward"))
+                        serverConfig.setSoulReward(amount);
 
                     scoreboardHandler.updateEverythingForEveryone();
 
@@ -207,7 +211,7 @@ public final class ConfigCommand implements CommandExecutor {
                 "/config reload",
                 "/config add <blocked, combat, bc> <message>",
                 "/config remove <blocked, combat, bc> <nummer>",
-                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay, baseEloKillstreak, baseXpKillstreak, baseMoneyKillstreak, levelUpMoney, netherPrice, endPrice> <amount>");
+                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay, baseEloKillstreak, baseXpKillstreak, baseMoneyKillstreak, levelUpMoney, netherPrice, endPrice, soulReward> <amount>");
 
         return false;
     }

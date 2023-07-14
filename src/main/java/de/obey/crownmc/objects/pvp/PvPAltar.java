@@ -61,13 +61,29 @@ public final class PvPAltar {
         if(location == null)
             return;
 
-        base = new ArmorStandBuilder(location, identifier)
-                .addStandAbove(5, 0.6)
+        base = new ArmorStandBuilder(location.clone(), identifier)
+                .addStandAbove(5, 0.625)
                 .setHelmet(1, Material.ENDER_STONE)
                 .setHelmet(2, Material.ENDER_STONE)
                 .setHelmet(3, Material.ENDER_STONE)
                 .setHelmet(4, Material.ENDER_STONE)
                 .setHelmet(5, Material.ENDER_STONE);
+
+        holo = new ArmorStandBuilder(location.clone().add(0, 4.5, 0), identifier)
+                .addStandUnder(3, 0.5)
+                .setCustomName(1, "§8( §r" + ChatColor.translateAlternateColorCodes('&', prefix) + " §8)")
+                .setCustomName(2, "§7Status§8: " + getStringFromState())
+                .setCustomName(3, "§7Nutze das Schild um den Vorgang zu starten§8.");
+    }
+
+    private String getStringFromState() {
+        if(state == 0)
+            return "§f§lOffen";
+
+        if(state == 1)
+            return "§a§lWird eingenommen";
+
+        return "§c§lCooldown";
     }
 
     public void shutdown() {

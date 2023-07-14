@@ -105,8 +105,8 @@ public final class VoteParty {
                 final Location location = votePartyHandler.getLocations().get(new Random().nextInt(votePartyHandler.getLocations().size()));
                 final Giant giant = location.getWorld().spawn(location, Giant.class);
 
-                giant.setMaxHealth(2000);
-                giant.setHealth(2000);
+                giant.setMaxHealth(500);
+                giant.setHealth(500);
 
                 giant.setCustomNameVisible(true);
                 giant.setCustomName(giant.getHealth() + "§c§l❤");

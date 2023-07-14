@@ -189,6 +189,16 @@ public final class RouletteHandler {
     }
 
     public void openTable(final int id, final Player player) {
+        final RouletteTable table = tables.get(id);
+
+        if(table == null)
+            return;
+
+        if(table.getBetAmounts().containsKey(player.getUniqueId())) {
+            messageUtil.sendMessage(player, "Du spielst bereits an diesem Tisch§8.");
+            return;
+        }
+
         final Inventory inventory = Bukkit.createInventory(null, 9*5, "§f§lTisch§7 " + id);
 
         InventoryUtil.fillSideRows(inventory, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());

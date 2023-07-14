@@ -7,8 +7,9 @@ package de.obey.crownmc.listener;
 */
 
 import de.obey.crownmc.Initializer;
-import de.obey.crownmc.objects.Ban;
+import de.obey.crownmc.objects.punishment.Ban;
 import de.obey.crownmc.backend.user.UserPunishment;
+import de.obey.crownmc.objects.punishment.BanReason;
 import de.obey.crownmc.util.MathUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -39,12 +40,11 @@ public final class AsyncPlayerPreLoginListener implements Listener {
         initializer.getUserHandler().getUser(event.getUniqueId()).thenAcceptAsync(user -> {
 
             final UserPunishment punishment = user.getPunishment();
+
             if(user.getPunishment().isBanned()) {
                 final Ban ban = punishment.getBans().get(punishment.getBans().size() - 1);
-                event.disallow(PlayerPreLoginEvent.Result.KICK_OTHER, "\n§6§lCrownMc§8.§6§lde\n\n" +
-                        "§c§oDu bist für '" + ban.getReason() + "' gebannt.\n\n" +
-                        "§7Author§8: §f" + ban.getAuthor() + "\n" +
-                        "§7Dauer§8: §f" + (ban.getDuration() <= 0 ? "§4§lPermanent" : MathUtil.getDaysAndHoursAndMinutesAndSecondsFromSeconds(punishment.getRemainingBanMillis() / 1000)));
+                final BanReason reason = ban.getBanReason();
+                event.disallow(PlayerPreLoginEvent.Result.KICK_OTHER, initializer.getBanHandler().getKickMessage(reason.getId(), punishment.getRemainingBanMillis(), ban.getAuthor()));
                 return;
             }
 

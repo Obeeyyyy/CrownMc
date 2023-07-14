@@ -7,7 +7,9 @@ package de.obey.crownmc.backend.user;
 */
 
 import de.obey.crownmc.CrownMain;
-import de.obey.crownmc.objects.Ban;
+import de.obey.crownmc.handler.BanHandler;
+import de.obey.crownmc.objects.punishment.Ban;
+import de.obey.crownmc.objects.punishment.BanReason;
 import de.obey.crownmc.util.MathUtil;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 
 public final class UserPunishment {
 
+    private final BanHandler banHandler = CrownMain.getInstance().getInitializer().getBanHandler();
+
     private final User user;
     private final YamlConfiguration cfg;
 
@@ -28,7 +32,8 @@ public final class UserPunishment {
 
     private boolean muted, banned;
 
-    private long mutedUntil, mutedTimes = 0, bannedUntil, banTimes = 0;
+    private long mutedUntil, mutedTimes = 0, bannedUntil;
+    private int banTimes = 0;
 
     @Getter
     private ArrayList<Mute> mutes = new ArrayList<>();
@@ -62,12 +67,10 @@ public final class UserPunishment {
             bannedUntil = cfg.getLong("banneduntil");
 
         if(cfg.contains("bantimes"))
-            banTimes = cfg.getLong("bantimes");
+            banTimes = cfg.getInt("bantimes");
 
         if(cfg.contains("bans")) {
-            cfg.getConfigurationSection("bans").getKeys(false).forEach(id -> {
-                bans.add(new Ban(id, cfg));
-            });
+            cfg.getConfigurationSection("bans").getKeys(false).forEach(id -> bans.add(new Ban(Integer.parseInt(id), cfg)));
         }
     }
 
@@ -102,7 +105,7 @@ public final class UserPunishment {
     public long getRemainingBanMillis() {
         if(isBanned()) {
             if(bannedUntil <= 0)
-                return bannedUntil;
+                return -1;
 
             return bannedUntil - System.currentTimeMillis();
         }
@@ -110,55 +113,32 @@ public final class UserPunishment {
         return 0;
     }
 
-    public void unBan(final CommandSender unbanBy) {
+    public boolean registerUnban() {
         final OfflinePlayer offlinePlayer = user.getOfflinePlayer();
 
-        if(!isMuted()) {
-            unbanBy.sendMessage(prefix + "Der Spieler " + offlinePlayer.getName() + " ist nicht gebannt§8.");
-            return;
-        }
+        if(!isBanned())
+            return false;
 
         banned = false;
         bannedUntil = System.currentTimeMillis();
 
-        unbanBy.sendMessage(prefix + "Du hast §8'§a§o" + offlinePlayer.getName() + "§8'§7 entbannt§8.");
+        return true;
     }
 
-    public void ban(final CommandSender banBy, final String reason, final long bannedMillis) {
-        final OfflinePlayer offlinePlayer = user.getOfflinePlayer();
-
-        if (isBanned()) {
-            banBy.sendMessage(prefix + "Der Spieler " + offlinePlayer.getName() + " ist schon gebannt§8.");
-            return;
-        }
-
+    public void registerNewBan(final String authorName, final BanReason banReason) {
         banTimes++;
         banned = true;
-        if (bannedMillis <= 0) {
+
+        if(banReason.getDuration() <= 0) {
             bannedUntil = -1;
         } else {
-            bannedUntil = System.currentTimeMillis() + bannedMillis;
+            bannedUntil = System.currentTimeMillis() + banReason.getDuration();
         }
 
-        cfg.set("bans." + banTimes + ".reason", reason);
-        cfg.set("bans." + banTimes + ".author", banBy.getName());
-        cfg.set("bans." + banTimes + ".duration", bannedMillis);
+        cfg.set("bans." + banTimes + ".reason", banReason.getId());
+        cfg.set("bans." + banTimes + ".author", authorName);
 
-        bans.add(new Ban(banTimes + "", cfg));
-
-        Bukkit.broadcastMessage(prefix + "§8'§c§o" + offlinePlayer.getName() + "§8'§7 wurde von " + banBy.getName() + " gebannt§8.");
-
-        if (offlinePlayer.isOnline()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    offlinePlayer.getPlayer().kickPlayer("\n§6§lCrownMc§8.§6§lde\n\n" +
-                            "§c§oDu wurdest für '" + reason + "' gebannt.\n\n" +
-                            "§7Author§8: §f" + banBy.getName() + "\n" +
-                            "§7Dauer§8: §f" + (bannedMillis <= 0 ? "§4§lPermanent" : MathUtil.getDaysAndHoursAndMinutesAndSecondsFromSeconds(getRemainingBanMillis() / 1000)));
-                }
-            }.runTask(CrownMain.getInstance());
-        }
+        bans.add(new Ban(banTimes, cfg));
     }
 
     public void sendBanInfo(final CommandSender sender) {
@@ -174,7 +154,7 @@ public final class UserPunishment {
             sender.sendMessage("");
             sender.sendMessage("§8 - §7Ban§8.§7" + ban.getId());
             sender.sendMessage("§f     -> §cAuthor§8: §7" + ban.getAuthor());
-            sender.sendMessage("§f     -> §cGrund§8: §7" + ban.getReason());
+            sender.sendMessage("§f     -> §cGrund§8: §7" + ban.getBanReason().getName());
             sender.sendMessage("§f     -> §cDuration§8: §7" + (bannedUntil <= 0 ? "§4§lPermanent" : MathUtil.getHoursAndMinutesAndSecondsFromSeconds(getRemainingBanMillis()/ 1000)));
         });
     }

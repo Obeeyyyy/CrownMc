@@ -70,7 +70,7 @@ public final class EnderchestListener implements Listener {
             final User user = userHandler.getUserInstant(chestOwner.getUniqueId());
 
             if (!player.getName().equalsIgnoreCase(chestOwner.getName())) {
-                if (!PermissionUtil.hasPermission((Player) event.getWhoClicked(), "enderchest.others", false)) {
+                if (!PermissionUtil.hasPermission(event.getWhoClicked(), "enderchest.other.edit", false)) {
                     if (!user.getEnderchest().getEnderchestTrusted().contains(player.getUniqueId().toString()))
                         event.setCancelled(true);
                 }
@@ -88,7 +88,7 @@ public final class EnderchestListener implements Listener {
             final User user = userHandler.getUserInstant(chestOwner.getUniqueId());
 
             if (!chestOwner.getName().equalsIgnoreCase(player.getName())) {
-                if (!PermissionUtil.hasPermission(player, "enderchest.others", false)) {
+                if (!PermissionUtil.hasPermission(player, "enderchest.other.edit", false)) {
                     if (!user.getEnderchest().getEnderchestTrusted().contains(player.getUniqueId().toString())) {
                         event.setCancelled(true);
                     }

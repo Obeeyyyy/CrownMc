@@ -54,9 +54,6 @@ public final class EnderChestCommand implements CommandExecutor {
                 return false;
             }
 
-            if (!PermissionUtil.hasPermission(player, "enderchest.other", true))
-                return false;
-
             if (args[0].equalsIgnoreCase("trusted") || args[0].equalsIgnoreCase("list")) {
 
                 final User user = initializer.getUserHandler().getUserInstant(player.getUniqueId());

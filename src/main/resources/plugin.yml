@@ -59,7 +59,7 @@ commands:
     aliases: [ ss ]
   allmoney:
   broadcast:
-    aliases: [ bc ]
+    aliases: [ bcc ]
   firstjoinitems:
     aliases: [ fji ]
   adminitems:
@@ -175,3 +175,5 @@ commands:
   frieden:
     aliases: [friede, peace]
   pvpaltar:
+  banreason:
+    aliases: [banr]

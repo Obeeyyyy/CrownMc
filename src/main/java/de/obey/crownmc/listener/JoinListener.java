@@ -196,7 +196,7 @@ public final class JoinListener implements Listener {
                 player.getActivePotionEffects().forEach(potionEffect -> player.removePotionEffect(potionEffect.getType()));
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
 
-                //LabyUtil.sendServerBanner(player);
+                LabyUtil.sendServerBanner(player);
                 LabyUtil.sendCurrentPlayingGamemode(player, "§8» §6§lCrownMc.de §7| §f§oJoin Now !");
             }
         }.runTaskLater(CrownMain.getInstance(), 20);

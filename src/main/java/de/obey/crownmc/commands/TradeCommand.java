@@ -6,7 +6,9 @@ package de.obey.crownmc.commands;
 
 */
 
+import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.handler.TradeHandler;
+import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.MessageBuilder;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
@@ -21,6 +23,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RequiredArgsConstructor
 @NonNull
@@ -28,6 +31,7 @@ public final class TradeCommand implements CommandExecutor {
 
     private final MessageUtil messageUtil;
     private final TradeHandler tradeHandler;
+    private final UserHandler userHandler;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -48,6 +52,16 @@ public final class TradeCommand implements CommandExecutor {
                 return false;
             }
 
+           final AtomicBoolean state = new AtomicBoolean(true);
+            userHandler.getUser(target.getUniqueId()).thenAccept(user -> {
+                if(!user.is(DataType.TRADEREQUESTS))
+                    state.set(false);
+            });
+
+            if(!state.get()) {
+                messageUtil.sendMessage(sender, target.getName() + " akzeptiert keine Trade Anfragen§8.");
+                return false;
+            }
 
             final List<UUID> requestedPlayers = tradeHandler.getRequests().getOrDefault(player, new ArrayList<>());
             if (requestedPlayers.contains(target.getUniqueId())) {

@@ -116,7 +116,7 @@ public final class AdminItemsCommand implements CommandExecutor {
                         .setLore("",
                                 "§8▰§7▱ §e§lRechtsklick",
                                 "§8 - §7Um den §6Crown §7Rang für ",
-                                "§8 - §71ne Woche zu erhalten§8.",
+                                "§8 - §71 nen Monat zu erhalten§8.",
                                 "")
                 .build());
 
@@ -144,6 +144,24 @@ public final class AdminItemsCommand implements CommandExecutor {
                         .setLore("",
                         "§3§lInformation",
                         "  §8- §7Dieses Item ermöglicht es dir die Position mit anderen zu tauschen§8.",
+                                "")
+                .build());
+
+        inventory.addItem(new ItemBuilder(Material.EYE_OF_ENDER)
+                        .setDisplayname("§5§lWarp Auge")
+                        .setLore("",
+                                "§5§lInformation",
+                                "§8  -§7 Dieses Auge erlaubt es dir dich zu vorher",
+                                "§8  -§7 abgespeicherten Positionen zu teleportieren§8.",
+                                "",
+                                "§5§lRechtsklick",
+                                "§8  -§7 Position Speichern§8.",
+                                "",
+                                "§5§lLinksklick",
+                                "§8  -§7 Zu Position Teleportieren§8.",
+                                "",
+                                "§8» §7Energie§8:§f 15",
+                                "§8» §7Position Name§8:§f kein name",
                                 "")
                 .build());
 

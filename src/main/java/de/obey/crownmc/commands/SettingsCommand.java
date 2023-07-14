@@ -86,16 +86,22 @@ public final class SettingsCommand implements CommandExecutor, Listener {
         } else if (event.getSlot() == 14) {
             user.setBoolean(DataType.KILLHOLOSTATE, !user.is(DataType.KILLHOLOSTATE));
 
-        } else if (event.getSlot() == 21) {
-            user.setBoolean(DataType.SPAWNTELEPORT, !user.is(DataType.SPAWNTELEPORT));
-
-        } else if (event.getSlot() == 22) {
-            user.setBoolean(DataType.RESPAWNKIT, !user.is(DataType.RESPAWNKIT));
-
         } else if (event.getSlot() == 15) {
             Bukkit.dispatchCommand(player, "c settings");
 
         } else if (event.getSlot() == 20) {
+            user.setBoolean(DataType.SPAWNTELEPORT, !user.is(DataType.SPAWNTELEPORT));
+
+        } else if (event.getSlot() == 21) {
+            user.setBoolean(DataType.RESPAWNKIT, !user.is(DataType.RESPAWNKIT));
+
+        } else if (event.getSlot() == 22) {
+            user.setBoolean(DataType.TRADEREQUESTS, !user.is(DataType.TRADEREQUESTS));
+
+        } else if (event.getSlot() == 23) {
+            user.setBoolean(DataType.PEACEREQUESTS, !user.is(DataType.PEACEREQUESTS));
+
+        } else if (event.getSlot() == 24) {
             if (!PermissionUtil.hasPermission(player, "chatlines", true))
                 return;
 
@@ -196,41 +202,69 @@ public final class SettingsCommand implements CommandExecutor, Listener {
                     .build());
         }
         if (user.is(DataType.SPAWNTELEPORT)) {
-            inventory.setItem(21, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+            inventory.setItem(20, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                     .setTextur("MTU2MmU4YzFkNjZiMjFlNDU5YmU5YTI0ZTVjMDI3YTM0ZDI2OWJkY2U0ZmJlZTJmNzY3OGQyZDNlZTQ3MTgifX19", UUID.randomUUID())
                     .setDisplayname("§8» §7Spawn Teleport §8× §a§oAktiviert")
                     .setLore("", "§7  Klicke um die Teleportation zum Spawn beim joinen zu §c§odeaktivieren§7.")
                     .build());
         } else {
-            inventory.setItem(21, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+            inventory.setItem(20, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                     .setTextur("Mzk5MzY2YTNmMjMzNTZkNDRjYjNhNzIyZjgxODdjN2QwN2JhOTc1MDFmNzZkMTVmMmIzMTFlN2ZmZTVhNGRhYyJ9fX0=", UUID.randomUUID())
                     .setDisplayname("§8» §7Spawn Teleport §8× §c§oDeaktiviert")
                     .setLore("", "§7  Klicke um die Teleportation zum Spawn beim joinen zu §a§oaktivieren§7.")
                     .build());
         }
         if (user.is(DataType.RESPAWNKIT)) {
-            inventory.setItem(22, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+            inventory.setItem(21, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                     .setTextur("OWE0MTgxYzFhNGM0NWVmNjExNDA2YzdkZDY4YTRkYzQ4MzEyMTgwODdkYWUxOWE2MmE0ZGVjYjJkY2RkMzVjMCJ9fX0=", UUID.randomUUID())
                     .setDisplayname("§8» §7Respawnkit §8× §a§oAktiviert")
                     .setLore("", "§7  Klicke um das Respawnkit zu §c§odeaktivieren§7.")
                     .build());
         } else {
-            inventory.setItem(22, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+            inventory.setItem(21, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                     .setTextur("Mzk5MzY2YTNmMjMzNTZkNDRjYjNhNzIyZjgxODdjN2QwN2JhOTc1MDFmNzZkMTVmMmIzMTFlN2ZmZTVhNGRhYyJ9fX0=", UUID.randomUUID())
                     .setDisplayname("§8» §7Respawnkit §8× §c§oDeaktiviert")
                     .setLore("", "§7  Klicke um das Respawnkit zu §a§oaktivieren§7.")
                     .build());
         }
 
+        if (user.is(DataType.TRADEREQUESTS)) {
+            inventory.setItem(22, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setTextur("OTVmZDY3ZDU2ZmZjNTNmYjM2MGExNzg3OWQ5YjUzMzhkNzMzMmQ4ZjEyOTQ5MWE1ZTE3ZThkNmU4YWVhNmMzYSJ9fX0=", UUID.randomUUID())
+                    .setDisplayname("§8» §7Trade Anfragen §8× §a§oAktiviert")
+                    .setLore("", "§7  Klicke um Trade Anfragen zu §c§odeaktivieren§7.")
+                    .build());
+        } else {
+            inventory.setItem(22, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setTextur("Mzk5MzY2YTNmMjMzNTZkNDRjYjNhNzIyZjgxODdjN2QwN2JhOTc1MDFmNzZkMTVmMmIzMTFlN2ZmZTVhNGRhYyJ9fX0=", UUID.randomUUID())
+                    .setDisplayname("§8» §7Trade Anfragen §8× §c§oDeaktiviert")
+                    .setLore("", "§7  Klicke um Trade Anfragen zu §a§oaktivieren§7.")
+                    .build());
+        }
+
+        if (user.is(DataType.PEACEREQUESTS)) {
+            inventory.setItem(23, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setTextur("YTBhNzk4OWI1ZDZlNjIxYTEyMWVlZGFlNmY0NzZkMzUxOTNjOTdjMWE3Y2I4ZWNkNDM2MjJhNDg1ZGMyZTkxMiJ9fX0=", UUID.randomUUID())
+                    .setDisplayname("§8» §7Friedens Anfragen §8× §a§oAktiviert")
+                    .setLore("", "§7  Klicke um Friedens Anfragen zu §c§odeaktivieren§7.")
+                    .build());
+        } else {
+            inventory.setItem(23, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setTextur("Mzk5MzY2YTNmMjMzNTZkNDRjYjNhNzIyZjgxODdjN2QwN2JhOTc1MDFmNzZkMTVmMmIzMTFlN2ZmZTVhNGRhYyJ9fX0=", UUID.randomUUID())
+                    .setDisplayname("§8» §7Friedens Anfragen §8× §c§oDeaktiviert")
+                    .setLore("", "§7  Klicke um Friedens Anfragen zu §a§oaktivieren§7.")
+                    .build());
+        }
+
         if (PermissionUtil.hasPermission(user.getPlayer(), "chatlines", false)) {
             if (user.is(DataType.CHATLINESSTATE)) {
-                inventory.setItem(20, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                inventory.setItem(24, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setTextur("MzE5ZjUwYjQzMmQ4NjhhZTM1OGUxNmY2MmVjMjZmMzU0MzdhZWI5NDkyYmNlMTM1NmM5YWE2YmIxOWEzODYifX19", UUID.randomUUID())
                         .setDisplayname("§8» §7ChatLines §8× §a§oAktiviert")
                         .setLore("", "§7  Klicke um ChatLines zu §c§odeaktivieren§7.")
                         .build());
             } else {
-                inventory.setItem(20, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                inventory.setItem(24, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setTextur("Mzk5MzY2YTNmMjMzNTZkNDRjYjNhNzIyZjgxODdjN2QwN2JhOTc1MDFmNzZkMTVmMmIzMTFlN2ZmZTVhNGRhYyJ9fX0=", UUID.randomUUID())
                         .setDisplayname("§8» §7ChatLines §8× §c§oDeaktiviert")
                         .setLore("", "§7  Klicke um ChatLines zu §a§oaktivieren§7.")

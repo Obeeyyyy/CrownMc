@@ -24,7 +24,7 @@ public final class LabyUtil {
 
     public void sendServerBanner(final Player player) {
         final JsonObject object = new JsonObject();
-        object.addProperty("url", "https://i.imgur.com/ipJhAxR.png"); // Url of the image
+        object.addProperty("url", "https://i.imgur.com/HkrJici.png"); // Url of the image
         LabyModProtocol.sendLabyModMessage(player, "server_banner", object);
     }
 

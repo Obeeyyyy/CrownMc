@@ -12,6 +12,7 @@ import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.handler.CombatHandler;
 import de.obey.crownmc.handler.KillFarmHandler;
+import de.obey.crownmc.handler.LocationHandler;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.objects.pvp.Combat;
 import de.obey.crownmc.objects.effects.KillEffect;
@@ -23,6 +24,7 @@ import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -34,6 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @NonNull
@@ -44,6 +47,7 @@ public final class DeathListener implements Listener {
     private final KillFarmHandler killFarmHandler;
     private final CombatHandler combatHandler;
     private final ServerConfig serverConfig;
+    private final LocationHandler locationHandler;
 
     private final DecimalFormat format = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
 
@@ -125,6 +129,20 @@ public final class DeathListener implements Listener {
             killerUser.addLong(DataType.ELOPOINTS, eloReward);
             killerUser.addLong(DataType.MONEY, moneyReward);
             killerUser.addXP(xpReward);
+
+            // End Drop
+            final Location location = locationHandler.getLocation("end");
+
+            if(location != null) {
+                event.getDrops().add(new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                                .setTextur("MTA4OTFlNzY2NmE0MWQxM2FlMTM5YTE5Njk2OGFjY2U4YTA1NGQ4NGRkODMwNGNlYWRkMjhhODc4OTg4M2IyNiJ9fX0=", UUID.fromString("f4b1497c-1122-3344-5566-059a8fa5b024"))
+                                .setDisplayname("§8( §2§l☯ §8) §f§o" + player.getName() + "'s §2§lSeele")
+                                .setLore("",
+                                        "§8▰§7▱ §2§lSeelen Tausch",
+                                        "§8  -§7 Die Seele kann bei §5§lReaper",
+                                        "§8  -§7 am Spawn getauscht werden§8.")
+                        .build());
+            }
         }
         // Reward stuff end
 

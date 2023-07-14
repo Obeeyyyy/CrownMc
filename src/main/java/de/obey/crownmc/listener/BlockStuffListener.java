@@ -143,7 +143,7 @@ public final class BlockStuffListener implements Listener {
         if (protection != null) {
             if (player.getGameMode() == GameMode.SURVIVAL) {
                 if (!protection.isFly()) {
-                    if (player.isFlying() || player.getAllowFlight() && !VanishCommand.vanished.contains(player)) {
+                    if ((player.isFlying() || player.getAllowFlight()) && !VanishCommand.vanished.contains(player)) {
                         player.setAllowFlight(false);
                         player.setFlying(false);
                     }

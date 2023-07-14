@@ -8,6 +8,7 @@ package de.obey.crownmc.objects;
 
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.commands.AfkCommand;
+import de.obey.crownmc.commands.BanCommand;
 import de.obey.crownmc.handler.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public final class Runnables {
     private final ScoreboardHandler scoreboardHandler;
     private final AutoBroadcastHandler autoBroadcastHandler;
     private final DailyPotHandler dailyPotHandler;
+    private final BanCommand banCommand;
 
     public void start2TickTimerAsync() {
         new BukkitRunnable() {
@@ -42,6 +44,7 @@ public final class Runnables {
                 kitHandler.runUpdateTick();
                 userHandler.runInterval();
                 dailyPotHandler.updateStands();
+                banCommand.check();
             }
         }.runTaskTimerAsynchronously(CrownMain.getInstance(), 10, 10);
     }
