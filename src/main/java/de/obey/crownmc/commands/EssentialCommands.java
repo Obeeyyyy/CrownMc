@@ -60,17 +60,17 @@ public final class EssentialCommands implements CommandExecutor {
                 }
 
                 try {
-                    final float level = (float) (Integer.parseInt(args[0])) / 10;
+                    final float level = Integer.parseInt(args[0]) / 10.0F;
 
                     if (level > -0.1 && level < 1.1) {
-                        player.setWalkSpeed(getRealMoveSpeed(level, false));
-                        player.setFlySpeed(getRealMoveSpeed(level, false));
+                        player.setFlySpeed(level);
+                        player.setWalkSpeed(level);
                         initializer.getMessageUtil().sendMessage(player, "Deine Geschwindigkeit wurde angepasst§8.");
+
                         return false;
                     }
 
-                } catch (NumberFormatException ignored) {
-                }
+                } catch (NumberFormatException ignored) {}
 
                 initializer.getMessageUtil().sendMessage(player, "Bitte gebe eine Zahl von 1-10 an§8.");
 
@@ -95,7 +95,7 @@ public final class EssentialCommands implements CommandExecutor {
                 }
 
                 try {
-                    final int level = Integer.parseInt(args[0]) / 10;
+                    final float level = Integer.parseInt(args[0]) / 10.0F;
 
                     if (level > -0.1 && level < 1.1) {
                         target.setWalkSpeed(level);
@@ -452,10 +452,6 @@ public final class EssentialCommands implements CommandExecutor {
                 tpas.put(player, target);
 
                 initializer.getMessageUtil().sendMessage(player, "Du hast " + target.getName() + " eine TPA gesendet§8.");
-                if (initializer.getUserHandler().getUserInstant(target.getUniqueId()).getList(DataType.IGNORES).contains(player.getUniqueId().toString())) {
-                    return true;
-                }
-
                 initializer.getMessageUtil().sendMessage(target, player.getName() + " möchte sich zu dir teleportieren§8.");
 
                 target.sendMessage(" ");
@@ -550,11 +546,6 @@ public final class EssentialCommands implements CommandExecutor {
                 tpaHeres.put(player, target);
 
                 initializer.getMessageUtil().sendMessage(player, "Du hast " + target.getName() + " eine TPA-Here gesendet§8.");
-
-                if (initializer.getUserHandler().getUserInstant(target.getUniqueId()).getList(DataType.IGNORES).contains(player.getUniqueId().toString())) {
-                    return true;
-                }
-
                 initializer.getMessageUtil().sendMessage(target, player.getName() + " möchte dich zu ihm teleportieren§8.");
 
                 target.sendMessage(" ");
@@ -616,17 +607,6 @@ public final class EssentialCommands implements CommandExecutor {
         }
 
         return false;
-    }
-
-    private float getRealMoveSpeed(final float userSpeed, final boolean isFly) {
-        final float defaultSpeed = isFly ? 0.1f : 0.2f;
-        float maxSpeed = 1f;
-
-        if (userSpeed < 1f) {
-            return defaultSpeed * userSpeed;
-        }
-        final float ratio = ((userSpeed - 1) / 9) * (maxSpeed - defaultSpeed);
-        return ratio + defaultSpeed;
     }
 
 }

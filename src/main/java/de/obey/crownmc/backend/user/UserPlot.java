@@ -109,8 +109,8 @@ public final class UserPlot {
             for (String text : wand) {
                 final String[] data = text.split(":");
 
-                inventory.addItem(new ItemBuilder(Material.getMaterial(data[0]), 1, Byte.parseByte(data[1]))
-                        .setDisplayname("§8» §f§l" + Material.getMaterial(data[0]).name())
+                inventory.addItem(new ItemBuilder(Material.getMaterial(Integer.parseInt(data[0])), 1, Byte.parseByte(data[1]))
+                        .setDisplayname("§8» §f§l" + Material.getMaterial(Integer.parseInt(data[0])).name())
                         .setLore("",
                                 "§8▰§7▱ §b§lRechtsklick",
                                 "§8 - §7Setzte diesen Block als deine Plotwand§8.",

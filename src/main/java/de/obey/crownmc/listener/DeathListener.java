@@ -10,12 +10,10 @@ import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.backend.user.User;
-import de.obey.crownmc.handler.CombatHandler;
-import de.obey.crownmc.handler.KillFarmHandler;
-import de.obey.crownmc.handler.LocationHandler;
-import de.obey.crownmc.handler.UserHandler;
+import de.obey.crownmc.handler.*;
 import de.obey.crownmc.objects.pvp.Combat;
 import de.obey.crownmc.objects.effects.KillEffect;
+import de.obey.crownmc.objects.pvp.PvPAltar;
 import de.obey.crownmc.util.ArmorStandPacketBuilder;
 import de.obey.crownmc.util.Bools;
 import de.obey.crownmc.util.InventoryUtil;
@@ -48,21 +46,22 @@ public final class DeathListener implements Listener {
     private final CombatHandler combatHandler;
     private final ServerConfig serverConfig;
     private final LocationHandler locationHandler;
+    private final PvPAltarHandler pvPAltarHandler;
 
     private final DecimalFormat format = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
 
     @EventHandler
     public void on(final PlayerDeathEvent event) {
 
-        final Player player = event.getEntity();
-        final User user = userHandler.getUserInstant(player.getUniqueId());
+        final Player died = event.getEntity();
+        final User user = userHandler.getUserInstant(died.getUniqueId());
 
-        messageUtil.log("#> " + player.getName() + " DIED / ITEMS:" + player.getInventory().getContents().length);
+        messageUtil.log("#> " + died.getName() + " DIED / ITEMS:" + died.getInventory().getContents().length);
 
-        Player tempKiller = player.getKiller();
+        Player tempKiller = died.getKiller();
 
         if (tempKiller == null) {
-            final Combat combat = combatHandler.isInCombat(player);
+            final Combat combat = combatHandler.isInCombat(died);
 
             if (combat == null)
                 return;
@@ -73,7 +72,16 @@ public final class DeathListener implements Listener {
         final Player killer = tempKiller;
         tempKiller = null;
 
-        if(killer == player)
+        // PvP Altar stuff start
+
+        if(pvPAltarHandler.getCapturing().containsKey(died.getUniqueId())) {
+            final PvPAltar altar = pvPAltarHandler.getCapturing().get(died.getUniqueId());
+            altar.died(died, killer);
+        }
+
+        // PvP Altar stuff end
+
+        if(killer == died)
             return;
 
         final User killerUser = userHandler.getUserInstant(killer.getUniqueId());
@@ -92,8 +100,8 @@ public final class DeathListener implements Listener {
                 eloReward =  serverConfig.getKillEloReward(),
                 xpReward = serverConfig.getKillXPReward();
 
-        killFarmHandler.check(player, killer);
-        if (!killFarmHandler.isBlocked(player)) {
+        killFarmHandler.check(died, killer);
+        if (!killFarmHandler.isBlocked(died)) {
 
             killerUser.addLong(DataType.KILLS, 1);
             killerUser.addLong(DataType.KILLSTREAK, 1);
@@ -133,10 +141,10 @@ public final class DeathListener implements Listener {
             // End Drop
             final Location location = locationHandler.getLocation("end");
 
-            if(location != null) {
+            if(location != null && killer.getLocation().getWorld() == location.getWorld()) {
                 event.getDrops().add(new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                                 .setTextur("MTA4OTFlNzY2NmE0MWQxM2FlMTM5YTE5Njk2OGFjY2U4YTA1NGQ4NGRkODMwNGNlYWRkMjhhODc4OTg4M2IyNiJ9fX0=", UUID.fromString("f4b1497c-1122-3344-5566-059a8fa5b024"))
-                                .setDisplayname("§8( §2§l☯ §8) §f§o" + player.getName() + "'s §2§lSeele")
+                                .setDisplayname("§8( §2§l☯ §8) §f§o" + died.getName() + "'s §2§lSeele")
                                 .setLore("",
                                         "§8▰§7▱ §2§lSeelen Tausch",
                                         "§8  -§7 Die Seele kann bei §5§lReaper",
@@ -150,10 +158,10 @@ public final class DeathListener implements Listener {
         final long bounty = user.getLong(DataType.BOUNTY);
         if (bounty > 0) {
             user.setLong(DataType.BOUNTY, 0);
-            messageUtil.sendMessage(player, "Du hast dein Kopfgeld verloren. §8(§c§o" + messageUtil.formatLong(bounty) + "$§8)");
+            messageUtil.sendMessage(died, "Du hast dein Kopfgeld verloren. §8(§c§o" + messageUtil.formatLong(bounty) + "$§8)");
 
             InventoryUtil.addItem(killer, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
-                    .setDisplayname("§8»┃ §7Kopf von§e§o " + player.getName())
+                    .setDisplayname("§8»┃ §7Kopf von§e§o " + died.getName())
                     .setLore("",
                             "§8▰§7▱  §6§lKopfgeld",
                             "  §8-§f§o " + messageUtil.formatLong(bounty) + "§e§o$",
@@ -161,7 +169,7 @@ public final class DeathListener implements Listener {
                             "§8▰§7▱  §6§lWie erhalte ich mein Kopfgeld §8?",
                             "  §8- §7Das §eKopfgeld §7kann am Spawn",
                             "  §8- §7bei §5§lReaper §7abgeholt werden§8.")
-                    .setSkullOwner(player.getName())
+                    .setSkullOwner(died.getName())
                     .build());
         }
         // Bounty stuff end
@@ -170,11 +178,11 @@ public final class DeathListener implements Listener {
         // HOLO start
         if (killerUser.is(DataType.KILLHOLOSTATE)) {
 
-            final ArmorStandPacketBuilder stand = new ArmorStandPacketBuilder(player.getLocation().add(0, 1, 0));
+            final ArmorStandPacketBuilder stand = new ArmorStandPacketBuilder(died.getLocation().add(0, 1, 0));
 
             stand.addStand(8).setGravity(false).setVisible(false).
                     setCustomName(1, "§6§lCrownMc").
-                    setCustomName(3, "§7Du hast §e§o" + player.getName() + "§7 getötet§8.").
+                    setCustomName(3, "§7Du hast §e§o" + died.getName() + "§7 getötet§8.").
                     setCustomName(4, "§7Deine Belohnung§8:").
                     setCustomName(6, "§a§o+ §7" + moneyReward + "§e$").
                     setCustomName(7, "§a§o+ §7" + (Bools.doubleXP ? "§d§l" + messageUtil.formatLong(xpReward * 2L) : messageUtil.formatLong(xpReward)) + "§e Xp").
@@ -188,16 +196,16 @@ public final class DeathListener implements Listener {
         //Kill Effect
         final KillEffect killEffect = new KillEffect();
 
-        killEffect.run(player.getLocation().clone().add(0, -0.5, 0), 1, 4);
+        killEffect.run(died.getLocation().clone().add(0, -0.5, 0), 1, 4);
 
         // CombatTag Start
         new BukkitRunnable() {
             @Override
             public void run() {
-                Combat combat = combatHandler.isInCombat(player);
+                Combat combat = combatHandler.isInCombat(died);
                 if (combat != null) {
                     final long playerUserKillstreak = user.getLong(DataType.KILLSTREAK);
-                    messageUtil.sendMessage(player, "Du wurdest von " + killer.getName() + " §8(§f§o" +
+                    messageUtil.sendMessage(died, "Du wurdest von " + killer.getName() + " §8(§f§o" +
                             "" + format.format((killer.getHealth() / 2)) + "§4§l❤§8)§7 getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (playerUserKillstreak > 0 ? " §7Du hattest eine §e§o" + playerUserKillstreak + "§7er Killstreak§8." : ""));
                     combat.end();
                 }
@@ -206,8 +214,8 @@ public final class DeathListener implements Listener {
 
                 combat = combatHandler.isInCombat(killer);
                 if (combat != null) {
-                    messageUtil.sendMessage(killer, "Du hast " + player.getName() + " getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (killerUser.getLong(DataType.KILLSTREAK) > 0 ? " §7Deine Killstreak§8: §6§o" + killerUser.getLong(DataType.KILLSTREAK) + "§7 Kills§8." : ""));
-                    killer.playSound(player.getLocation(), Sound.SILVERFISH_KILL, 0.5f, 100);
+                    messageUtil.sendMessage(killer, "Du hast " + died.getName() + " getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (killerUser.getLong(DataType.KILLSTREAK) > 0 ? " §7Deine Killstreak§8: §6§o" + killerUser.getLong(DataType.KILLSTREAK) + "§7 Kills§8." : ""));
+                    killer.playSound(died.getLocation(), Sound.SILVERFISH_KILL, 0.5f, 100);
                     combat.end();
                 }
             }

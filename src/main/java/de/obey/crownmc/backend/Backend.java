@@ -6,25 +6,20 @@ package de.obey.crownmc.backend;
 
 */
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.Getter;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
-public final class MySQL {
+public final class Backend {
 
     @Getter
-    private HikariDataSource hikariDataSource;
+    private final HikariDataSource hikariDataSource = new HikariDataSource();
 
-    public MySQL(final ServerConfig serverConfig) {
+    public Backend(final ServerConfig serverConfig) {
 
         final String host = serverConfig.getHost(),
                 username = serverConfig.getUsername(),
@@ -39,16 +34,17 @@ public final class MySQL {
             return;
         }
 
-        final HikariConfig hikariConfig = new HikariConfig();
         final String jdbc = "jdbc:mysql://";
 
-        hikariConfig.setUsername(username);
-        hikariConfig.setPassword(password);
-        hikariConfig.setJdbcUrl(jdbc + host + "/" + database + "?autoReconnect=true");
-        hikariConfig.setMaximumPoolSize(20);
-        hikariConfig.setMinimumIdle(100);
+        if(password.length() > 0)
+            hikariDataSource.setPassword(password);
 
-        hikariDataSource = new HikariDataSource(hikariConfig);
+        hikariDataSource.setUsername(username);
+        hikariDataSource.setJdbcUrl(jdbc + host + "/" + database + "?autoReconnect=true");
+        hikariDataSource.setMaximumPoolSize(20);
+        hikariDataSource.setMinimumIdle(100);
+
+        messageUtil.log("Connecting to §f-> §e§o" + username + "@" + host + "/" +database + " pw='" + password + "'");
 
         try {
             hikariDataSource.getConnection();
@@ -56,55 +52,33 @@ public final class MySQL {
 
             createTables();
 
-        } catch (final SQLException e) {
+        } catch (final SQLException exception) {
             serverConfig.setWhitelist(true);
             messageUtil.log("MYSQL IS NOT SETUP, MAINTANANCE-MODE HAS BEEN ACTIVATED ...");
         }
     }
 
     private void createTables() {
-        execute("CREATE TABLE IF NOT EXISTS users(id bigint, uuid text, money bigint, crowns bigint, kills bigint, deaths bigint, bounty bigint, level bigint, xp bigint, killstreak bigint, killstreakrecord bigint, elopoints bigint, votes bigint, playtime bigint, destroyedBlocks bigint, destroyedEventBlocks bigint)");
+        execute("CREATE TABLE IF NOT EXISTS users(id bigint, uuid text, name text, money bigint, crowns bigint, kills bigint, deaths bigint, bounty bigint, level bigint, xp bigint, killstreak bigint, killstreakrecord bigint, elopoints bigint, votes bigint, playtime bigint, destroyedBlocks bigint, destroyedEventBlocks bigint)");
         execute("CREATE TABLE IF NOT EXISTS clans(name text, leader text, trophies int, kills int, deaths int);");
         System.out.println("CREATED TABLES");
     }
 
     public void execute(final String command) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            connection = hikariDataSource.getConnection();
-            preparedStatement = connection.prepareStatement(command);
+        try (final Connection connection = hikariDataSource.getConnection();
+             final PreparedStatement preparedStatement = connection.prepareStatement(command)){
 
             preparedStatement.execute();
-            preparedStatement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
+        } catch (final SQLException exception) {
+            exception.printStackTrace();
         }
     }
 
     public ResultSet getResultSet(String command) {
 
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        Statement statement;
+        ResultSet resultSet;
 
         try {
             connection = hikariDataSource.getConnection();
@@ -114,10 +88,9 @@ public final class MySQL {
             closeAfter(connection, statement, resultSet);
 
             return resultSet;
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
-
 
         return null;
     }
@@ -125,32 +98,30 @@ public final class MySQL {
 
     public String getString(String table, String what, String type, String typeValue) {
 
-        ResultSet resultSet = null;
-
         try {
-            resultSet = getResultSet("SELECT * FROM " + table + " WHERE " + type + "= '" + typeValue + "'");
+            final ResultSet resultSet = getResultSet("SELECT * FROM " + table + " WHERE " + type + "= '" + typeValue + "'");
+
+            if(resultSet == null)
+                return "null";
 
             if (resultSet.next())
                 return resultSet.getString(what);
 
-        } catch (SQLException ignored) {
-        }
+        } catch (final SQLException ignored) {}
 
         return "null";
     }
 
     public Long getLong(String table, String what, String type, String typeValue) {
+        try (final ResultSet resultSet = getResultSet("SELECT * FROM " + table + " WHERE " + type + "= '" + typeValue + "'");){
 
-        ResultSet resultSet = null;
-
-        try {
-            resultSet = getResultSet("SELECT * FROM " + table + " WHERE " + type + "= '" + typeValue + "'");
+            if(resultSet == null)
+                return -1L;
 
             if (resultSet.next())
                 return resultSet.getLong(what);
 
-        } catch (SQLException ignored) {
-        }
+        } catch (final SQLException ignored) {}
 
         return -1L;
     }

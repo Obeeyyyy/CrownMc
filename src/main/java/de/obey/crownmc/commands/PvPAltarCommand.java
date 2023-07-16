@@ -10,6 +10,7 @@ package de.obey.crownmc.commands;
 
 import de.obey.crownmc.handler.PvPAltarHandler;
 import de.obey.crownmc.objects.pvp.PvPAltar;
+import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
@@ -57,6 +58,7 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
                     player.sendMessage("§7   -§8> §7MoneyReward§8: §e" + messageUtil.formatLong(altar.getMoneyReward()));
                     player.sendMessage("§7   -§8> §7EloReward§8: §d" + messageUtil.formatLong(altar.getEloReward()));
                     player.sendMessage("§7   -§8> §7XpReward§8: §a" + messageUtil.formatLong(altar.getXpReward()));
+                    player.sendMessage("");
                 }
 
                 return false;
@@ -75,6 +77,25 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
 
                     pvPAltarHandler.createPvPAltar(id, player.getLocation().clone().add(0, -1.25, 0));
                     messageUtil.sendMessage(player, "Altar §8(§f" + id + "§8)§7 erstellt§8.");
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("delete")) {
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    pvPAltarHandler.deletePvPAltar(id);
+                    messageUtil.sendMessage(player, "Altar §8(§f" + id + "§8)§7 gelöscht§8.");
 
                 } catch (final NumberFormatException exception) {
                     messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
@@ -133,6 +154,62 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
             }
         }
 
+        if(args.length == 3) {
+            if(args[0].equalsIgnoreCase("settime")) {
+
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+                    final long millis = MathUtil.getMillisFromString(args[2]);
+
+                    altar.setTimeToCapture(millis);
+                    altar.shutdown();
+                    altar.spawnAltar();
+
+                    messageUtil.sendMessage(player, "Altar TimeToCapture -> " + MathUtil.getMinutesAndSecondsFromSeconds(millis/1000));
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("setcd")) {
+
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+                    final long millis = MathUtil.getMillisFromString(args[2]);
+
+                    altar.setCooldownMillis(millis);
+                    altar.shutdown();
+                    altar.spawnAltar();
+
+                    messageUtil.sendMessage(player, "Altar Cooldown -> " + MathUtil.getMinutesAndSecondsFromSeconds(millis/1000));
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+
+                return false;
+            }
+        }
+
         if(args.length >= 3) {
             if(args[0].equalsIgnoreCase("setprefix")) {
 
@@ -170,6 +247,8 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
         messageUtil.sendSyntax(sender,
                 "/pvpaltar list",
                 "/pvpaltar respawn <id>",
+                "/pvpaltar settime <id> <10m>",
+                "/pvpaltar setcd <id> <10m>",
                 "/pvpaltar setloc <id>",
                 "/pvpaltar setprefix <id> <string>",
                 "/pvpaltar create <id>",

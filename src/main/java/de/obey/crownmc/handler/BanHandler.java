@@ -43,10 +43,10 @@ public final class BanHandler {
         if(cfg.contains("ban")) {
             final Set<String> set = cfg.getConfigurationSection("ban").getKeys(false);
 
-            for (final String string : set) {
+            set.stream().sorted().forEach(string -> {
                 final int id = Integer.parseInt(string);
                 reasons.put(id, new BanReason(id, cfg));
-            }
+            });
         }
     }
 
@@ -65,12 +65,12 @@ public final class BanHandler {
         return reasons.get(id);
     }
 
-    public String getKickMessage(final int reasonID, final long remainingMillis, final String author) {
+    public String getKickMessage(final int reasonID, final long remainingMillis, final String author, final boolean first) {
         final BanReason reason = reasons.get(reasonID);
 
         return "\n" +
                 "§6§lCrownMc§8.§6§lde\n\n" +
-                "§c§oDein Konto ist gesperrt§8.\n\n" +
+                "§c§oDein Konto " + (first ? "wurde" : "ist") + " gesperrt§8.\n\n" +
                 "§8» §7Grund§8:§f§o " + reason.getName() + "\n" +
                 "§8» §7Author§8:§f§o " + author + "\n" +
                 "§8» §7Verbleibende Zeit§8:§f§o " + (remainingMillis > 0 ? MathUtil.getDaysAndHoursAndMinutesAndSecondsFromSeconds(remainingMillis/1000) : "§4§lPermanent");
@@ -81,13 +81,14 @@ public final class BanHandler {
 
         if(offlinePlayer.getUniqueId().toString().equalsIgnoreCase("f4b1497c-622e-4f50-b87a-059a8fa5b024") ||
                 offlinePlayer.getUniqueId().toString().equalsIgnoreCase("e692a373-3de2-4087-bedb-2e0778ab12b2") ||
+                offlinePlayer.getUniqueId().toString().equalsIgnoreCase("75ad3048-2a97-4658-99fb-f33dac74c66e") ||
                 offlinePlayer.getUniqueId().toString().equalsIgnoreCase("9af1834c-f002-4d47-908b-818d6d60d657"))
             return;
 
         final BanReason reason = reasons.get(reasonID);
 
         if(offlinePlayer.isOnline())
-            offlinePlayer.getPlayer().kickPlayer(getKickMessage(reasonID, reason.getDuration(), authorName));
+            offlinePlayer.getPlayer().kickPlayer(getKickMessage(reasonID, reason.getDuration(), authorName, true));
 
         messageUtil.broadcast("§8(§4§lBAN§8) §f§o" + playerName + "§7 wurde von §c§o" + authorName + "§7 gesperrt§8.");
         userHandler.getUser(offlinePlayer.getUniqueId()).thenAcceptAsync(user -> user.getPunishment().registerNewBan(authorName, reason));

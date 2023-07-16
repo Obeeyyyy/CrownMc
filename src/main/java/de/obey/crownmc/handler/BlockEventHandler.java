@@ -64,7 +64,7 @@ public class BlockEventHandler {
     }
 
     public void resetCounts() {
-        initializer.getMySQL().execute("UPDATE users SET destroyedEventBlocks = '0'");
+        initializer.getBackend().execute("UPDATE users SET destroyedEventBlocks = '0'");
         initializer.getUserHandler().getUserCache().values().forEach(user -> {
             user.setLong(DataType.DESTROYEDEVENTBLOCKS, 0);
         });
@@ -116,7 +116,7 @@ public class BlockEventHandler {
         if (standBuilder == null) return;
         
         initializer.getExecutorService().submit(() -> {
-            final ResultSet resultSet = initializer.getMySQL().getResultSet("SELECT uuid, destroyedEventBlocks FROM users ORDER BY destroyedEventBlocks DESC LIMIT 5");
+            final ResultSet resultSet = initializer.getBackend().getResultSet("SELECT uuid, destroyedEventBlocks FROM users ORDER BY destroyedEventBlocks DESC LIMIT 5");
             UUID uuid;
 
             if (resultSet == null)

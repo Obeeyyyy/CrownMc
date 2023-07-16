@@ -24,6 +24,14 @@
             <systemPath>${project.basedir}/lib/PlotSquared-Bukkit.jar</systemPath>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>4.0.3</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.github.NuVotifier</groupId>
             <artifactId>NuVotifier</artifactId>
@@ -57,13 +65,6 @@
             <artifactId>craftbukkit</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>

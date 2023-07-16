@@ -16,9 +16,11 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Giant;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import java.util.Random;
 
@@ -65,6 +67,9 @@ public final class VoteParty {
     }
 
     private void startDropRunnable() {
+
+        final Random random = new Random();
+
         runnable.cancel();
         runnable = new BukkitRunnable() {
 
@@ -73,7 +78,7 @@ public final class VoteParty {
             @Override
             public void run() {
 
-                if(itemDrops >= 5) {
+                if(itemDrops >= 20) {
                     spawnBossMob();
                     cancel();
                     return;
@@ -88,7 +93,9 @@ public final class VoteParty {
                     for (final Location location : votePartyHandler.getLocations()) {
                         playeSoundForEveryOne(location, Sound.FIREWORK_LARGE_BLAST2);
                         playEffectForEveryone(location, Effect.ENDER_SIGNAL);
-                        location.getWorld().dropItem(location, votePartyHandler.getRandomItem());
+
+                        final Item item = location.getWorld().dropItem(location, votePartyHandler.getRandomItem());
+                        item.setVelocity(getRandomVelocity(random));
                     }
                 }
             }
@@ -105,8 +112,8 @@ public final class VoteParty {
                 final Location location = votePartyHandler.getLocations().get(new Random().nextInt(votePartyHandler.getLocations().size()));
                 final Giant giant = location.getWorld().spawn(location, Giant.class);
 
-                giant.setMaxHealth(500);
-                giant.setHealth(500);
+                giant.setMaxHealth(2000);
+                giant.setHealth(2000);
 
                 giant.setCustomNameVisible(true);
                 giant.setCustomName(giant.getHealth() + "§c§l❤");
@@ -132,6 +139,14 @@ public final class VoteParty {
 
             ((Player) entity).playSound(location, sound, 0.5f, 1);
         }
+    }
+
+    private Vector getRandomVelocity(Random random) {
+        double x = random.nextDouble() - 0.5;
+        double y = random.nextDouble() - 0.5;
+        double z = random.nextDouble() - 0.5;
+
+        return new Vector(x, y, z).normalize().multiply(0.6);
     }
 
     public void shutdown() {

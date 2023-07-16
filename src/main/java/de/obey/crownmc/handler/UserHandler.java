@@ -8,7 +8,7 @@ package de.obey.crownmc.handler;
 
 import com.google.common.collect.Maps;
 import de.obey.crownmc.CrownMain;
-import de.obey.crownmc.backend.MySQL;
+import de.obey.crownmc.backend.Backend;
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.backend.enums.StoreType;
@@ -49,7 +49,7 @@ public final class UserHandler {
     @NonNull
     private final LocationHandler locationHandler;
     @NonNull
-    private final MySQL mySQL;
+    private final Backend backend;
     @NonNull
     private final ExecutorService executorService;
 
@@ -78,7 +78,7 @@ public final class UserHandler {
                     // if the user was not online for 30 minutes the user will be removed from the cache
                     if (user.isUsedForRanking() || System.currentTimeMillis() - user.getLong(DataType.LASTSEEN) <= 1000 * 60 * 30)
                         return;
-                } catch (final NullPointerException e) {}
+                } catch (final NullPointerException ignored) {}
 
                 userCache.remove(user.getOfflinePlayer().getUniqueId());
             });
@@ -135,15 +135,16 @@ public final class UserHandler {
                 user.setBoolean(DataType.REGISTERED, true);
 
                 // Creating mysql table row
-                final ResultSet check = mySQL.getResultSet("SELECT id FROM users WHERE uuid='" + player.getUniqueId().toString() + "'");
+                final ResultSet check = backend.getResultSet("SELECT id FROM users WHERE uuid='" + player.getUniqueId().toString() + "'");
                 try {
                     if (check.next()) {
-                        mySQL.execute("UPDATE users SET id='" + user.getLong(DataType.ID) + "' WHERE uuid='" + player.getUniqueId().toString() + "'");
+                        backend.execute("UPDATE users SET id='" + user.getLong(DataType.ID) + "' WHERE uuid='" + player.getUniqueId().toString() + "'");
                     } else {
-                        mySQL.execute("INSERT INTO users(id, uuid, money, kills, deaths, bounty, level, xp, killstreak, killstreakrecord, elopoints, votes, playtime, destroyedBlocks, destroyedEventBlocks) " +
+                        backend.execute("INSERT INTO users(id, uuid, name, money, kills, deaths, bounty, level, xp, killstreak, killstreakrecord, elopoints, votes, playtime, destroyedBlocks, destroyedEventBlocks) " +
                                 "VALUES ('" + user.getLong(DataType.ID) + "'," +  /* id */
                                 " '" + user.getOfflinePlayer().getUniqueId().toString() + "'," + /* uuid */
-                                " '10000', " + /* money */
+                                " '" + user.getOfflinePlayer().getName() + "', " + /* name */
+                                " '0', " + /* money */
                                 " '0', " + /* kills */
                                 " '0', " + /* deaths */
                                 " '0', " + /* bounty */
@@ -229,18 +230,6 @@ public final class UserHandler {
             // Loading data from file
             for (DataType value : DataType.values()) {
                 if (value.getStoreType() == StoreType.CONFIG) {
-
-                    if(value == DataType.IGNORES) {
-                        if(cfg.contains(value.getSavedAs())) {
-                            user.getData().put(value, cfg.getList(value.getSavedAs()));
-                            continue;
-                        }
-
-                        user.getData().put(value, new ArrayList<>());
-
-                        continue;
-                    }
-
                     if(cfg.contains(value.getSavedAs())) {
                         final long data = cfg.getLong(value.getSavedAs(), -1);
 
@@ -257,7 +246,7 @@ public final class UserHandler {
             }
 
             // Loading data from mysql
-            final ResultSet results = mySQL.getResultSet("SELECT * FROM users WHERE uuid='" + user.getOfflinePlayer().getUniqueId() + "'");
+            final ResultSet results = backend.getResultSet("SELECT * FROM users WHERE uuid='" + user.getOfflinePlayer().getUniqueId() + "'");
 
             if (results == null) {
                 messageUtil.log("WARNING : failed to load mysql for " + uuid.toString() + " (" + offlinePlayer.getName() + ")");
@@ -313,8 +302,9 @@ public final class UserHandler {
 
         executorService.submit(() -> {
 
-            mySQL.execute("UPDATE users SET " +
+            backend.execute("UPDATE users SET " +
                     "money='" + user.getLong(DataType.MONEY) + "', " +
+                    "name='" + user.getOfflinePlayer().getName() + "', " +
                     "crowns='" + user.getLong(DataType.CROWNS) + "', " +
                     "kills='" + user.getLong(DataType.KILLS) + "', " +
                     "deaths='" + user.getLong(DataType.DEATHS) + "', " +

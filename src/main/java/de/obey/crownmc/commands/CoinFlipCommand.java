@@ -81,7 +81,7 @@ public final class CoinFlipCommand implements CommandExecutor, Listener {
             long amount = 0L;
 
             try {
-                amount = Long.parseLong(args[1]);
+                amount = Long.parseLong(args[0]);
 
                 if (amount < 100) {
                     messageUtil.sendMessage(sender, "Der Wetteinsatz muss mind. 100$ hoch sein§8.");
@@ -92,7 +92,7 @@ public final class CoinFlipCommand implements CommandExecutor, Listener {
 
             } catch (final NumberFormatException exception) {
 
-                amount = MathUtil.getLongFromStringwithSuffix(args[1]);
+                amount = MathUtil.getLongFromStringwithSuffix(args[0]);
 
                 if (amount <= 0) {
                     messageUtil.sendMessage(sender, "Bitte gebe eine Zahl an, oder benutze folgende Abkürzungen§8. (§7k, m, mrd, b, brd, t§8)");

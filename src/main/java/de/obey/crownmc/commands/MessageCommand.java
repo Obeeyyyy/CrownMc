@@ -129,10 +129,8 @@ public final class MessageCommand implements CommandExecutor {
         player.sendMessage(prefix + "Du §8-§7 " + target.getName() + "§8 » §e" + ChatColor.translateAlternateColorCodes('&', message));
         lastMessaged.put(player.getUniqueId(), target.getUniqueId());
 
-        if (!initializer.getUserHandler().getUserInstant(target.getUniqueId()).getList(DataType.IGNORES).contains(player.getUniqueId().toString())) {
-            target.sendMessage(prefix + player.getName() + " §8-§7 Dir §8 » §e" + ChatColor.translateAlternateColorCodes('&', message));
-            lastMessaged.put(target.getUniqueId(), player.getUniqueId());
-        }
+        target.sendMessage(prefix + player.getName() + " §8-§7 Dir §8 » §e" + ChatColor.translateAlternateColorCodes('&', message));
+        lastMessaged.put(target.getUniqueId(), player.getUniqueId());
 
         for (final Player teammember : Bukkit.getOnlinePlayers()) {
             if (PermissionUtil.hasPermission(teammember, "msgspy", false) && target != teammember && player != teammember) {

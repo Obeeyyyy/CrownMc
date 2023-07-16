@@ -19,7 +19,7 @@ import java.util.UUID;
 public enum DataType {
 
     ID("id", StoreType.MYSQL, 0L),
-    MONEY("money", StoreType.MYSQL, 2500L),
+    MONEY("money", StoreType.MYSQL, 0L),
     CROWNS("crowns", StoreType.MYSQL, 0L),
     PLAYTIME("playtime", StoreType.MYSQL, 0L),
     PLAYTIMESAVED("playtimesaved", StoreType.CONFIG, 0L),
@@ -58,7 +58,6 @@ public enum DataType {
     RESPAWNKIT("respawnkitstate", StoreType.CONFIG, true),
     REGISTERED("registered", StoreType.CONFIG, true),
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
-    IGNORES("ignores", StoreType.CONFIG, null),
     LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 0L),
     LASTVOTE("lastvote", StoreType.CONFIG, 0L);
 

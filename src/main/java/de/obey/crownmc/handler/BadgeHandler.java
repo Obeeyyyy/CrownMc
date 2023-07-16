@@ -6,6 +6,7 @@ package de.obey.crownmc.handler;
 
 */
 
+import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.objects.Badge;
 import lombok.Getter;
@@ -75,7 +76,7 @@ public final class BadgeHandler {
             return;
 
         badgeMap.values().forEach(badge -> badge.save(serverConfig.getCfg()));
-        System.out.println("Saving (" + badgeMap.size() +") Badges.");
+        CrownMain.getInstance().getInitializer().getMessageUtil().log("Saving (" + badgeMap.size() +") Badges.");
 
         serverConfig.save();
     }

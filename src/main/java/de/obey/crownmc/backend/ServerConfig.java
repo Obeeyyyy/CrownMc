@@ -45,7 +45,7 @@ public final class ServerConfig {
             votes = 0, voteparty = 0,
             dailycount = 0,
             baseXPkillstreak = 0, baseMoneyKillstreak = 0, baseEloKillstreak = 0, levelUpMoney = 0,
-            netherPrice = 1000000, endPrice = 1000000, soulReward = 0;
+            netherPrice = 1000000, endPrice = 1000000, soulReward = 0, epCooldown = 3;
     @Setter
     private long dailyMillisCount = 0;
     @Setter
@@ -189,6 +189,9 @@ public final class ServerConfig {
         if (cfg.contains("soulReward"))
             soulReward = cfg.getInt("soulReward");
 
+        if (cfg.contains("epCooldown"))
+            epCooldown = cfg.getInt("epCooldown");
+
         loadRespawnKitItems();
     }
 
@@ -223,6 +226,7 @@ public final class ServerConfig {
         cfg.set("netherprice", netherPrice);
         cfg.set("endprice", endPrice);
         cfg.set("soulReward", soulReward);
+        cfg.set("epCooldown", epCooldown);
 
         if (domainJoins.size() > 0) {
             domainJoins.keySet().forEach(domain -> cfg.set("domains." + domain, domainJoins.get(domain)));

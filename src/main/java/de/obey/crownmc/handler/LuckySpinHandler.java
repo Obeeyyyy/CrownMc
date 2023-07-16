@@ -19,8 +19,11 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -34,9 +37,13 @@ public final class LuckySpinHandler {
     private final UserHandler userHandler;
 
     private final YamlConfiguration cfg;
+    private final File file;
 
     @Getter
     private ArrayList<ItemStack> items = new ArrayList<>();
+
+    @Getter
+    private ArrayList<ItemStack> chanceList = new ArrayList<>();
 
     @Getter
     private LuckySpin luckySpin;
@@ -46,13 +53,33 @@ public final class LuckySpinHandler {
         this.messageUtil = messageUtil;
         this.userHandler = userHandler;
 
-        cfg = FileUtil.getCfg(FileUtil.getFile("luckyspin.yml"));
+        file = FileUtil.getFile("luckyspin.yml");
+        cfg = FileUtil.getCfg(file);
 
         if(cfg.contains("items")) {
             items = (ArrayList<ItemStack>) cfg.get("items");
         } else {
             items.add(new ItemStack(Material.STICK));
         }
+
+        setChanceItems();
+    }
+
+    public void setChanceItems() {
+        if(items.isEmpty())
+            return;
+
+        chanceList = new ArrayList<>();
+
+        items.forEach(item -> {
+            final double chance = getChanceFromItem(item);
+
+            if (chance > 0) {
+                for (int i = 0; i < chance * 100; i++) {
+                    chanceList.add(item);
+                }
+            }
+        });
     }
 
     public void spin(final Player player) {
@@ -70,6 +97,11 @@ public final class LuckySpinHandler {
             if(remaining <= 86400000) {
                 messageUtil.sendMessage(player, "Du musst noch " + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((86400000-remaining)/1000) + "warten§8.");
                 player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f,1);
+                return;
+            }
+
+            if(items.isEmpty()) {
+                messageUtil.sendMessage(player, "Fehler ! Bitte kontaktiere ein Teammitglied§8.");
                 return;
             }
 
@@ -102,20 +134,74 @@ public final class LuckySpinHandler {
     }
 
     public ItemStack getRandomItem() {
-        return items.get(new Random().nextInt(items.size()));
+        final ItemStack item =  chanceList.get(new Random().nextInt(chanceList.size())).clone();
+        final ItemMeta meta = item.getItemMeta();
+
+        final ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+        lore.remove(lore.size() - 1);
+        lore.remove(lore.size() - 1);
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
     }
 
-    public void setItems(final ArrayList<ItemStack> list) {
+    public void setItems(final Inventory inventory) {
         items.clear();
-        items = list;
 
-        items.removeIf(itemStack -> itemStack == null || itemStack.getType() == Material.AIR);
+        final ArrayList<ItemStack> temp = new ArrayList<>();
 
-        cfg.set("items", items);
-        FileUtil.saveToFile(FileUtil.getFile("luckyspin.yml"), cfg);
+        for (final ItemStack item : inventory.getContents()) {
+            if(item != null && item.getType() != Material.AIR) {
+                setLoreWithChanceForItem(item);
+                temp.add(item);
+            }
+        }
+
+        items = temp;
+
+        setChanceItems();
+        save();
 
         luckySpin.shutdown();
         luckySpin.setup();
+    }
+
+
+    private void setLoreWithChanceForItem(final ItemStack item){
+        final ItemMeta meta = item.getItemMeta();
+        ArrayList<String> lore = new ArrayList<>();
+
+        if(meta.hasLore()) {
+            lore = (ArrayList<String>) meta.getLore();
+
+            if(!lore.get(lore.size() - 1).startsWith("Chance ")) {
+                lore.add("");
+                lore.add("Chance 0.00%");
+            }
+
+        } else {
+            lore.add("");
+            lore.add("Chance 0.00%");
+        }
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
+    public double getChanceFromItem(final ItemStack item) {
+        if(!item.hasItemMeta())
+            return 0;
+
+        if(!item.getItemMeta().hasLore())
+            return 0;
+
+        return Double.parseDouble(item.getItemMeta().getLore().get(item.getItemMeta().getLore().size() - 1).split(" ")[1].replace("%", ""));
+    }
+
+    private void save() {
+        cfg.set("items", items);
+        FileUtil.saveToFile(file, cfg);
     }
 
 }

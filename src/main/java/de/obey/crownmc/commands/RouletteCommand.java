@@ -18,12 +18,14 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 @RequiredArgsConstructor @NonNull
@@ -168,6 +170,22 @@ public final class RouletteCommand implements CommandExecutor, Listener {
 
             } catch (final NumberFormatException ignored) {}
         }
+    }
+
+    @EventHandler
+    public void on(final PlayerInteractAtEntityEvent event) {
+        if (!(event.getRightClicked() instanceof ArmorStand))
+            return;
+
+        if (event.getRightClicked().getCustomName() == null)
+            return;
+
+        try {
+            final int id = Integer.parseInt(event.getRightClicked().getCustomName().split(" ")[1]);
+
+            rouletteHandler.openTable(id, event.getPlayer());
+
+        } catch (final NumberFormatException ignored) {}
     }
 
     @EventHandler

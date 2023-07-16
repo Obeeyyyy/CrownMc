@@ -8,7 +8,7 @@ package de.obey.crownmc.handler;
 
 import de.obey.crownmc.Initializer;
 import de.obey.crownmc.CrownMain;
-import de.obey.crownmc.backend.MySQL;
+import de.obey.crownmc.backend.Backend;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.ItemBuilder;
@@ -139,14 +139,14 @@ public final class RankingHandler {
 
     private void updateDataForInventory(final String what) {
 
-        final MySQL mySQL = initializer.getMySQL();
+        final Backend backend = initializer.getBackend();
 
         initializer.getExecutorService().submit(() -> {
             try {
                 if (what.equals("money")) {
                     final Inventory inventory = inventories.get("money");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = mySQL.getResultSet("SELECT uuid FROM users ORDER BY money DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY money DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;
@@ -173,7 +173,7 @@ public final class RankingHandler {
                 if (what.equals("kills")) {
                     final Inventory inventory = inventories.get("kills");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = mySQL.getResultSet("SELECT uuid FROM users ORDER BY kills DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY kills DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;
@@ -199,7 +199,7 @@ public final class RankingHandler {
                 if (what.equals("elopoints")) {
                     final Inventory inventory = inventories.get("elopoints");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = mySQL.getResultSet("SELECT uuid FROM users ORDER BY elopoints DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY elopoints DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;
@@ -226,7 +226,7 @@ public final class RankingHandler {
                 if (what.equals("killstreak")) {
                     final Inventory inventory = inventories.get("killstreak");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = mySQL.getResultSet("SELECT uuid FROM users ORDER BY killstreakrecord DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY killstreakrecord DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;
@@ -253,7 +253,7 @@ public final class RankingHandler {
                 if (what.equals("votes")) {
                     final Inventory inventory = inventories.get("votes");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = mySQL.getResultSet("SELECT uuid FROM users ORDER BY votes DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY votes DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;
@@ -280,7 +280,7 @@ public final class RankingHandler {
                 if (what.equals("xp")) {
                     final Inventory inventory = inventories.get("xp");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = mySQL.getResultSet("SELECT uuid FROM users ORDER BY xp DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY xp DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;
@@ -306,7 +306,7 @@ public final class RankingHandler {
                 if (what.equals("playtime")) {
                     final Inventory inventory = inventories.get("playtime");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = mySQL.getResultSet("SELECT uuid FROM users ORDER BY playtime DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY playtime DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;
@@ -331,7 +331,7 @@ public final class RankingHandler {
                 if (what.equals("crowns")) {
                     final Inventory inventory = inventories.get("crowns");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = mySQL.getResultSet("SELECT uuid FROM users ORDER BY crowns DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY crowns DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;

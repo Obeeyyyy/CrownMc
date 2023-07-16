@@ -138,8 +138,8 @@ public final class LuckySpin {
         stand.setVisible(false);
         stand.setGravity(false);
         stand.setCustomName((item.getItemMeta() != null && item.getItemMeta().getDisplayName() != null) ? identifier + item.getItemMeta().getDisplayName() : identifier + "§a§o" + item.getType().name());
+        stand.setCustomName(stand.getCustomName() + "§8 (§f§o" + luckySpinHandler.getChanceFromItem(item) + "%§8)");
         stand.setCustomNameVisible(true);
-        stand.setItemInHand(item);
     }
 
     private void spawnAnimationStand(final int id, final ItemStack item) {
@@ -182,12 +182,13 @@ public final class LuckySpin {
         int slot = 0;
         int row = 0;
         for (final ItemStack item : items) {
+
             if(slot > 3) {
                 slot = 0;
                 row++;
             }
 
-            spawnStand(item, location.clone().add(slot*1.5, -row*0.5 - slot*0.25, 0));
+            spawnStand(item, location.clone().add(slot*2.75, -row*0.5, 0));
             slot++;
         }
 
@@ -286,6 +287,7 @@ public final class LuckySpin {
 
         removeAllCreatedEntities();
         spawnDefaultStands();
+        spawnItemWall();
         spawnMarkers();
 
         state = 0;

@@ -237,7 +237,6 @@ public final class WandCommand implements CommandExecutor, Listener {
             if (!userHandler.getUserInstant(player.getUniqueId()).getPlot().addPlotwand(item)) {
                 messageUtil.sendMessage(player, "Du hast diese Plotwand schon freigeschaltet§8.");
                 player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
-                return;
             } else {
                 InventoryUtil.removeItemInHand(player, 1);
                 messageUtil.sendMessage(player, "Du hast eine neue Plotwand freigeschaltet§8.");

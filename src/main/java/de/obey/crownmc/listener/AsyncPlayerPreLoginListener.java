@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 
 @RequiredArgsConstructor
@@ -37,17 +38,7 @@ public final class AsyncPlayerPreLoginListener implements Listener {
             return;
 
         // Load User Data if not Loaded
-        initializer.getUserHandler().getUser(event.getUniqueId()).thenAcceptAsync(user -> {
-
-            final UserPunishment punishment = user.getPunishment();
-
-            if(user.getPunishment().isBanned()) {
-                final Ban ban = punishment.getBans().get(punishment.getBans().size() - 1);
-                final BanReason reason = ban.getBanReason();
-                event.disallow(PlayerPreLoginEvent.Result.KICK_OTHER, initializer.getBanHandler().getKickMessage(reason.getId(), punishment.getRemainingBanMillis(), ban.getAuthor()));
-                return;
-            }
-
+        initializer.getUserHandler().getUser(event.getUniqueId()).thenAccept(user -> {
             event.allow();
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.ALLOWED);
         });

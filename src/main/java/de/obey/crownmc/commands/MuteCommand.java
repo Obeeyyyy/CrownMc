@@ -98,6 +98,7 @@ public final class MuteCommand implements CommandExecutor {
 
                     punishment.sendMuteInfo(sender);
                     punishment.sendBanInfo(sender);
+                    sender.sendMessage("");
                 });
 
                 return false;

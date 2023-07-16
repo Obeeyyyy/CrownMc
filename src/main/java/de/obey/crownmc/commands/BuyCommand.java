@@ -9,6 +9,7 @@ package de.obey.crownmc.commands;
 */
 
 import de.obey.crownmc.backend.enums.DataType;
+import de.obey.crownmc.handler.BanHandler;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
@@ -29,6 +30,9 @@ public final class BuyCommand implements CommandExecutor {
 
     @NonNull
     private final UserHandler userHandler;
+
+    @NonNull
+    private final BanHandler banHandler;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -62,6 +66,10 @@ public final class BuyCommand implements CommandExecutor {
         }
 
         if(command.getName().equalsIgnoreCase("refund")) {
+            if(args.length >= 2) {
+                banHandler.banPlayer(args[1], 99, "Console");
+            }
+
             if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("crowns")) {
                     final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);

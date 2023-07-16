@@ -134,8 +134,8 @@ public final class AsyncChatListener implements Listener {
         if (PermissionUtil.hasPermission(player, "chatcolor", false))
             message = ChatColor.translateAlternateColorCodes('&', message);
 
-        final String prefix = rang != null ? rang.getChatPrefix() : "";
-        final String suffix = rang != null ? " " + rang.getChatSuffix() : "";
+        final String prefix = rang.getChatPrefix();
+        final String suffix = " " + rang.getChatSuffix();
 
         String preLine = prefix + player.getName() + suffix + rang.getChatcolor();
 
@@ -180,16 +180,6 @@ public final class AsyncChatListener implements Listener {
 
             if (SupportCommand.isInSupportChat(online.getUniqueId()) != null && SupportCommand.isInSupportChat(online.getUniqueId()).getState() == 1)
                 return;
-
-            final User onlineUser = userHandler.getUserInstant(online.getUniqueId());
-
-            if(onlineUser != null ){
-                if(onlineUser.getList(DataType.IGNORES) != null ) {
-                    if(onlineUser.getList(DataType.IGNORES).contains(player.getUniqueId().toString())) {
-                        return;
-                    }
-                }
-            }
 
             if (PermissionUtil.hasPermission(player, "chatlines", false) && userHandler.getUserInstant(player.getUniqueId()).is(DataType.CHATLINESSTATE)) {
                 online.sendMessage("§8»");

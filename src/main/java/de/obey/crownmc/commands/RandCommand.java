@@ -242,14 +242,11 @@ public final class RandCommand implements CommandExecutor, Listener {
             if (!userHandler.getUserInstant(player.getUniqueId()).getPlot().addPlotrand(item)) {
                 messageUtil.sendMessage(player, "Du hast diesen Plotrand schon freigeschaltet§8.");
                 player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
-                return;
             } else {
                 InventoryUtil.removeItemInHand(player, 1);
                 messageUtil.sendMessage(player, "Du hast einen neuen Plotrand freigeschaltet§8.");
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 1);
             }
-
-            return;
         }
     }
 

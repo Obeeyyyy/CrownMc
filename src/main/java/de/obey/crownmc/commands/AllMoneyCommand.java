@@ -6,7 +6,7 @@ package de.obey.crownmc.commands;
 
 */
 
-import de.obey.crownmc.backend.MySQL;
+import de.obey.crownmc.backend.Backend;
 import de.obey.crownmc.util.FileUtil;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
@@ -28,7 +28,7 @@ import java.util.Objects;
 public final class AllMoneyCommand implements CommandExecutor {
 
     @NonNull
-    private MySQL mySQL;
+    private Backend backend;
     @NonNull
     private MessageUtil messageUtil;
 
@@ -38,7 +38,7 @@ public final class AllMoneyCommand implements CommandExecutor {
         if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "allmoney", true))
             return false;
 
-        final ResultSet resultSet = mySQL.getResultSet("SELECT money FROM users WHERE money > '0'");
+        final ResultSet resultSet = backend.getResultSet("SELECT money FROM users WHERE money > '0'");
 
         int overflowed = 0;
         long counted = 0;

@@ -121,7 +121,9 @@ public final class AfkCommand implements CommandExecutor, Listener {
     public void onMove(final PlayerMoveEvent event) {
         if(afkList.contains(event.getPlayer())) {
 
-            if(event.getTo().getBlock().getType() == Material.WATER || event.getFrom().getBlock().getType() == Material.WATER)
+            if(event.getTo().getBlock().getType() == Material.WATER || event.getTo().getBlock().getType() == Material.STATIONARY_WATER ||
+                event.getFrom().getBlock().getType() == Material.WATER || event.getFrom().getBlock().getType() == Material.STATIONARY_WATER ||
+            event.getTo().getBlock().getType().name().contains("STAIRS"))
                 return;
 
             endAFK(event.getPlayer());

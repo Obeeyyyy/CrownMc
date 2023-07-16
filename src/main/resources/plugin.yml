@@ -159,8 +159,6 @@ commands:
   mute:
   unmute:
   check:
-  ignore:
-  ignores:
   luckyspin:
   voteparty:
   crowns:

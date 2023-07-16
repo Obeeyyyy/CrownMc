@@ -49,10 +49,11 @@ public final class RouletteHandler {
         if(tables.isEmpty())
             return;
 
+        tables.get(1).killStands();
+
         tables.values().forEach(table -> {
             table.setLocation(locationHandler.getLocation("roulette-" + table.getTableID()));
             table.loadLocations();
-            table.killStands();
             table.spawnStands();
         });
     }

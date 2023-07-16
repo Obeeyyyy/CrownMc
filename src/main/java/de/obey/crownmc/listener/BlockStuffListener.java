@@ -6,6 +6,7 @@ package de.obey.crownmc.listener;
 
 */
 
+import com.google.common.collect.Maps;
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.backend.enums.DataType;
@@ -17,6 +18,7 @@ import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.handler.WorldProtectionHandler;
 import de.obey.crownmc.objects.WorldProtection;
 import de.obey.crownmc.util.Bools;
+import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
@@ -57,7 +59,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 @NonNull
@@ -69,7 +73,7 @@ public final class BlockStuffListener implements Listener {
     private final UserHandler userHandler;
     private final ServerConfig serverConfig;
     private final WorldProtectionHandler worldProtectionHandler;
-    private final HashMap<UUID, Long> enderpearlCooldown = new HashMap<>();
+    private final Map<UUID, Long> enderpearlCooldown = Maps.newConcurrentMap();
 
     @EventHandler
     public void on(final LeavesDecayEvent event) {
@@ -164,6 +168,24 @@ public final class BlockStuffListener implements Listener {
         }
     }
 
+    public void checkEnderPearlCooldown() {
+        if(enderpearlCooldown.isEmpty())
+            return;
+
+        for (final UUID uuid : enderpearlCooldown.keySet()) {
+            if(enderpearlCooldown.get(uuid) <= System.currentTimeMillis()) {
+                enderpearlCooldown.remove(uuid);
+            } else {
+                final Player player = Bukkit.getPlayer(uuid);
+
+                if(player == null)
+                    continue;
+
+                messageUtil.sendActionBar(player, "§c§oEnderperlen - " + MathUtil.getSecondsFromMillis(enderpearlCooldown.get(player.getUniqueId()) - System.currentTimeMillis()));
+            }
+        }
+    }
+
     @EventHandler
     public void onToggle(final PlayerInteractEvent event) {
         final Player player = event.getPlayer();
@@ -173,6 +195,7 @@ public final class BlockStuffListener implements Listener {
                 || event.getAction() == Action.LEFT_CLICK_AIR) {
             if (player.getItemInHand() != null) {
                 if (player.getItemInHand().getType() == Material.ENDER_PEARL) {
+
                     if (!Bools.ep && !PermissionUtil.hasPermission(event.getPlayer(), "toggle.bypass", false)) {
                         event.setCancelled(true);
                         player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
@@ -180,19 +203,23 @@ public final class BlockStuffListener implements Listener {
                         messageUtil.sendMessage(player, "Enderperlen sind §c§odeaktiviert§7.");
                     }
 
+                    /* Enderperlen Cooldown */
                     if (enderpearlCooldown.containsKey(player.getUniqueId()) && enderpearlCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
                         event.setCancelled(true);
+                        player.updateInventory();
                         player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
                         return;
                     } else {
-                        enderpearlCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (1000 * 3));
+                        enderpearlCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (1000L * serverConfig.getEpCooldown()));
                     }
+                    /* Enderperlen Cooldown end */
                 }
+
                 if (player.getItemInHand().getType() == Material.POTION) {
                     if (!Bools.potions && !PermissionUtil.hasPermission(event.getPlayer(), "toggle.bypass", false)) {
                         event.setCancelled(true);
-                        player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
                         player.updateInventory();
+                        player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
                         messageUtil.sendMessage(player, "Potions sind §c§odeaktiviert§7.");
                     }
                 }

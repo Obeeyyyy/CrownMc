@@ -72,7 +72,7 @@ public final class TradeCommand implements CommandExecutor {
             requestedPlayers.add(target.getUniqueId());
             tradeHandler.getRequests().put(player, requestedPlayers);
 
-            messageUtil.sendMessage(player, "Du hast §e§o" + target.getName() + "§u7 eine Tradeanfrage gesendet§8.");
+            messageUtil.sendMessage(player, "Du hast §e§o" + target.getName() + "§7 eine Tradeanfrage gesendet§8.");
             messageUtil.sendMessage(target, "§e§o" + player.getName() + "§7 hat dir eine Tradeanfrage gesendet§8.");
 
             new MessageBuilder("§8» §7Klicke hier, um die Tradeanfrage §a§oanzunehmen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/trade accept " + player.getName()).send(target);

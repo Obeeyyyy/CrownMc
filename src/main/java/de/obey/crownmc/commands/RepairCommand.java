@@ -6,6 +6,7 @@ package de.obey.crownmc.commands;
 
 */
 
+import de.obey.crownmc.handler.WorldProtectionHandler;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
@@ -24,6 +25,9 @@ public final class RepairCommand implements CommandExecutor {
     @NonNull
     private final MessageUtil messageUtil;
 
+    @NonNull
+    private final WorldProtectionHandler worldProtectionHandler;
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -35,7 +39,7 @@ public final class RepairCommand implements CommandExecutor {
         if (!PermissionUtil.hasPermission(player, "repair", true))
             return false;
 
-        final boolean all = !player.getWorld().getName().equalsIgnoreCase("pvp");
+        final boolean all = !worldProtectionHandler.canFightPlayers(player);
 
         if (all) {
             int count = 0;

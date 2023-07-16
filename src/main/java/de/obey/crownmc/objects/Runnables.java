@@ -10,6 +10,7 @@ import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.commands.AfkCommand;
 import de.obey.crownmc.commands.BanCommand;
 import de.obey.crownmc.handler.*;
+import de.obey.crownmc.listener.BlockStuffListener;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -24,6 +25,7 @@ public final class Runnables {
     private final AutoBroadcastHandler autoBroadcastHandler;
     private final DailyPotHandler dailyPotHandler;
     private final BanCommand banCommand;
+    private final BlockStuffListener blockStuffListener;
 
     public void start2TickTimerAsync() {
         new BukkitRunnable() {
@@ -31,6 +33,7 @@ public final class Runnables {
             public void run() {
                 scoreboardHandler.runUpdateTick();
                 autoBroadcastHandler.checkBroadcast();
+                blockStuffListener.checkEnderPearlCooldown();
 
                 AfkCommand.checkAllIfAfk();
             }

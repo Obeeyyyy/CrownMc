@@ -16,6 +16,11 @@ import java.util.Locale;
 public final class MathUtil {
 
     public String getDaysAnHoursFromSeconds(long seconds) {
+
+        if(seconds < 0) {
+            return "§4§lPermanent";
+        }
+
         int minutes = 0;
         int days = 0;
         int hours = 0;
@@ -39,6 +44,11 @@ public final class MathUtil {
     }
 
     public String getDaysAndHoursAndMinutesAndSecondsFromSeconds(long seconds) {
+
+        if(seconds < 0) {
+            return "§4§lPermanent";
+        }
+
         int days = 0;
         int hours = 0;
         int minutes = 0;
@@ -62,6 +72,11 @@ public final class MathUtil {
     }
 
     public String getHoursAndMinutesAndSecondsFromSeconds(long seconds) {
+
+        if(seconds < 0) {
+            return "§4§lPermanent";
+        }
+
         int hours = 0;
         int minutes = 0;
 
@@ -79,6 +94,11 @@ public final class MathUtil {
     }
 
     public String getMinutesAndSecondsFromSeconds(long seconds) {
+
+        if(seconds < 0) {
+            return "§4§lPermanent";
+        }
+
         int minutes = 0;
 
         while (seconds >= 60) {
@@ -90,6 +110,11 @@ public final class MathUtil {
     }
 
     public String getMinutesFromSeconds(long seconds) {
+
+        if(seconds < 0) {
+            return "§4§lPermanent";
+        }
+
         int minutes = 0;
 
         while (seconds >= 60) {
@@ -99,6 +124,14 @@ public final class MathUtil {
 
         return minutes + "min ";
     }
+
+
+    public String getSecondsFromMillis(long millis) {
+        final double seconds = millis / 1000.0;
+        final String formattedSeconds = String.format("%.1f", seconds);
+        return formattedSeconds + "s";
+    }
+
 
     public long getMillisFromString(final String string) {
         long millis = 0;

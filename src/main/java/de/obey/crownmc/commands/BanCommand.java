@@ -98,6 +98,13 @@ public final class BanCommand implements CommandExecutor {
                         return false;
                     }
 
+                    final BanReason reason = banHandler.getReadsonFromID(reasonID);
+
+                    if(!sender.hasPermission(reason.getPermission())) {
+                        messageUtil.sendMessage(sender, "Du hast keine Rechte für diesen Grund§8.");
+                        return false;
+                    }
+
                     banHandler.banPlayer(args[0], reasonID, sender.getName());
 
                     if(!PermissionUtil.hasPermission(sender, "admin", false))
@@ -123,7 +130,7 @@ public final class BanCommand implements CommandExecutor {
                 if(!messageUtil.hasPlayedBefore(sender, args[0]))
                     return false;
 
-                final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+                final OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
 
                 banHandler.unBanPlayer(sender, target);
 

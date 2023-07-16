@@ -6,7 +6,7 @@ package de.obey.crownmc.commands;
 
 */
 
-import de.obey.crownmc.backend.MySQL;
+import de.obey.crownmc.backend.Backend;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.text.NumberFormat;
 public final class ServerStatsCommand implements CommandExecutor {
 
     @NonNull
-    private final MySQL mySQL;
+    private final Backend backend;
 
     private final Runtime runtime = Runtime.getRuntime();
 
@@ -44,7 +44,7 @@ public final class ServerStatsCommand implements CommandExecutor {
         sender.sendMessage("§8    §8 > §f Allocated§8: §e" + numberFormat.format(allocatedMem) + " MB");
         sender.sendMessage("§8    §8 > §f Free§8: §e" + numberFormat.format(maxMem - allocatedMem) + " MB");
         sender.sendMessage("§8    §8 > §f Used§8: §e" + numberFormat.format(freeMemory) + " MB");
-        sender.sendMessage("§8    §8 > §f MySQL Connections§8: §e" + mySQL.getHikariDataSource().getHikariPoolMXBean().getActiveConnections() + " (" + mySQL.getHikariDataSource().getHikariPoolMXBean().getIdleConnections() + ") /" + mySQL.getHikariDataSource().getHikariPoolMXBean().getTotalConnections());
+        sender.sendMessage("§8    §8 > §f MySQL Connections§8: §e" + backend.getHikariDataSource().getHikariPoolMXBean().getActiveConnections() + " (" + backend.getHikariDataSource().getHikariPoolMXBean().getIdleConnections() + ") /" + backend.getHikariDataSource().getHikariPoolMXBean().getTotalConnections());
         sender.sendMessage("§8");
         sender.sendMessage("§8§l§m----------------------");
 

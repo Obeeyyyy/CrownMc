@@ -120,7 +120,7 @@ public final class SetupCommand implements CommandExecutor {
         }
 
         messageUtil.sendSyntax(sender, "/setup <bounty, crash, blockevent, dailypot, lw, portal>");
-        messageUtil.sendMessage(sender, "Benötigte Locations: crash1, crash2, crash3, crashGraph, blockevent, dailypot, luckyspin, luckyspinwall");
+        messageUtil.sendMessage(sender, "Benötigte Locations: crash1, crash2, crash3, crashgraph, blockevent, dailypot, luckyspin, luckyspinwall");
 
         return false;
     }

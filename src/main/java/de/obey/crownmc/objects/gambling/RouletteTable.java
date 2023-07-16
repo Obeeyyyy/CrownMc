@@ -167,7 +167,7 @@ public final class RouletteTable {
         final ArmorStand stand = location.getWorld().spawn(location, ArmorStand.class);
 
         stand.setVisible(false);
-        stand.setCustomName(identifier);
+        stand.setCustomName(identifier + "rod " + tableID);
         stand.setCustomNameVisible(false);
         stand.setGravity(false);
 
@@ -181,7 +181,7 @@ public final class RouletteTable {
         final ArmorStand stand = location.getWorld().spawn(location, ArmorStand.class);
 
         stand.setVisible(false);
-        stand.setCustomName(identifier + "green");
+        stand.setCustomName(identifier + "green " + tableID);
         stand.setCustomNameVisible(false);
         stand.setGravity(false);
 
@@ -197,7 +197,7 @@ public final class RouletteTable {
         final ArmorStand stand = location.getWorld().spawn(location, ArmorStand.class);
 
         stand.setVisible(false);
-        stand.setCustomName(identifier + "red");
+        stand.setCustomName(identifier + "red " + tableID);
         stand.setCustomNameVisible(false);
         stand.setGravity(false);
 
@@ -213,7 +213,7 @@ public final class RouletteTable {
         final ArmorStand stand = location.getWorld().spawn(location, ArmorStand.class);
 
         stand.setVisible(false);
-        stand.setCustomName(identifier + "black");
+        stand.setCustomName(identifier + "black " + tableID);
         stand.setCustomNameVisible(false);
         stand.setGravity(false);
 
@@ -391,7 +391,7 @@ public final class RouletteTable {
         if(winSlot < 1 || winStand == null)
             return;
 
-        final String winColor = ChatColor.stripColor(winStand.getCustomName());
+        final String winColor = ChatColor.stripColor(winStand.getCustomName().split(" ")[0]);
         final double multiplier = rouletteHandler.getMultiplier(winColor);
 
         for (final UUID uuid : betAmounts.keySet()) {

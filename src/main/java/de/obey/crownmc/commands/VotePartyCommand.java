@@ -114,9 +114,9 @@ public final class VotePartyCommand implements CommandExecutor, Listener {
         if(!(event.getEntity() instanceof Giant))
             return;
 
-        if((event.getDamager() instanceof Player))
+        if(!(event.getDamager() instanceof Player))
             return;
 
-        messageUtil.sendMessage(event.getDamager(), "" + ((Giant) event.getEntity()).getHealth() + "§c§l❤");
+        messageUtil.sendMessage(event.getDamager(), "Noch§8: §f§o" + ((Giant) event.getEntity()).getHealth() + "§c§l❤");
     }
 }

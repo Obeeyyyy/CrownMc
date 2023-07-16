@@ -58,6 +58,7 @@ public final class ConfigCommand implements CommandExecutor {
                 messageUtil.sendMessage(sender, " - netherPrice: " + serverConfig.getNetherPrice());
                 messageUtil.sendMessage(sender, " - endPrice: " + serverConfig.getEndPrice());
                 messageUtil.sendMessage(sender, " - soulReward: " + serverConfig.getSoulReward());
+                messageUtil.sendMessage(sender, " - epCooldown: " + serverConfig.getEpCooldown() +  "s");
                 sender.sendMessage("");
 
                 messageUtil.sendMessage(sender, "Blocked Commands:");
@@ -135,6 +136,9 @@ public final class ConfigCommand implements CommandExecutor {
 
                     if (args[1].equalsIgnoreCase("soulreward"))
                         serverConfig.setSoulReward(amount);
+
+                    if (args[1].equalsIgnoreCase("epCooldown"))
+                        serverConfig.setEpCooldown(amount);
 
                     scoreboardHandler.updateEverythingForEveryone();
 

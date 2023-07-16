@@ -19,12 +19,15 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -38,6 +41,11 @@ public final class MessageUtil {
     private final ServerConfig serverConfig;
 
     private UserHandler userHandler;
+
+    public void sendActionBar(final Player player, final String message) {
+        final PacketPlayOutChat packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + ChatColor.translateAlternateColorCodes('&', message) + "\"}"), (byte) 2);
+        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+    }
 
     public boolean isOnline(final CommandSender sender, final String name) {
         if (userHandler == null)
@@ -128,12 +136,13 @@ public final class MessageUtil {
     }
 
     public void log(final String message) {
-        //Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', message));
-        Bukkit.getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', message));
+        Bukkit.getConsoleSender().sendMessage("§8§o(§a§oLOG§8§o)§f§o " + ChatColor.translateAlternateColorCodes('&', message));
+        //Bukkit.getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', message));
     }
 
     public void warn(final String message) {
-        Bukkit.getLogger().log(Level.WARNING, ChatColor.translateAlternateColorCodes('&', message));
+        //Bukkit.getLogger().log(Level.WARNING, ChatColor.translateAlternateColorCodes('&', message));
+        Bukkit.getConsoleSender().sendMessage("§8§o(§4§oWARN§8§o)§f§o " + ChatColor.translateAlternateColorCodes('&', message));
     }
 
     public void sendHoverTextCommandToTeamMembers(final String message, final String command) {

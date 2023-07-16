@@ -102,7 +102,7 @@ public final class BanReasonCommand implements CommandExecutor {
             }
         }
 
-        if(args.length == 3) {
+        if(args.length >= 3) {
             if(args[0].equalsIgnoreCase("setn")) {
 
                 try {
@@ -113,7 +113,12 @@ public final class BanReasonCommand implements CommandExecutor {
                         return false;
                     }
 
-                    final String value = args[2];
+                    String value = args[2];
+
+                    if(args.length > 3) {
+                        for (int i = 3; i < args.length; i++)
+                            value = value + " " + args[i];
+                    }
 
                     banHandler.getReadsonFromID(id).setName(value);
                     messageUtil.sendMessage(player, "Ban Grund bearbeitet§8. (§f" + id + "§8)");
@@ -125,7 +130,9 @@ public final class BanReasonCommand implements CommandExecutor {
 
                 return false;
             }
+        }
 
+        if(args.length == 3) {
             if(args[0].equalsIgnoreCase("setp")) {
 
                 try {
