@@ -95,7 +95,8 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>${project.basedir}/out</outputDirectory>
+                    <!-- <outputDirectory>${project.basedir}/out</outputDirectory> -->
+                    <outputDirectory>D:\localhost\plugins</outputDirectory>
                 </configuration>
             </plugin>
 

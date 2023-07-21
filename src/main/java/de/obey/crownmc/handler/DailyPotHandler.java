@@ -116,16 +116,11 @@ public final class DailyPotHandler {
         }
 
         if (locationHandler.getLocation("dailypot") == null) {
-            messageUtil.sendMessage(Bukkit.getConsoleSender(), "Dailypot locationHandler == null");
+            messageUtil.log("§c§oDailypot location existiert nicht.");
             return;
         }
 
         final Location dailypotLocation = locationHandler.getLocation("dailypot").clone();
-
-        if (dailypotLocation == null) {
-            messageUtil.sendMessage(Bukkit.getConsoleSender(), "Dailypot location == null");
-            return;
-        }
 
         new BukkitRunnable() {
             @Override
@@ -148,10 +143,8 @@ public final class DailyPotHandler {
     }
 
     public void updateStands() {
-        if(stands == null) {
-            setupArmorStands();
+        if(stands == null)
             return;
-        }
 
         final DecimalFormat format = new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 

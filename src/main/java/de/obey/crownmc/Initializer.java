@@ -66,6 +66,7 @@ public final class Initializer {
     private RouletteHandler rouletteHandler;
     private PvPAltarHandler pvPAltarHandler;
     private BanHandler banHandler;
+    private NpcHandler npcHandler;
 
     private PlotAPI plotAPI;
 
@@ -87,6 +88,7 @@ public final class Initializer {
     private BlockStuffListener blockStuffListener;
     private PvPAltarListener pvPAltarListener;
     private WarpAugeListener warpAugeListener;
+    private VoteKickCommand voteKickCommand;
 
     private void loadCommands() {
         shieldCommand = new ShieldCommand(messageUtil);
@@ -94,6 +96,7 @@ public final class Initializer {
         blockStuffListener = new BlockStuffListener(messageUtil, locationHandler, combatHandler, userHandler, serverConfig, worldProtectionHandler);
         pvPAltarListener = new PvPAltarListener(messageUtil, pvPAltarHandler);
         warpAugeListener = new WarpAugeListener(messageUtil, locationHandler);
+        voteKickCommand = new VoteKickCommand(messageUtil);
 
         crownMain.getCommand("whitelist").setExecutor(new WhitelistCommand(serverConfig, messageUtil));
         crownMain.getCommand("stop").setExecutor(new StopCommand(this));
@@ -226,6 +229,8 @@ public final class Initializer {
         crownMain.getCommand("frieden").setExecutor(new FriedenCommand(messageUtil, userHandler));
         crownMain.getCommand("pvpaltar").setExecutor(new PvPAltarCommand(messageUtil, pvPAltarHandler));
         crownMain.getCommand("banreason").setExecutor(new BanReasonCommand(messageUtil, banHandler));
+        crownMain.getCommand("votekick").setExecutor(voteKickCommand);
+        crownMain.getCommand("npc").setExecutor(new NpcCommand(messageUtil, npcHandler));
     }
 
     private void loadListener() {
@@ -287,6 +292,7 @@ public final class Initializer {
         pluginManager.registerEvents(new PvPAltarCommand(messageUtil, pvPAltarHandler), crownMain);
         pluginManager.registerEvents(warpAugeListener, crownMain);
         pluginManager.registerEvents(pvPAltarListener, crownMain);
+        pluginManager.registerEvents(voteKickCommand, crownMain);
     }
 
     private void loadTabCompleter() {
@@ -451,6 +457,7 @@ public final class Initializer {
                     rouletteHandler = new RouletteHandler(locationHandler, messageUtil, userHandler);
                     pvPAltarHandler = new PvPAltarHandler(messageUtil);
                     banHandler = new BanHandler(messageUtil, userHandler);
+                    npcHandler = new NpcHandler(messageUtil);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
@@ -471,6 +478,7 @@ public final class Initializer {
                     crashHandler.setupArmorStands();
                     rouletteHandler.loadTables();
                     pvPAltarHandler.loadAllPvPAltars();
+                    npcHandler.loadStands();
                 }
 
                 if (ticks == 7) {
@@ -526,6 +534,7 @@ public final class Initializer {
         serverConfig.save();
         dailyPotHandler.save();
         banHandler.save();
+        npcHandler.shutdown();
 
         userHandler.getUserCache().values().forEach(userHandler::saveData);
     }

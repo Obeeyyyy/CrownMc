@@ -12,11 +12,28 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.EulerAngle;
 
 import java.util.logging.Level;
 
 @UtilityClass
 public final class LocationUtil {
+
+    public String encodeEuler(final EulerAngle angle) {
+        return "#" + angle.getX() + "#" + angle.getY() + "#" + angle.getZ();
+    }
+
+    public EulerAngle decodeEuler(final String value) {
+        final String[] splitted = value.split("#");
+
+        if(splitted.length < 3) {
+            return null;
+        }
+
+        return new EulerAngle(Double.parseDouble(splitted[1]),
+                Double.parseDouble(splitted[2]),
+                Double.parseDouble(splitted[3]));
+    }
 
     public String encode(final Location location) {
         return "#" + location.getWorld().getName() + "#" + location.getX() + "#" + location.getY() + "#" + location.getZ() + "#" + location.getYaw() + "#" + location.getPitch();

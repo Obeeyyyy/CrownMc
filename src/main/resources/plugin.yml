@@ -175,3 +175,4 @@ commands:
   pvpaltar:
   banreason:
     aliases: [banr]
+  votekick:
