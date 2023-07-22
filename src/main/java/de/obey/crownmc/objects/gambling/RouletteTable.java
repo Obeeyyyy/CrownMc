@@ -404,7 +404,7 @@ public final class RouletteTable {
                 if(player == null)
                     continue;
 
-                messageUtil.sendMessage(player, "Du hast §a+§f§o" + messageUtil.formatLong(reward) + "§6§l$§7 gewonnen§8.");
+                messageUtil.sendMessage(player, "Du hast §a+§f§o" + messageUtil.formatLong(reward) + "§6§l$§7 erhalten§8. ( §a+" + messageUtil.formatLong(reward - betAmounts.get(uuid)) + " §8)");
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 1);
                 continue;
             }

@@ -45,9 +45,9 @@ public class CNPC {
         boots = cfg.getItemStack(path + "boots");
         hand = cfg.getItemStack(path + "hand");
 
-        showName = cfg.getBoolean(path + "showName", false);
-        showArms = cfg.getBoolean(path + "showArms", false);
-        visible = cfg.getBoolean(path + "visible", false);
+        showName = cfg.getBoolean(path + "showName", true);
+        showArms = cfg.getBoolean(path + "showArms", true);
+        visible = cfg.getBoolean(path + "visible", true);
         small = cfg.getBoolean(path + "small", false);
 
         leftArm = LocationUtil.decodeEuler(cfg.getString(path + "leftArm", "#0#0#0"));
@@ -108,4 +108,75 @@ public class CNPC {
         cfg.set(path + "rightArm", LocationUtil.encodeEuler(rightArm));
     }
 
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setHelmet(ItemStack helmet) {
+        this.helmet = helmet;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setChestPlate(ItemStack chestPlate) {
+        this.chestPlate = chestPlate;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setLeggings(ItemStack leggings) {
+        this.leggings = leggings;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setBoots(ItemStack boots) {
+        this.boots = boots;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setHand(ItemStack hand) {
+        this.hand = hand;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setShowName(boolean showName) {
+        this.showName = showName;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setShowArms(boolean showArms) {
+        this.showArms = showArms;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setSmall(boolean small) {
+        this.small = small;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setLeftArm(EulerAngle leftArm) {
+        this.leftArm = leftArm;
+        removeStand();
+        spawnStand();
+    }
+
+    public void setRightArm(EulerAngle rightArm) {
+        this.rightArm = rightArm;
+        removeStand();
+        spawnStand();
+    }
 }

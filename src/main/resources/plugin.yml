@@ -176,3 +176,4 @@ commands:
   banreason:
     aliases: [banr]
   votekick:
+  npc:

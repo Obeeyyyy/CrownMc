@@ -249,7 +249,7 @@ public final class UserHandler {
             final ResultSet results = backend.getResultSet("SELECT * FROM users WHERE uuid='" + user.getOfflinePlayer().getUniqueId() + "'");
 
             if (results == null) {
-                messageUtil.log("WARNING : failed to load mysql for " + uuid.toString() + " (" + offlinePlayer.getName() + ")");
+                messageUtil.warn("§c§o failed to load mysql for " + uuid.toString() + " (" + offlinePlayer.getName() + ")");
                 return user;
             }
 

@@ -142,7 +142,7 @@ public final class JoinListener implements Listener {
                     player.sendMessage(" §8- §7Täglicher Vote§8: §e§o/vote");
                     player.sendMessage(" §8- §7Online Shop§8: §e§ostore.crownmc.de");
                     player.sendMessage("");
-                    player.sendMessage(" §8- §7Du warst §f§o" + (MathUtil.getHoursAndMinutesAndSecondsFromSeconds((System.currentTimeMillis() - user.getLong(DataType.LASTSEEN)) / 1000)) + "§coffline.");
+                    player.sendMessage(" §8- §7Du warst §f§o" + (MathUtil.getDaysAndHoursAndMinutesAndSecondsFromSeconds((System.currentTimeMillis() - user.getLong(DataType.LASTSEEN)) / 1000)) + "§coffline.");
                     player.sendMessage(" §8- §7Loginstreak§8: §f§o" + user.getLong(DataType.LOGINSTREAK) + "§8.");
                     player.sendMessage(" §8- §7Nächster Tag in §a§o" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((86400000 - (System.currentTimeMillis() - user.getLong(DataType.LOGINSTREAKUPDATED))) / 1000));
                     player.sendMessage("");

@@ -248,13 +248,13 @@ public final class RouletteHandler {
 
     public double getMultiplier(final String color) {
         if (color.equalsIgnoreCase("red"))
-            return 1.5;
-
-        if(color.equalsIgnoreCase("black"))
             return 1.8;
 
-        if(color.equalsIgnoreCase("green"))
+        if(color.equalsIgnoreCase("black"))
             return 2.5;
+
+        if(color.equalsIgnoreCase("green"))
+            return 5.0;
 
         return 1;
     }

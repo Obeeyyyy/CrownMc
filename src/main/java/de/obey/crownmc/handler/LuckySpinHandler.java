@@ -120,7 +120,7 @@ public final class LuckySpinHandler {
         shutdown();
 
         if (locationHandler.getLocation("luckyspin") == null) {
-            messageUtil.sendMessage(Bukkit.getConsoleSender(), "Luckyspin Location existiert nicht§8.");
+            messageUtil.warn("§c§oLuckyspin location existiert nicht.");
             return;
         }
 

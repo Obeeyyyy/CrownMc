@@ -74,12 +74,17 @@ public final class ServerConfig {
         if (!playerFiles.exists())
             playerFiles.mkdir();
 
+        final File clanFiles = new File(initializer.getCrownMain().getDataFolder() + "/clanFiles");
+
+        if(!clanFiles.exists())
+            clanFiles.mkdir();
+
         if (!configFile.exists()) {
 
             cfg.set("whitelist", true);
             cfg.set("betawhitelist", true);
             cfg.set("playercount", 0);
-            cfg.set("prefix", "&c&oSkySlayer &7");
+            cfg.set("prefix", "&f&lObeySystem &8>&7 ");
             cfg.set("mysql.host", "change");
             cfg.set("mysql.password", "change");
             cfg.set("mysql.username", "change");
@@ -87,8 +92,8 @@ public final class ServerConfig {
             cfg.set("firstjoin", new ArrayList<ItemStack>());
             cfg.set("voteitems", new ArrayList<ItemStack>());
             cfg.set("domains.45,142,114,29", 0);
-            cfg.set("motd.1", "line1");
-            cfg.set("motd.2", "line2");
+            cfg.set("motd.1", "&f&lObeysystem");
+            cfg.set("motd.2", "&7change me :)");
             cfg.set("event", "CHANGE THIS");
 
             FileUtil.saveToFile(configFile, cfg);
@@ -96,7 +101,7 @@ public final class ServerConfig {
 
         whitelist = cfg.getBoolean("whitelist");
         betawhitelist = cfg.getBoolean("betawhitelist");
-        prefix = cfg.getString("prefix");
+        prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString("prefix"));
         host = cfg.getString("mysql.host");
         username = cfg.getString("mysql.username");
         database = cfg.getString("mysql.database");

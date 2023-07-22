@@ -48,6 +48,7 @@ public final class Initializer {
     private ScoreboardHandler scoreboardHandler;
     private TradeHandler tradeHandler;
     private UserHandler userHandler;
+    private ClanHandler clanHandler;
     private WarpHandler warpHandler;
     private KitHandler kitHandler;
     private BadgeHandler badgeHandler;
@@ -60,7 +61,6 @@ public final class Initializer {
     private GuessTheNumberCommand guessTheNumberCommand;
     private DailyPotHandler dailyPotHandler;
     private LuckySpinHandler luckySpinHandler;
-    private ClanHandler clanHandler;
     private VotePartyHandler votePartyHandler;
     private JackPotHandler jackPotHandler;
     private RouletteHandler rouletteHandler;
@@ -451,7 +451,7 @@ public final class Initializer {
                     blockEventHandler = new BlockEventHandler(Initializer.this);
                     dailyPotHandler = new DailyPotHandler(locationHandler, messageUtil, userHandler);
                     luckySpinHandler = new LuckySpinHandler(locationHandler, messageUtil, userHandler);
-                    clanHandler = new ClanHandler(messageUtil);
+                    clanHandler = new ClanHandler(messageUtil, backend, executorService);
                     votePartyHandler = new VotePartyHandler();
                     jackPotHandler = new JackPotHandler();
                     rouletteHandler = new RouletteHandler(locationHandler, messageUtil, userHandler);
@@ -491,7 +491,7 @@ public final class Initializer {
                     //crownBot = new CrownBot(userHandler, messageUtil);
                     //crownBot.setup();
 
-                    runnables = new Runnables(kitHandler, userHandler, scoreboardHandler, autoBroadcastHandler, dailyPotHandler, banCommand, blockStuffListener);
+                    runnables = new Runnables(kitHandler, userHandler, clanHandler, scoreboardHandler, autoBroadcastHandler, dailyPotHandler, banCommand, blockStuffListener);
                     runnables.start10TickTimerAsync();
                     runnables.start2TickTimerAsync();
 

@@ -21,6 +21,7 @@ public final class Runnables {
 
     private final KitHandler kitHandler;
     private final UserHandler userHandler;
+    private final ClanHandler clanHandler;
     private final ScoreboardHandler scoreboardHandler;
     private final AutoBroadcastHandler autoBroadcastHandler;
     private final DailyPotHandler dailyPotHandler;
@@ -46,6 +47,7 @@ public final class Runnables {
             public void run() {
                 kitHandler.runUpdateTick();
                 userHandler.runInterval();
+                clanHandler.runInterval();
                 dailyPotHandler.updateStands();
                 banCommand.check();
             }

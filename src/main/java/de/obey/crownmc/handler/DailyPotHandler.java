@@ -116,7 +116,7 @@ public final class DailyPotHandler {
         }
 
         if (locationHandler.getLocation("dailypot") == null) {
-            messageUtil.log("§c§oDailypot location existiert nicht.");
+            messageUtil.warn("§c§oDailypot location existiert nicht.");
             return;
         }
 
