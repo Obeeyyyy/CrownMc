@@ -48,6 +48,7 @@ public final class AsyncChatListener implements Listener {
     private final RouletteHandler rouletteHandler;
     private final PlotAPI plotAPI;
     private final WarpAugeListener warpAugeListener;
+    private final WordScrambleHandler wordScrambleHandler;
 
     private boolean checkPlotChat(final Player player) {
         if (Bukkit.getPluginManager().getPlugin("PlotSquared") == null)
@@ -69,6 +70,11 @@ public final class AsyncChatListener implements Listener {
             return;
 
         String message = event.getMessage();
+
+        /*
+        Word Scramlbe check
+         */
+        wordScrambleHandler.isInScramble(player, message);
 
         /* Setting coinflip start*/
         if (coinflipHandler.isCreatingCoinflip(player, message))

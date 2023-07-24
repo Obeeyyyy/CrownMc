@@ -191,6 +191,12 @@ public final class RangCommand implements CommandExecutor {
             }
 
             if (args[0].equalsIgnoreCase("ntprefix")) {
+
+                if(ChatColor.stripColor(text).length() > 8) {
+                    messageUtil.sendMessage(sender, "Zu lang !");
+                    return false;
+                }
+
                 rang.setNtPrefix(text);
                 messageUtil.sendMessage(sender, "NameTagPrefix für " + rang.getName() + " auf " + text + "§7 gesetzt.");
                 scoreboardHandler.getTeams().clear();

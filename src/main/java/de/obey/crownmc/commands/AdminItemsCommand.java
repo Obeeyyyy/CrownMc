@@ -116,7 +116,7 @@ public final class AdminItemsCommand implements CommandExecutor {
                         .setLore("",
                                 "§8▰§7▱ §e§lRechtsklick",
                                 "§8 - §7Um den §6Crown §7Rang für ",
-                                "§8 - §71 nen Monat zu erhalten§8.",
+                                "§8 - §71nen Monat zu erhalten§8.",
                                 "")
                 .build());
 

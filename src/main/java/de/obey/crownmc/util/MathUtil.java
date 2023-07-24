@@ -43,9 +43,37 @@ public final class MathUtil {
         return (days > 0 ? days + "d " : "") + (hours > 0 ? hours + "h " : "");
     }
 
-    public String getDaysAndHoursAndMinutesAndSecondsFromSeconds(long seconds) {
+    public String getDaysAndHoursAndMinutesFromSeconds(long seconds) {
 
         if(seconds < 0) {
+            return "§4§lPermanent";
+        }
+
+        int minutes = 0;
+        int days = 0;
+        int hours = 0;
+
+        while (seconds >= 60) {
+            seconds -= 60;
+            minutes++;
+        }
+
+        while (minutes >= 60) {
+            minutes -= 60;
+            hours++;
+        }
+
+        while (hours >= 24) {
+            hours -= 24;
+            days++;
+        }
+
+        return (days > 0 ? days + "d " : "") + (hours > 0 ? hours + "h " : "") + (minutes > 0 ? minutes + "m " : "");
+    }
+
+    public String getDaysAndHoursAndMinutesAndSecondsFromSeconds(long seconds) {
+
+        if(seconds <= 0) {
             return "§4§lPermanent";
         }
 
@@ -131,7 +159,6 @@ public final class MathUtil {
         final String formattedSeconds = String.format("%.1f", seconds);
         return formattedSeconds + "s";
     }
-
 
     public long getMillisFromString(final String string) {
         long millis = 0;

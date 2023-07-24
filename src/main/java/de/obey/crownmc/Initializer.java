@@ -14,6 +14,7 @@ import de.obey.crownmc.handler.*;
 import de.obey.crownmc.listener.*;
 import de.obey.crownmc.objects.Runnables;
 import de.obey.crownmc.tabcomplete.OnlineListTabComplete;
+import de.obey.crownmc.tabcomplete.ToggleTabComplete;
 import de.obey.crownmc.tabcomplete.WarpsTabComplete;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.Getter;
@@ -58,7 +59,6 @@ public final class Initializer {
     private ShopHandler shopHandler;
     private AutoBroadcastHandler autoBroadcastHandler;
     private BlockEventHandler blockEventHandler;
-    private GuessTheNumberCommand guessTheNumberCommand;
     private DailyPotHandler dailyPotHandler;
     private LuckySpinHandler luckySpinHandler;
     private VotePartyHandler votePartyHandler;
@@ -67,6 +67,7 @@ public final class Initializer {
     private PvPAltarHandler pvPAltarHandler;
     private BanHandler banHandler;
     private NpcHandler npcHandler;
+    private WordScrambleHandler wordScrumbleHandler;
 
     private PlotAPI plotAPI;
 
@@ -83,20 +84,18 @@ public final class Initializer {
         this.serverConfig = new ServerConfig(this);
     }
 
-    private ShieldCommand shieldCommand;
     private BanCommand banCommand;
     private BlockStuffListener blockStuffListener;
-    private PvPAltarListener pvPAltarListener;
-    private WarpAugeListener warpAugeListener;
-    private VoteKickCommand voteKickCommand;
-
-    private void loadCommands() {
-        shieldCommand = new ShieldCommand(messageUtil);
+    private void loadCommandsAndListener() {
+        final ShieldCommand shieldCommand = new ShieldCommand(messageUtil);
         banCommand = new BanCommand(messageUtil, banHandler);
         blockStuffListener = new BlockStuffListener(messageUtil, locationHandler, combatHandler, userHandler, serverConfig, worldProtectionHandler);
-        pvPAltarListener = new PvPAltarListener(messageUtil, pvPAltarHandler);
-        warpAugeListener = new WarpAugeListener(messageUtil, locationHandler);
-        voteKickCommand = new VoteKickCommand(messageUtil);
+        final PvPAltarListener pvPAltarListener = new PvPAltarListener(messageUtil, pvPAltarHandler);
+        final WarpAugeListener warpAugeListener = new WarpAugeListener(messageUtil, locationHandler);
+        final VoteKickCommand voteKickCommand = new VoteKickCommand(messageUtil);
+        final GuessTheNumberCommand guessTheNumberCommand = new GuessTheNumberCommand(messageUtil);
+        final NpcCommand npcCommand = new NpcCommand(messageUtil, npcHandler);
+        final ClanCommand clanCommand = new ClanCommand(messageUtil, userHandler, clanHandler);
 
         crownMain.getCommand("whitelist").setExecutor(new WhitelistCommand(serverConfig, messageUtil));
         crownMain.getCommand("stop").setExecutor(new StopCommand(this));
@@ -208,7 +207,6 @@ public final class Initializer {
         crownMain.getCommand("verlosung").setExecutor(new VerlosungCommand(messageUtil));
         crownMain.getCommand("afk").setExecutor(new AfkCommand(messageUtil, scoreboardHandler, userHandler));
         crownMain.getCommand("say").setExecutor(new SayCommand(messageUtil));
-        guessTheNumberCommand = new GuessTheNumberCommand(messageUtil);
         crownMain.getCommand("guessthenumber").setExecutor(guessTheNumberCommand);
         crownMain.getCommand("sudo").setExecutor(new SudoCommand(messageUtil));
         crownMain.getCommand("dailypot").setExecutor(new DailyPotCommand(messageUtil, dailyPotHandler));
@@ -230,10 +228,10 @@ public final class Initializer {
         crownMain.getCommand("pvpaltar").setExecutor(new PvPAltarCommand(messageUtil, pvPAltarHandler));
         crownMain.getCommand("banreason").setExecutor(new BanReasonCommand(messageUtil, banHandler));
         crownMain.getCommand("votekick").setExecutor(voteKickCommand);
-        crownMain.getCommand("npc").setExecutor(new NpcCommand(messageUtil, npcHandler));
-    }
+        crownMain.getCommand("npc").setExecutor(npcCommand);
+        crownMain.getCommand("clan").setExecutor(clanCommand);
+        crownMain.getCommand("scramble").setExecutor(new ScrambleCommand(wordScrumbleHandler));
 
-    private void loadListener() {
         final PluginManager pluginManager = Bukkit.getPluginManager();
 
         pluginManager.registerEvents(new AsyncPlayerPreLoginListener(this), crownMain);
@@ -242,7 +240,7 @@ public final class Initializer {
         pluginManager.registerEvents(new QuitListener(this), crownMain);
         pluginManager.registerEvents(new PickupPotionsListener(), crownMain);
         pluginManager.registerEvents(new PortalMeisterListener(messageUtil, serverConfig, userHandler, locationHandler), crownMain);
-        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, jackPotHandler, rouletteHandler, plotAPI, warpAugeListener), crownMain);
+        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, jackPotHandler, rouletteHandler, plotAPI, warpAugeListener, wordScrumbleHandler), crownMain);
         pluginManager.registerEvents(blockStuffListener, crownMain);
         pluginManager.registerEvents(new InvseeCommand(messageUtil), crownMain);
         pluginManager.registerEvents(new FirstJoinItems(messageUtil, serverConfig), crownMain);
@@ -293,6 +291,8 @@ public final class Initializer {
         pluginManager.registerEvents(warpAugeListener, crownMain);
         pluginManager.registerEvents(pvPAltarListener, crownMain);
         pluginManager.registerEvents(voteKickCommand, crownMain);
+        pluginManager.registerEvents(npcCommand, crownMain);
+        pluginManager.registerEvents(clanCommand, crownMain);
     }
 
     private void loadTabCompleter() {
@@ -315,45 +315,26 @@ public final class Initializer {
         crownMain.getCommand("setprefix").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("stats").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("user").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("vanish").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("message").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("respond").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("teamchat").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("stack").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("teleport").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("teleportall").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("fly").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("joinmessage").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("leavemessage").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("chatclear").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("bounty").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("spawn").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("rename").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("pay").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("globalmute").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("location").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("toggle").setTabCompleter(new OnlineListTabComplete());
+        crownMain.getCommand("toggle").setTabCompleter(new ToggleTabComplete());
         crownMain.getCommand("ping").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("invsee").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("serverstats").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("allmoney").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("broadcast").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("firstjoinitems").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("adminitems").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("enderchest").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("skull").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("god").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("domains").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("motd").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("save").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("settings").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("tmote").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("werbung").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("config").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("bodysee").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("privatechatclear").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("packetlogger").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("slowchat").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("support").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("gutschein").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("combattag").setTabCompleter(new OnlineListTabComplete());
@@ -397,8 +378,6 @@ public final class Initializer {
         crownMain.getCommand("setevent").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("workbench").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("bank").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("clearlag").setTabCompleter(new OnlineListTabComplete());
-        crownMain.getCommand("blockevent").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("give").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("block").setTabCompleter(new OnlineListTabComplete());
         crownMain.getCommand("sell").setTabCompleter(new OnlineListTabComplete());
@@ -451,19 +430,21 @@ public final class Initializer {
                     blockEventHandler = new BlockEventHandler(Initializer.this);
                     dailyPotHandler = new DailyPotHandler(locationHandler, messageUtil, userHandler);
                     luckySpinHandler = new LuckySpinHandler(locationHandler, messageUtil, userHandler);
-                    clanHandler = new ClanHandler(messageUtil, backend, executorService);
+                    clanHandler = new ClanHandler(messageUtil, backend, executorService, userHandler);
                     votePartyHandler = new VotePartyHandler();
                     jackPotHandler = new JackPotHandler();
                     rouletteHandler = new RouletteHandler(locationHandler, messageUtil, userHandler);
                     pvPAltarHandler = new PvPAltarHandler(messageUtil);
                     banHandler = new BanHandler(messageUtil, userHandler);
                     npcHandler = new NpcHandler(messageUtil);
+                    wordScrumbleHandler = new WordScrambleHandler(messageUtil, userHandler);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
                 }
 
                 if(ticks == 6) {
+                    scoreboardHandler.unregisterAllTeams();
                     coinflipHandler.updateInventory();
                     locationHandler.loadLocations();
                     warpHandler.loadWarps();
@@ -482,16 +463,23 @@ public final class Initializer {
                 }
 
                 if (ticks == 7) {
-                    shieldCommand = new ShieldCommand(messageUtil);
 
-                    loadCommands();
+                    loadCommandsAndListener();
                     loadTabCompleter();
-                    loadListener();
 
                     //crownBot = new CrownBot(userHandler, messageUtil);
                     //crownBot.setup();
 
-                    runnables = new Runnables(kitHandler, userHandler, clanHandler, scoreboardHandler, autoBroadcastHandler, dailyPotHandler, banCommand, blockStuffListener);
+                    runnables = new Runnables(kitHandler,
+                            userHandler,
+                            clanHandler,
+                            scoreboardHandler,
+                            autoBroadcastHandler,
+                            dailyPotHandler,
+                            banCommand,
+                            blockStuffListener,
+                            wordScrumbleHandler);
+
                     runnables.start10TickTimerAsync();
                     runnables.start2TickTimerAsync();
 

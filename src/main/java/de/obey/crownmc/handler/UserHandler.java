@@ -181,6 +181,10 @@ public final class UserHandler {
                     locationHandler.teleportToLocationNameInstant(player, "spawn");
 
                     registering.remove(player);
+
+                    if(player.getName().equalsIgnoreCase("Gewichtiger")) {
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ban Gewichtiger 2");
+                    }
                 }
             }.runTaskLater(CrownMain.getInstance(), 15);
 
@@ -271,7 +275,7 @@ public final class UserHandler {
                     user.setLong(DataType.DESTROYEDBLOCKS, results.getLong(DataType.DESTROYEDBLOCKS.getSavedAs()));
                     user.setLong(DataType.DESTROYEDEVENTBLOCKS, results.getLong(DataType.DESTROYEDEVENTBLOCKS.getSavedAs()));
                 }
-            } catch (SQLException exception) {
+            } catch (final SQLException exception) {
                 exception.printStackTrace();
             }
 
@@ -327,6 +331,9 @@ public final class UserHandler {
                     cfg.set(value.getSavedAs(), user.getData().get(value));
                 }
             }
+
+            if(user.getClan() != null)
+                cfg.set("clan", user.getClan().getClanName());
 
             user.saveObjects();
 

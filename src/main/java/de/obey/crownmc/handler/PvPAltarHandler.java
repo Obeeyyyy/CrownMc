@@ -76,7 +76,9 @@ public final class PvPAltarHandler {
 
         messageUtil.log("Saving (" + pvpAltarMap.size() + ") PvPAltars.");
 
-        pvpAltarMap.values().forEach(PvPAltar::save);
+        for (final PvPAltar value : pvpAltarMap.values()) {
+            value.save();
+        }
 
         FileUtil.saveToFile(file, cfg);
     }
@@ -99,6 +101,9 @@ public final class PvPAltarHandler {
         altar.delete();
 
         pvpAltarMap.remove(id);
+
+        cfg.set("altars." + id, null);
+        FileUtil.saveToFile(file, cfg);
     }
 
     public void startPvPAltar(final int id, final Player player) {

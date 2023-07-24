@@ -507,7 +507,7 @@ public final class ScoreboardHandler {
                 votes.setSuffix(messageUtil.formatLong(user.getLong(DataType.VOTES)));
 
                 final Team playtime = scoreboard.getTeam("playtime");
-                final String value = MathUtil.getDaysAnHoursFromSeconds(user.getLong(DataType.PLAYTIME));
+                final String value = MathUtil.getDaysAndHoursAndMinutesFromSeconds(user.getLong(DataType.PLAYTIME));
                 playtime.setSuffix((value.length() > 0 ? value : "§8(§c§ox§8)"));
 
                 final Team voteparty = scoreboard.getTeam("voteparty");
@@ -591,9 +591,24 @@ public final class ScoreboardHandler {
         if (team == null)
             team = board.registerNewTeam(Team);
 
+        if(ChatColor.stripColor(prefix).length() >= 8) {
+            messageUtil.warn("§c§onametag to long -" + prefix + "- (" + Team + ")");
+            return team;
+        }
+
         team.setPrefix(prefix);
         team.setSuffix(suffix);
 
         return team;
+    }
+
+    public void unregisterAllTeams() {
+        if(Bukkit.getScoreboardManager().getMainScoreboard() == null ||
+        Bukkit.getScoreboardManager().getMainScoreboard().getTeams().isEmpty())
+            return;
+
+        for (final Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+            team.unregister();
+        }
     }
 }

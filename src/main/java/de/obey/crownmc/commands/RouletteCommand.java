@@ -182,10 +182,8 @@ public final class RouletteCommand implements CommandExecutor, Listener {
 
         try {
             final int id = Integer.parseInt(event.getRightClicked().getCustomName().split(" ")[1]);
-
             rouletteHandler.openTable(id, event.getPlayer());
-
-        } catch (final NumberFormatException ignored) {}
+        } catch (final Exception ignored) {}
     }
 
     @EventHandler

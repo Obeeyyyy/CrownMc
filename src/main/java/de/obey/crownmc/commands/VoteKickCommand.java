@@ -1,6 +1,6 @@
 package de.obey.crownmc.commands;
 
-import de.obey.crownmc.objects.VoteKick;
+import de.obey.crownmc.objects.vote.VoteKick;
 import de.obey.crownmc.util.MessageBuilder;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
@@ -52,7 +52,8 @@ public class VoteKickCommand implements CommandExecutor, Listener {
             final VoteKick voteKick = voteKicks.get(target.getUniqueId());
 
             if (voteKick.vote(player, state)) {
-                messageUtil.sendMessage(sender, "Du hast seine Stimme abgegeben§8.");
+                messageUtil.sendMessage(sender, "Du hast für §f" + args[0] + " §7gestimmt§8.");
+                player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 1);
                 return false;
             }
 

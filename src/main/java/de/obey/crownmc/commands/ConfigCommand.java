@@ -57,6 +57,8 @@ public final class ConfigCommand implements CommandExecutor {
                 messageUtil.sendMessage(sender, " - levelUpMoney: " + serverConfig.getLevelUpMoney());
                 messageUtil.sendMessage(sender, " - netherPrice: " + serverConfig.getNetherPrice());
                 messageUtil.sendMessage(sender, " - endPrice: " + serverConfig.getEndPrice());
+                messageUtil.sendMessage(sender, " - netherLevel: " + serverConfig.getNetherLevel());
+                messageUtil.sendMessage(sender, " - endLevel: " + serverConfig.getEndLevel());
                 messageUtil.sendMessage(sender, " - soulReward: " + serverConfig.getSoulReward());
                 messageUtil.sendMessage(sender, " - epCooldown: " + serverConfig.getEpCooldown() +  "s");
                 sender.sendMessage("");
@@ -140,6 +142,12 @@ public final class ConfigCommand implements CommandExecutor {
                     if (args[1].equalsIgnoreCase("epCooldown"))
                         serverConfig.setEpCooldown(amount);
 
+                    if (args[1].equalsIgnoreCase("endLevel"))
+                        serverConfig.setEndLevel(amount);
+
+                    if (args[1].equalsIgnoreCase("netherLevel"))
+                        serverConfig.setNetherLevel(amount);
+
                     scoreboardHandler.updateEverythingForEveryone();
 
                     messageUtil.sendMessage(sender, "UPDATED " + args[1] + " -> " + amount);
@@ -215,7 +223,7 @@ public final class ConfigCommand implements CommandExecutor {
                 "/config reload",
                 "/config add <blocked, combat, bc> <message>",
                 "/config remove <blocked, combat, bc> <nummer>",
-                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay, baseEloKillstreak, baseXpKillstreak, baseMoneyKillstreak, levelUpMoney, netherPrice, endPrice, soulReward> <amount>");
+                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay, baseEloKillstreak, baseXpKillstreak, baseMoneyKillstreak, levelUpMoney, netherPrice, endPrice, soulReward, netherLevel, endLevel> <amount>");
 
         return false;
     }

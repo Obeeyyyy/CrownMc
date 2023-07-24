@@ -44,6 +44,15 @@ public class NpcHandler {
         }
     }
 
+    public CNPC getNpcFromInteract(final ArmorStand armorStand) {
+        for (CNPC value : npcs.values()) {
+            if(value.getArmorStand() == armorStand)
+                return value;
+        }
+
+        return null;
+    }
+
     public boolean createNewNPC(final String name, final Location location) {
         if(npcs.containsKey(name))
             return false;

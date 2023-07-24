@@ -9,7 +9,7 @@ package de.obey.crownmc.handler;
 */
 
 import de.obey.crownmc.CrownMain;
-import de.obey.crownmc.objects.VoteParty;
+import de.obey.crownmc.objects.vote.VoteParty;
 import de.obey.crownmc.util.FileUtil;
 import lombok.Getter;
 import org.bukkit.Location;

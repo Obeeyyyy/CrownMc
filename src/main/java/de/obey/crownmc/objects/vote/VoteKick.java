@@ -1,4 +1,4 @@
-package de.obey.crownmc.objects;
+package de.obey.crownmc.objects.vote;
 
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.util.MessageUtil;
@@ -49,7 +49,7 @@ public class VoteKick {
         messageUtil.broadcast("");
         messageUtil.broadcast("§7  Die Abstimmung ist beendet§8.");
         messageUtil.broadcast("");
-        messageUtil.broadcast("§7Insgesamt haben §f§o" + (yesVotes + noVotes) + "§7 abgestimmt§8.");
+        messageUtil.broadcast("§7Insgesamt haben §f§o" + (yesVotes + noVotes) + "§7 Spieler abgestimmt§8.");
         messageUtil.broadcast("§a§o" + yesVotes + "§7 Spieler waren dafür§8.");
         messageUtil.broadcast("§c§o" + noVotes + "§7 Spieler waren dagegen§8.");
         messageUtil.broadcast("");
@@ -67,9 +67,14 @@ public class VoteKick {
 
             final Player onlineTarget = Bukkit.getPlayer(targetUUid);
 
-            onlineTarget.kickPlayer("\n§6§lCrownMc.de\n\n" +
-                    "§7Du wurdest vom Server gekickt§8.\n\n" +
-                    "§7Grund§8: §f§oVotekick von " + staredBy);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    onlineTarget.kickPlayer("\n§6§lCrownMc.de\n\n" +
+                            "§7Du wurdest vom Server gekickt§8.\n\n" +
+                            "§7Grund§8: §f§oVotekick von " + staredBy);
+                }
+            }.runTask(CrownMain.getInstance());
         }
 
     }

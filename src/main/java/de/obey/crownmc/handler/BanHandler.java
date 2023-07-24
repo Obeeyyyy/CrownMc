@@ -31,21 +31,28 @@ public final class BanHandler {
     private final HashMap<Integer, BanReason> reasons = new HashMap<>();
 
     private final File file;
-    private final YamlConfiguration cfg;
+    private YamlConfiguration cfg;
 
     public BanHandler(final MessageUtil messageUtil, final UserHandler userHandler) {
         this.messageUtil = messageUtil;
         this.userHandler = userHandler;
 
         file = FileUtil.getFile("ban.yml");
-        cfg = FileUtil.getCfg(file);
 
+        loadReasons();
+    }
+
+    public void loadReasons() {
+        reasons.clear();
+
+        cfg = FileUtil.getCfg(file);
         if(cfg.contains("ban")) {
             final Set<String> set = cfg.getConfigurationSection("ban").getKeys(false);
 
             set.stream().sorted().forEach(string -> {
                 final int id = Integer.parseInt(string);
                 reasons.put(id, new BanReason(id, cfg));
+                messageUtil.log("§a§oloaded ban reason " + id + " - " + reasons.get(id).getName());
             });
         }
     }

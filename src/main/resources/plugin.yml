@@ -177,3 +177,5 @@ commands:
     aliases: [banr]
   votekick:
   npc:
+  clan:
+  scramble:

@@ -17,7 +17,7 @@ public class CNPC {
     private final String name, path;
 
     private Location location;
-    private String prefix;
+    private String prefix, command;
     private ItemStack helmet, chestPlate, leggings, boots, hand;
 
     private boolean showName, showArms, visible, small;
@@ -38,12 +38,13 @@ public class CNPC {
         if(cfg.contains(path + "location"))
             location = LocationUtil.decode(cfg.getString(path + "location"));
 
-        prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString(path + "prefix", "Change me"));
+        prefix = ChatColor.translateAlternateColorCodes('&', cfg.getString(path + "prefix", name));
         helmet = cfg.getItemStack(path + "helmet");
         chestPlate = cfg.getItemStack(path + "chestPlate");
         leggings = cfg.getItemStack(path + "leggings");
         boots = cfg.getItemStack(path + "boots");
         hand = cfg.getItemStack(path + "hand");
+        command = cfg.getString(path + "command", null);
 
         showName = cfg.getBoolean(path + "showName", true);
         showArms = cfg.getBoolean(path + "showArms", true);
@@ -93,6 +94,7 @@ public class CNPC {
 
     public void save() {
         cfg.set("npc." + name + ".prefix", prefix);
+        cfg.set("npc." + name + ".command", command);
         cfg.set("npc." + name + ".location", LocationUtil.encode(location));
         cfg.set("npc." + name + ".showName", showName);
         cfg.set("npc." + name + ".showArms", showArms);
@@ -178,5 +180,10 @@ public class CNPC {
         this.rightArm = rightArm;
         removeStand();
         spawnStand();
+    }
+
+    public void setLocation(final Location location) {
+        this.location = location.clone();
+        armorStand.teleport(location);
     }
 }

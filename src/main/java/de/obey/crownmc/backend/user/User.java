@@ -9,6 +9,7 @@ package de.obey.crownmc.backend.user;
 import de.obey.crownmc.Initializer;
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.enums.DataType;
+import de.obey.crownmc.objects.Clan;
 import de.obey.crownmc.util.Bools;
 import de.obey.crownmc.util.FileUtil;
 import de.obey.crownmc.util.LevelUtil;
@@ -47,6 +48,7 @@ public final class User {
     private UserPunishment punishment;
     private UserLoginStreak loginStreak;
     private UserPeace userPeace;
+    private Clan clan;
 
     private PacketReader packetReader;
 
@@ -82,6 +84,12 @@ public final class User {
         this.punishment = new UserPunishment(this);
         this.loginStreak = new UserLoginStreak(this);
         this.userPeace = new UserPeace(this);
+
+        if(cfg.contains("clan")) {
+            initializer.getClanHandler().loadData(cfg.getString("clan")).thenAcceptAsync(data -> {
+                clan = data;
+            });
+        }
     }
 
     public void saveObjects() {

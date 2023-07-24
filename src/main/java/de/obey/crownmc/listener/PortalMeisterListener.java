@@ -72,6 +72,7 @@ public final class PortalMeisterListener implements Listener {
                         .setDisplayname("§8» §c§lNether §7Dimension")
                         .setLore("",
                                 "§c§lINFORMATIONEN",
+                                "§8  - §7Level§8: §f§o" + serverConfig.getNetherLevel(),
                                 "§8  - §7Preis§8: §f§o" + messageUtil.formatLong(serverConfig.getNetherPrice()) + "§6§l$",
                                 "§8  - §7PvP§8: §a§oAktiviert",
                                 "")
@@ -82,6 +83,7 @@ public final class PortalMeisterListener implements Listener {
                 .setDisplayname("§8» §f§lEnd §7Dimension")
                 .setLore("",
                         "§f§lINFORMATIONEN",
+                        "§8  - §7Level§8: §f§o" + serverConfig.getEndLevel(),
                         "§8  - §7Preis§8: §f§o" + messageUtil.formatLong(serverConfig.getEndPrice()) + "§6§l$",
                         "§8  - §7PvP§8: §a§oAktiviert",
                         "")
@@ -113,6 +115,11 @@ public final class PortalMeisterListener implements Listener {
 
             final User user = userHandler.getUserInstant(player.getUniqueId());
 
+            if(user.getLong(DataType.LEVEL) < serverConfig.getNetherLevel()) {
+                messageUtil.sendMessage(player, "Dein Level ist nicht hoch genug§8.");
+                return;
+            }
+
             if(!messageUtil.hasEnougthMoney(user, (long) serverConfig.getNetherPrice()))
                 return;
 
@@ -133,6 +140,11 @@ public final class PortalMeisterListener implements Listener {
             }
 
             final User user = userHandler.getUserInstant(player.getUniqueId());
+
+            if(user.getLong(DataType.LEVEL) < serverConfig.getEndLevel()) {
+                messageUtil.sendMessage(player, "Dein Level ist nicht hoch genug§8.");
+                return;
+            }
 
             if(!messageUtil.hasEnougthMoney(user, (long) serverConfig.getEndPrice()))
                 return;

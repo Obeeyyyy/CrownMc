@@ -38,6 +38,12 @@ public final class BanReasonCommand implements CommandExecutor {
             return false;
 
         if(args.length == 1) {
+            if(args[0].equalsIgnoreCase("reload")) {
+                banHandler.loadReasons();
+                messageUtil.sendMessage(sender, "Banreasons neu geladen§8.");
+                return false;
+            }
+
             if(args[0].equalsIgnoreCase("list")) {
 
                 if(banHandler.getReasons().isEmpty()) {
@@ -183,6 +189,7 @@ public final class BanReasonCommand implements CommandExecutor {
 
         messageUtil.sendSyntax(sender,
                 "/banr list",
+                "/banr reload",
                 "/banr create <id>",
                 "/banr delete <id>",
                 "/banr setn <id> <name>",

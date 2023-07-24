@@ -11,6 +11,7 @@ package de.obey.crownmc.listener;
 import de.obey.crownmc.handler.LocationHandler;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.LocationUtil;
+import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -38,6 +40,7 @@ public final class WarpAugeListener implements Listener {
     private final LocationHandler locationHandler;
 
     private final ArrayList<Player> settingLocation = new ArrayList<>();
+    private final HashMap<Player, Long> millis = new HashMap<>();
 
     @EventHandler
     public void on(final PlayerInteractEvent event) {
@@ -79,6 +82,11 @@ public final class WarpAugeListener implements Listener {
 
             if(location.getWorld() != player.getWorld()) {
                 messageUtil.sendMessage(player, "Du musst in der selben Welt sein§8, §7um das Warp Auge nutzen zu können§8.");
+                return;
+            }
+
+            if(millis.containsKey(player) && System.currentTimeMillis() < millis.get(player)) {
+                messageUtil.sendMessage(player,"Du kannst das Auge erst in " + MathUtil.getSecondsFromMillis(millis.get(player) - System.currentTimeMillis()) + "nutzen§8.");
                 return;
             }
 

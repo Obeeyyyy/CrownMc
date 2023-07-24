@@ -27,6 +27,7 @@ public final class Runnables {
     private final DailyPotHandler dailyPotHandler;
     private final BanCommand banCommand;
     private final BlockStuffListener blockStuffListener;
+    private final WordScrambleHandler wordScrumbleHandler;
 
     public void start2TickTimerAsync() {
         new BukkitRunnable() {
@@ -50,6 +51,7 @@ public final class Runnables {
                 clanHandler.runInterval();
                 dailyPotHandler.updateStands();
                 banCommand.check();
+                wordScrumbleHandler.runInterval();
             }
         }.runTaskTimerAsynchronously(CrownMain.getInstance(), 10, 10);
     }
