@@ -46,7 +46,8 @@ public final class ServerConfig {
             dailycount = 0,
             baseXPkillstreak = 0, baseMoneyKillstreak = 0, baseEloKillstreak = 0, levelUpMoney = 0,
             netherPrice = 1000000, endPrice = 1000000, soulReward = 0, epCooldown = 3,
-            netherLevel = 1, endLevel = 1;
+            netherLevel = 1, endLevel = 1,
+            clanPrice = 20000;
     @Setter
     private long dailyMillisCount = 0;
     @Setter
@@ -204,6 +205,8 @@ public final class ServerConfig {
         if (cfg.contains("netherLevel"))
             netherLevel = cfg.getInt("netherLevel");
 
+        clanPrice = cfg.getInt("clanPrice", 20000);
+
         loadRespawnKitItems();
     }
 
@@ -241,6 +244,7 @@ public final class ServerConfig {
         cfg.set("epCooldown", epCooldown);
         cfg.set("netherLevel", netherLevel);
         cfg.set("endLevel", endLevel);
+        cfg.set("clanPrice", clanPrice);
 
         if (domainJoins.size() > 0) {
             domainJoins.keySet().forEach(domain -> cfg.set("domains." + domain, domainJoins.get(domain)));

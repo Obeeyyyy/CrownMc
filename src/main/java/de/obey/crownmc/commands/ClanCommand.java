@@ -6,6 +6,7 @@ import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,16 +43,35 @@ public class ClanCommand implements CommandExecutor, Listener {
 
     @EventHandler
     public void on(final InventoryClickEvent event) {
+        final Player player = (Player) event.getWhoClicked();
+
         if(InventoryUtil.isInventoryTitle(event.getInventory(), "§c§oKein Clan")) {
             event.setCancelled(true);
 
+            if(!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§c§oKein Clan"))
+                return;
+
             if(event.getSlot() == 13) {
-                // create clan
+                if(!clanHandler.getCreatingClan().contains(player.getUniqueId()))
+                    clanHandler.getCreatingClan().add(player.getUniqueId());
+
+                player.closeInventory();
+                player.playSound(player.getLocation(), Sound.NOTE_BASS, 0.5f, 1);
+                messageUtil.sendMessage(player, "Schreibe den Clannamen und den Clantag in den Chat§8.");
+                messageUtil.sendMessage(player, "Nutze folgendes Format§8: §fclanname clantag");
+                messageUtil.sendMessage(player, "Schreibe §c§ocancel§7 um den Vorgang abzubrechen§8.");
             }
 
             return;
         }
 
+        if(InventoryUtil.startsWithInventoryTitle(event.getInventory(), "§7Clan ")) {
+            event.setCancelled(true);
 
+            if(!InventoryUtil.startsWithInventoryTitle(event.getClickedInventory(), "§7Clan "))
+                return;
+
+
+        }
     }
 }

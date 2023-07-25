@@ -25,7 +25,7 @@ public class Clan {
 
     private String clanName, clanTag;
     private UUID ownerUUID;
-    private Inventory clanChest;
+    private Inventory clanChest, clanInfo;
 
     private int kills, deaths, trophies, chestSlots, memberCap;
 
@@ -70,9 +70,11 @@ public class Clan {
         memberCap = cfg.getInt("clan.memberCap", 2);
 
         clanChest = Bukkit.createInventory(null, 9*6, "§7Chest §8(§f " + clanTag + "§8)");
+        clanInfo = Bukkit.createInventory(null, 9*5, "§7Clan §8(§f" + clanTag + "§8)");
 
         loadChestContents();
         updateClanChest();
+        updateClanInfo();
     }
 
     public void loadChestContents() {
@@ -106,6 +108,10 @@ public class Clan {
             }
 
         }
+    }
+
+    public void updateClanInfo() {
+        clanInfo.setItem(13, new ItemBuilder(Material.ITEM_FRAME).build());
     }
 
     public boolean isNeeded() {

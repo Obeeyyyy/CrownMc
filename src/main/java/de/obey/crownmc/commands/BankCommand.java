@@ -202,7 +202,6 @@ public final class BankCommand implements CommandExecutor {
                     }
 
                     bank.addTrusted(target);
-
                 });
 
                 return false;

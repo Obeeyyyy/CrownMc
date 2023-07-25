@@ -30,13 +30,11 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor @NonNull
 public final class VotePartyCommand implements CommandExecutor, Listener {
 
     @NonNull
     private final MessageUtil messageUtil;
-
-    @NonNull
     private final VotePartyHandler votePartyHandler;
 
     @Override

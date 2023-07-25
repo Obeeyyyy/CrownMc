@@ -148,6 +148,9 @@ public final class ConfigCommand implements CommandExecutor {
                     if (args[1].equalsIgnoreCase("netherLevel"))
                         serverConfig.setNetherLevel(amount);
 
+                    if (args[1].equalsIgnoreCase("clanPrice"))
+                        serverConfig.setClanPrice(amount);
+
                     scoreboardHandler.updateEverythingForEveryone();
 
                     messageUtil.sendMessage(sender, "UPDATED " + args[1] + " -> " + amount);
@@ -223,7 +226,25 @@ public final class ConfigCommand implements CommandExecutor {
                 "/config reload",
                 "/config add <blocked, combat, bc> <message>",
                 "/config remove <blocked, combat, bc> <nummer>",
-                "/config set <killMoneyReward, killXPReward, killEloReward, deathMoneyLose, deathEloLose, voteparty, votes, bcdelay, baseEloKillstreak, baseXpKillstreak, baseMoneyKillstreak, levelUpMoney, netherPrice, endPrice, soulReward, netherLevel, endLevel> <amount>");
+                "/config set <killMoneyReward, " +
+                        "killXPReward, " +
+                        "killEloReward, " +
+                        "deathMoneyLose, " +
+                        "deathEloLose, " +
+                        "voteparty, " +
+                        "votes, " +
+                        "bcdelay, " +
+                        "baseEloKillstreak, " +
+                        "baseXpKillstreak, " +
+                        "baseMoneyKillstreak, " +
+                        "levelUpMoney, " +
+                        "netherPrice, " +
+                        "endPrice, " +
+                        "soulReward, " +
+                        "netherLevel, " +
+                        "endLevel, " +
+                        "clanPrice" +
+                        "> <amount>");
 
         return false;
     }
