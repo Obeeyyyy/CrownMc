@@ -29,11 +29,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
@@ -55,7 +51,7 @@ public final class UserHandler {
 
     @Getter
     private final Map<UUID, User> userCache = Maps.newConcurrentMap();
-    private final Map<UUID, Long> loadingTimes = Maps.newConcurrentMap();
+    private final Map<UUID, Long> loadingTimes = new HashMap<>();
 
     @Getter
     private final ArrayList<Player> registering = new ArrayList<>();
@@ -182,8 +178,10 @@ public final class UserHandler {
 
                     registering.remove(player);
 
-                    if(player.getName().equalsIgnoreCase("Gewichtiger")) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ban Gewichtiger 2");
+                    if(player.getName().equalsIgnoreCase("Gewichtiger") ||
+                            player.getName().equalsIgnoreCase("Hattingen")) {
+
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ban " + player.getName() + " 1");
                     }
                 }
             }.runTaskLater(CrownMain.getInstance(), 15);
@@ -249,6 +247,9 @@ public final class UserHandler {
                 }
             }
 
+            // Load user Clan
+            user.loadClan();
+
             // Loading data from mysql
             final ResultSet results = backend.getResultSet("SELECT * FROM users WHERE uuid='" + user.getOfflinePlayer().getUniqueId() + "'");
 
@@ -261,16 +262,16 @@ public final class UserHandler {
                 if (results.next()) {
                     user.setLong(DataType.ID, results.getInt("id"));
                     user.setLong(DataType.MONEY, results.getLong("money"));
-                    user.setLong(DataType.CROWNS, results.getInt("crowns"));
+                    user.setLong(DataType.CROWNS, results.getLong("crowns"));
                     user.setLong(DataType.BOUNTY, results.getLong("bounty"));
-                    user.setLong(DataType.KILLS, results.getInt("kills"));
-                    user.setLong(DataType.DEATHS, results.getInt("deaths"));
-                    user.setLong(DataType.ELOPOINTS, results.getInt("elopoints"));
-                    user.setLong(DataType.XP, results.getInt("xp"));
-                    user.setLong(DataType.LEVEL, results.getInt("level"));
-                    user.setLong(DataType.KILLSTREAK, results.getInt("killstreak"));
-                    user.setLong(DataType.KILLSTREAKRECORD, results.getInt("killstreakrecord"));
-                    user.setLong(DataType.VOTES, results.getInt("votes"));
+                    user.setLong(DataType.KILLS, results.getLong("kills"));
+                    user.setLong(DataType.DEATHS, results.getLong("deaths"));
+                    user.setLong(DataType.ELOPOINTS, results.getLong("elopoints"));
+                    user.setLong(DataType.XP, results.getLong("xp"));
+                    user.setLong(DataType.LEVEL, results.getLong("level"));
+                    user.setLong(DataType.KILLSTREAK, results.getLong("killstreak"));
+                    user.setLong(DataType.KILLSTREAKRECORD, results.getLong("killstreakrecord"));
+                    user.setLong(DataType.VOTES, results.getLong("votes"));
                     user.setLong(DataType.PLAYTIME, results.getLong("playtime"));
                     user.setLong(DataType.DESTROYEDBLOCKS, results.getLong(DataType.DESTROYEDBLOCKS.getSavedAs()));
                     user.setLong(DataType.DESTROYEDEVENTBLOCKS, results.getLong(DataType.DESTROYEDEVENTBLOCKS.getSavedAs()));
@@ -286,6 +287,7 @@ public final class UserHandler {
             }
 
             messageUtil.log("Loaded user in " + (System.currentTimeMillis() - loadingTimes.get(uuid)) + "ms (" + uuid + ") - " + user.getOfflinePlayer().getName());
+            loadingTimes.remove(uuid);
 
             if (user.getOfflinePlayer().isOnline())
                 scoreboardHandler.updateScoreboard(user.getOfflinePlayer().getPlayer());
@@ -331,9 +333,6 @@ public final class UserHandler {
                     cfg.set(value.getSavedAs(), user.getData().get(value));
                 }
             }
-
-            if(user.getClan() != null)
-                cfg.set("clan", user.getClan().getClanName());
 
             user.saveObjects();
 

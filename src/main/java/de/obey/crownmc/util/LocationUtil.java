@@ -30,9 +30,9 @@ public final class LocationUtil {
             return null;
         }
 
-        return new EulerAngle(Double.parseDouble(splitted[1]),
-                Double.parseDouble(splitted[2]),
-                Double.parseDouble(splitted[3]));
+        return new EulerAngle(Math.toRadians(Double.parseDouble(splitted[1])),
+                Math.toRadians(Double.parseDouble(splitted[2])),
+                Math.toRadians(Double.parseDouble(splitted[3])));
     }
 
     public String encode(final Location location) {

@@ -70,6 +70,20 @@ public class WordScrambleHandler {
             chars[j] = temp;
         }
 
+        String value = new String(chars);
+
+        while (value.equalsIgnoreCase(word)) {
+            for (int i = 0; i < chars.length; i++) {
+                int j = random.nextInt(chars.length);
+                char temp = chars[i];
+                chars[i] = chars[j];
+                chars[j] = temp;
+            }
+
+            value = new String(chars);
+        }
+
+
         return new String(chars);
     }
 
@@ -102,7 +116,7 @@ public class WordScrambleHandler {
         words.add("obey");
         words.add("gold");
         words.add("tür");
-        words.add("tomaten");
+        words.add("tomate");
         words.add("banane");
         words.add("milch");
         words.add("wasser");
@@ -115,6 +129,20 @@ public class WordScrambleHandler {
         words.add("spirale");
         words.add("reden");
         words.add("menschen");
+        words.add("roulette");
+        words.add("eisen");
+        words.add("holz");
+        words.add("maus");
+        words.add("bildschirm");
+        words.add("plotwelt");
+        words.add("serverteam");
+        words.add("bogen");
+        words.add("apfel");
+        words.add("schwert");
+        words.add("himmel");
+        words.add("wolke");
+        words.add("enderchest");
+        words.add("party");
 
         return words.get(random.nextInt(words.size()));
     }

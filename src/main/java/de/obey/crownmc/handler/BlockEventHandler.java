@@ -27,6 +27,8 @@ public class BlockEventHandler {
     @NonNull
     private final Initializer initializer;
 
+    private final String identifier = "§k§k§r";
+
     private ArmorStandBuilder standBuilder;
 
     public void setupArmorStands() {
@@ -47,16 +49,7 @@ public class BlockEventHandler {
                 }
 
                 if (entity instanceof ArmorStand && entity.getCustomName() != null) {
-                    if (entity.getCustomName().equalsIgnoreCase("§8▰§7▱ §a§lBlockEvent§7 ▱§8▰"))
-                        entity.remove();
-
-                    if (entity.getCustomName().equalsIgnoreCase("???"))
-                        entity.remove();
-
-                    if (entity.getCustomName().startsWith("§8┃» §7Aktueller Block§8:§7 "))
-                        entity.remove();
-
-                    if (entity.getCustomName().startsWith("§8┃» §7Platz§8.§a§l"))
+                    if (entity.getCustomName().startsWith(identifier))
                         entity.remove();
                 }
             }
@@ -79,7 +72,10 @@ public class BlockEventHandler {
         if (location == null)
             return;
 
-        standBuilder = new ArmorStandBuilder(location)
+        if(Material.getMaterial(initializer.getServerConfig().getDestroyEventGoal()) == Material.BEDROCK)
+            return;
+
+        standBuilder = new ArmorStandBuilder(location, identifier)
                 .addStandUnder(1)
 
                 .setCustomName(1, "§8▰§7▱ §a§lBlockEvent§7 ▱§8▰")
@@ -104,10 +100,9 @@ public class BlockEventHandler {
             @Override
             public void run() {
 
-                if (standBuilder == null)
-                    setStands();
+                if (standBuilder != null)
+                    determineTopList();
 
-                determineTopList();
             }
         }.runTaskTimer(initializer.getCrownMain(), 20, 30 * 20);
     }

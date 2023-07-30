@@ -148,7 +148,8 @@ public final class DeathListener implements Listener {
                                 .setLore("",
                                         "§8▰§7▱ §2§lSeelen Tausch",
                                         "§8  -§7 Die Seele kann bei §5§lReaper",
-                                        "§8  -§7 am Spawn getauscht werden§8.")
+                                        "§8  -§7 am Spawn getauscht werden§8.",
+                                        "")
                         .build());
             }
         }
@@ -168,7 +169,8 @@ public final class DeathListener implements Listener {
                             "",
                             "§8▰§7▱  §6§lWie erhalte ich mein Kopfgeld §8?",
                             "  §8- §7Das §eKopfgeld §7kann am Spawn",
-                            "  §8- §7bei §5§lReaper §7abgeholt werden§8.")
+                            "  §8- §7bei §5§lReaper §7abgeholt werden§8.",
+                            "")
                     .setSkullOwner(died.getName())
                     .build());
         }
@@ -207,6 +209,8 @@ public final class DeathListener implements Listener {
                     final long playerUserKillstreak = user.getLong(DataType.KILLSTREAK);
                     messageUtil.sendMessage(died, "Du wurdest von " + killer.getName() + " §8(§f§o" +
                             "" + format.format((killer.getHealth() / 2)) + "§4§l❤§8)§7 getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (playerUserKillstreak > 0 ? " §7Du hattest eine §e§o" + playerUserKillstreak + "§7er Killstreak§8." : ""));
+                    messageUtil.sendMessage(died, "§c§o-" + messageUtil.formatLong(serverConfig.getDeathMoneyLose()) + "§4§l$");
+                    messageUtil.sendMessage(died, "§c§o-" + messageUtil.formatLong(serverConfig.getDeathEloLose()) + "§4 Elo");
                     combat.end();
                 }
 

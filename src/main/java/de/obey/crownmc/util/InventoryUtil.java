@@ -8,6 +8,7 @@ package de.obey.crownmc.util;
 
 import de.obey.crownmc.CrownMain;
 import lombok.experimental.UtilityClass;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,6 +16,34 @@ import org.bukkit.inventory.ItemStack;
 
 @UtilityClass
 public final class InventoryUtil {
+
+    public Inventory getConfirmation(final String title) {
+        final Inventory inv = Bukkit.createInventory(null, 9*3, title);
+
+        fillSideRows(inv, new ItemStack(Material.IRON_FENCE));
+
+        inv.setItem(4, new ItemStack(Material.IRON_FENCE));
+        inv.setItem(13, new ItemStack(Material.IRON_FENCE));
+        inv.setItem(22, new ItemStack(Material.IRON_FENCE));
+
+        final ItemStack green = new ItemBuilder(Material.STAINED_CLAY,1 , (byte) 5)
+                .setDisplayname("§a§lBestätigen")
+                .build();
+
+        final ItemStack red = new ItemBuilder(Material.STAINED_CLAY,1 , (byte) 14)
+                .setDisplayname("§c§lAbbrechen")
+                .build();
+
+        inv.setItem(1, green); inv.setItem(2, green); inv.setItem(3, green);
+        inv.setItem(10, green); inv.setItem(11, green); inv.setItem(12, green);
+        inv.setItem(19, green); inv.setItem(20, green); inv.setItem(21, green);
+
+        inv.setItem(5, red); inv.setItem(6, red); inv.setItem(7, red);
+        inv.setItem(14, red); inv.setItem(15, red); inv.setItem(16, red);
+        inv.setItem(23, red); inv.setItem(24, red); inv.setItem(25, red);
+
+        return inv;
+    }
 
     public void fillFromTo(final Inventory inventory, final ItemStack itemStack, int from, int to) {
         for (int i = 0; i < inventory.getSize(); i++) {

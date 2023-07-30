@@ -34,6 +34,7 @@ public final class Crash {
 
     private double finalMultiplier = 1.00D;
     private double multiplier = 0.00D;
+    private double forceMultiplier = 0;
 
     private int state = 0; // 0 = waiting - 1 = countdown to start - 2 = running - 3 = crashed
 
@@ -291,17 +292,22 @@ public final class Crash {
         }
          */
 
-        if(random.nextInt(10) < 3) { // 30% chance das es unter 1 crasht
-            finalMultiplier = random.nextDouble() + random.nextDouble()/10;
-        } else {
-            if(random.nextInt(10) > 5) {
-                finalMultiplier = 0.5 + random.nextDouble() + random.nextDouble() / 10;
-            } else {
-                finalMultiplier = 0.5 + random.nextInt(5) + random.nextDouble() + random.nextDouble() / 10;
-            }
-        }
+        if(forceMultiplier <= 0) {
 
-        finalMultiplier = Double.parseDouble(format.format(finalMultiplier).replace(",", "."));
+            if (random.nextInt(10) < 3) { // 30% chance das es unter 1 crasht
+                finalMultiplier = random.nextDouble() + random.nextDouble() / 10;
+            } else {
+                if (random.nextInt(10) > 5) {
+                    finalMultiplier = 0.5 + random.nextDouble() + random.nextDouble() / 10;
+                } else {
+                    finalMultiplier = 0.5 + random.nextInt(5) + random.nextDouble() + random.nextDouble() / 10;
+                }
+            }
+
+            finalMultiplier = Double.parseDouble(format.format(finalMultiplier).replace(",", "."));
+        } else {
+            finalMultiplier = forceMultiplier;
+        }
 
         bets.keySet().forEach(uuid -> {
             final Player player = Bukkit.getPlayer(uuid);
@@ -372,6 +378,7 @@ public final class Crash {
     private void endCrash() {
         state = 3;
         moneyInRound = 0;
+        forceMultiplier = 0;
 
         bets.keySet().forEach(uuid -> {
             final Player player = Bukkit.getPlayer(uuid);

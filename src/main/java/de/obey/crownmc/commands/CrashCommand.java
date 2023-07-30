@@ -73,6 +73,21 @@ public final class CrashCommand implements CommandExecutor, Listener {
 
                 return false;
             }
+
+            if (args[0].equalsIgnoreCase("force")) {
+
+                if(!PermissionUtil.hasPermission(sender, "admin", true))
+                    return false;
+
+                try {
+                    crashHandler.getCrash().setForceMultiplier(Double.parseDouble(args[1]));
+                    messageUtil.sendMessage(sender, "§f§o hehe boit");
+                }catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(sender, "Bitte gebe einen double an§8.");
+                }
+
+                return false;
+            }
         }
 
         messageUtil.sendSyntax(sender, "/crash join <amount>", "/crash leave");

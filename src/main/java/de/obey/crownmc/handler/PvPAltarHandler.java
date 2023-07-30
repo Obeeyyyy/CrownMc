@@ -47,6 +47,7 @@ public final class PvPAltarHandler {
     }
 
     public void loadAllPvPAltars() {
+        pvpAltarMap.clear();
         if(!cfg.contains("altars"))
             return;
 
@@ -57,6 +58,8 @@ public final class PvPAltarHandler {
 
         for (String allAltarId : allAltarIds) {
             final int id = Integer.parseInt(allAltarId);
+
+            messageUtil.log("Loading PvPAltar " + id + " ...");
 
             pvpAltarMap.put(id, new PvPAltar(id, cfg));
         }
@@ -127,7 +130,7 @@ public final class PvPAltarHandler {
             }
 
             if(altar.getState() == 2) {
-                messageUtil.sendMessage(player, "Der Altar kann erst in §f§o" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds(altar.getCooldownUntilMillis()/1000) + "§7wieder eingenommen werden§8.");
+                messageUtil.sendMessage(player, "Der Altar kann erst in §f§o" + MathUtil.getHoursAndMinutesAndSecondsFromSeconds((altar.getCooldownUntilMillis() - System.currentTimeMillis())/1000) + "§7wieder eingenommen werden§8.");
                 return;
             }
             return;
@@ -139,5 +142,10 @@ public final class PvPAltarHandler {
 
     public void block(final UUID uuid, final long millis) {
         blocked.put(uuid, System.currentTimeMillis() + millis);
+    }
+
+    public void unBlock(final Player player) {
+        if(blocked.containsKey(player.getUniqueId()))
+            blocked.remove(player.getUniqueId());
     }
 }

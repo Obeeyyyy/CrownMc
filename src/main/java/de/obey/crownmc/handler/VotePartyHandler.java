@@ -103,8 +103,9 @@ public final class VotePartyHandler {
         if(parties.isEmpty())
             return;
 
-        for (VoteParty party : parties) {
-            party.shutdown();
+        for (final VoteParty party : parties) {
+            if(party != null)
+                party.shutdown();
         }
     }
 

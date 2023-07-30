@@ -52,7 +52,7 @@ public final class BanHandler {
             set.stream().sorted().forEach(string -> {
                 final int id = Integer.parseInt(string);
                 reasons.put(id, new BanReason(id, cfg));
-                messageUtil.log("§a§oloaded ban reason " + id + " - " + reasons.get(id).getName());
+                messageUtil.log("§a§oLoaded ban reason " + id + " - " + reasons.get(id).getName());
             });
         }
     }

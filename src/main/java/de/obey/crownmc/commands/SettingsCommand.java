@@ -43,10 +43,10 @@ public final class SettingsCommand implements CommandExecutor, Listener {
 
         final Player player = (Player) sender;
 
-        Inventory inventory = Bukkit.createInventory(null, 9 * 4, "§7Slayer Settings");
+        Inventory inventory = Bukkit.createInventory(null, 9 * 4, "§7Crown Settings");
 
         if (PermissionUtil.hasPermission(player, "team", false))
-            inventory = Bukkit.createInventory(null, 9 * 6, "§7Slayer Settings");
+            inventory = Bukkit.createInventory(null, 9 * 6, "§7Crown Settings");
 
         updateInventory(initializer.getUserHandler().getUserInstant(player.getUniqueId()), inventory);
 
@@ -58,10 +58,10 @@ public final class SettingsCommand implements CommandExecutor, Listener {
     @EventHandler
     public void on(final InventoryClickEvent event) {
 
-        if (InventoryUtil.isInventoryTitle(event.getInventory(), "§7Slayer Settings"))
+        if (InventoryUtil.isInventoryTitle(event.getInventory(), "§7Crown Settings"))
             event.setCancelled(true);
 
-        if (!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§7Slayer Settings"))
+        if (!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§7Crown Settings"))
             return;
 
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR)

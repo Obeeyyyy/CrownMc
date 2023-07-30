@@ -266,35 +266,40 @@ public final class ScoreboardHandler {
 
             sidebar_normal.setDisplayName("§6§lCrownMc §8(§f" + (Bukkit.getOnlinePlayers().size() - VanishCommand.vanished.size()) + "§8)");
 
-            sidebar_normal.getScore("§7           SkyPvP").setScore(15);
-            sidebar_normal.getScore("§3").setScore(14);
+            sidebar_normal.getScore("§7           SkyPvP").setScore(16);
+            sidebar_normal.getScore("§3").setScore(15);
 
-            sidebar_normal.getScore("§6§l" + player.getName()).setScore(13);
+            sidebar_normal.getScore("§6§l" + player.getName()).setScore(14);
 
             final Team money = scoreboard.registerNewTeam("money");
             money.setSuffix("...");
             money.addEntry("§8 ├ §7Money§8: §e");
-            sidebar_normal.getScore("§8 ├ §7Money§8: §e").setScore(12);
+            sidebar_normal.getScore("§8 ├ §7Money§8: §e").setScore(13);
 
             final Team crowns = scoreboard.registerNewTeam("crowns");
             crowns.setSuffix("...");
             crowns.addEntry("§8 ├ §7Crowns§8: §e");
-            sidebar_normal.getScore("§8 ├ §7Crowns§8: §e").setScore(11);
+            sidebar_normal.getScore("§8 ├ §7Crowns§8: §e").setScore(12);
 
             final Team stats = scoreboard.registerNewTeam("stats");
             stats.setSuffix("...");
             stats.addEntry("§8 ├ §7KDr§8: §a");
-            sidebar_normal.getScore("§8 ├ §7KDr§8: §a").setScore(10);
-
-            final Team rank = scoreboard.registerNewTeam("rank");
-            rank.setSuffix("§7...");
-            rank.addEntry("§8 ├ §7PvP-Rank§8: §f");
-            sidebar_normal.getScore("§8 ├ §7PvP-Rank§8: §f").setScore(9);
+            sidebar_normal.getScore("§8 ├ §7KDr§8: §a").setScore(11);
 
             final Team votes = scoreboard.registerNewTeam("votes");
             votes.setSuffix("§7...");
             votes.addEntry("§8 ├ §7Votes§8: §2");
-            sidebar_normal.getScore("§8 ├ §7Votes§8: §2").setScore(8);
+            sidebar_normal.getScore("§8 ├ §7Votes§8: §2").setScore(10);
+
+            final Team clan = scoreboard.registerNewTeam("clan");
+            clan.setSuffix("§7...");
+            clan.addEntry("§8 ├ §7Clan§8: §l");
+            sidebar_normal.getScore("§8 ├ §7Clan§8: §l").setScore(9);
+
+            final Team rank = scoreboard.registerNewTeam("rank");
+            rank.setSuffix("§7...");
+            rank.addEntry("§8 ├ §7PvP-Rank§8: §f");
+            sidebar_normal.getScore("§8 ├ §7PvP-Rank§8: §f").setScore(8);
 
             final Team playtime = scoreboard.registerNewTeam("playtime");
             playtime.setSuffix("§7...");
@@ -502,6 +507,13 @@ public final class ScoreboardHandler {
 
                 final Team pvprank = scoreboard.getTeam("rank");
                 pvprank.setSuffix(eloHandler.getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)).getPrefix());
+
+                final Team clan = scoreboard.getTeam("clan");
+                if(user.getString(DataType.CLANNAME).equalsIgnoreCase("-")) {
+                    clan.setSuffix("§c§oKein Clan");
+                } else {
+                    clan.setSuffix("§f" + user.getString(DataType.CLANNAME));
+                }
 
                 final Team votes = scoreboard.getTeam("votes");
                 votes.setSuffix(messageUtil.formatLong(user.getLong(DataType.VOTES)));

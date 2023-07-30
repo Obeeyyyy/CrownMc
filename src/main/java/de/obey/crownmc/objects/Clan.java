@@ -1,12 +1,14 @@
 package de.obey.crownmc.objects;
 
-import de.obey.crownmc.util.FileUtil;
-import de.obey.crownmc.util.ItemBuilder;
+import de.obey.crownmc.CrownMain;
+import de.obey.crownmc.util.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,6 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Getter @Setter
 public class Clan {
 
+    private final MessageUtil messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
+
     private final File clanFile;
     private final YamlConfiguration cfg;
     private ArrayList<String> memberList = new ArrayList<>();
@@ -25,9 +29,9 @@ public class Clan {
 
     private String clanName, clanTag;
     private UUID ownerUUID;
-    private Inventory clanChest, clanInfo;
+    private Inventory clanChest, clanInfo, memberInventory;
 
-    private int kills, deaths, trophies, chestSlots, memberCap;
+    private int kills, deaths, trophies, chestSlots, memberCap, xp, level;
 
     public Clan(final String name) {
         clanFile = FileUtil.getFile("/clanFiles/" + name + ".yml");
@@ -45,9 +49,11 @@ public class Clan {
 
         final ArrayList<ItemStack> chestContents = new ArrayList<>();
 
-        for (int i = 0; i < clanChest.getSize(); i++) {
-            if (i+1 <= chestSlots)
-                chestContents.add(clanChest.getItem(i));
+        if(clanChest != null) {
+            for (int i = 0; i < clanChest.getSize(); i++) {
+                if (i + 1 <= chestSlots)
+                    chestContents.add(clanChest.getItem(i));
+            }
         }
 
         cfg.set("clan.chest.items", chestContents);
@@ -62,15 +68,15 @@ public class Clan {
         if (cfg.contains("clan.mods"))
             moderatorList = (ArrayList<String>) cfg.getStringList("clan.mods");
 
-        if (cfg.contains("clan.owner"))
-            ownerUUID = UUID.fromString(cfg.getString("clan.owner"));
-
         clanTag = cfg.getString("clan.tag", clanName);
         chestSlots = cfg.getInt("clan.chest.slots", 9);
         memberCap = cfg.getInt("clan.memberCap", 2);
 
         clanChest = Bukkit.createInventory(null, 9*6, "§7Chest §8(§f " + clanTag + "§8)");
         clanInfo = Bukkit.createInventory(null, 9*5, "§7Clan §8(§f" + clanTag + "§8)");
+        memberInventory = Bukkit.createInventory(null, 9*6, "§7Member §8(§f" + clanTag + "§8)");
+
+        InventoryUtil.fillSideRows(clanInfo, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
 
         loadChestContents();
         updateClanChest();
@@ -82,7 +88,7 @@ public class Clan {
             final ArrayList<ItemStack> contents = (ArrayList<ItemStack>) cfg.getList("clan.chest.items");
             final AtomicInteger slot = new AtomicInteger();
 
-            if (contents.size() > 0) {
+            if (!contents.isEmpty()) {
                 contents.forEach(item -> {
                     if(slot.get() + 1 > chestSlots)
                         return;
@@ -111,7 +117,133 @@ public class Clan {
     }
 
     public void updateClanInfo() {
-        clanInfo.setItem(13, new ItemBuilder(Material.ITEM_FRAME).build());
+        clanInfo.setItem(13, new ItemBuilder(Material.ITEM_FRAME)
+                        .setDisplayname("§7§lClan Informationen")
+                        .setLore("",
+                                "§8➬ §7Clan§8: §f§o" + clanName + "§8 (§r" + clanTag + "§8)",
+                                "",
+                                "§8  - §7Leader§8: §f§o" + Bukkit.getOfflinePlayer(ownerUUID).getName(),
+                                "§8  - §7Mitglieder§8: §f" + memberList.size() + "§8/§f" + memberCap,
+                                "§8  - §7Level§8: §f" + level + " §8(§f" + messageUtil.formatLong(xp) + "XP§8)",
+                                "§8  - §7Kills§8: §a" + messageUtil.formatLong(kills),
+                                "§8  - §7Tode§8: §c" + messageUtil.formatLong(deaths),
+                                "")
+                .build());
+
+        clanInfo.setItem(29, new ItemBuilder(Material.PAPER)
+                        .setDisplayname("§7Mitglieder Verwaltung")
+                        .setLore("",
+                                "§7§lLinksklick",
+                                "§8  - §7Öffnet die mitglieder Verwaltung§8.",
+                                "")
+                .build());
+
+        clanInfo.setItem(30, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                        .setTextur("N2UyZWI0NzUxZTNjNTBkNTBmZjE2MzUyNTc2NjYzZDhmZWRmZTNlMDRiMmYwYjhhMmFhODAzYjQxOTM2M2NhMSJ9fX0=", UUID.randomUUID())
+                .setDisplayname("§7Clan Truhe")
+                .setLore("",
+                        "§7§lLinksklick",
+                        "§8  - §7Öffnet die Clantruhe§8.",
+                        "")
+                .build());
+
+        clanInfo.setItem(31, new ItemBuilder(Material.EMERALD)
+                .setDisplayname("§7Clan Shop")
+                .setLore("",
+                        "§7§lLinksklick",
+                        "§8  - §7Öffnet den Clanshop§8.",
+                        "")
+                .build());
+
+        clanInfo.setItem(33, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                .setDisplayname("§c§lClan Löschen")
+                        .setTextur("M2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==", UUID.randomUUID())
+                .setLore("",
+                        "§7§lLinksklick",
+                        "§8  - §7Öffnet den Clanshop§8.",
+                        "")
+                .build());
+    }
+
+    public void updateMemberInventory() {
+        memberInventory.clear();
+
+        InventoryUtil.fillSideRows(memberInventory, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
+        memberInventory.setItem(52, new ItemBuilder(Material.BARRIER).setDisplayname("§c§oZurück").build());
+
+        for (final String text : memberList) {
+            final UUID uuid = UUID.fromString(text);
+            final OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+
+            memberInventory.addItem(new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                            .setSkullOwner(player.getName())
+                            .setDisplayname("§8»§7 " + player.getName() + (isLeader(uuid) ? " §8(§4§lLeader§8)" : isMod(uuid) ? " §8(§5§lMod§8)" : ""))
+                            .setLore("",
+                                    "§f§lRechtsklick",
+                                    "§8  - §7Kickt diesen Spieler aus dem Clan§8.",
+                                    "",
+                                    "§f§lShift + Rechtsklick",
+                                    "§8  - §7Demotet diesen Spieler§8.",
+                                    "",
+                                    "§f§lShift + Linksklick",
+                                    "§8  - §7Promotet diesen Spieler§8.",
+                                    "")
+                    .build());
+        }
+
+        if(memberList.size() < memberCap) {
+            memberInventory.addItem(new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setDisplayname("§a§oMitglied hinzufügen")
+                    .setTextur("M2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=", UUID.randomUUID())
+                    .build());
+        } else {
+            memberInventory.addItem(new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setDisplayname("§c§oMember Limit erreicht")
+                            .setLore("",
+                                    "§7Das member Limit kann im Clanshop erweitert werden§8.",
+                                    "")
+                    .setTextur("M2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==", UUID.randomUUID())
+                    .build());
+        }
+    }
+
+    public void newMemberJoin(final Player player) {
+        memberList.add(player.getUniqueId().toString());
+
+        sendMessageToAllClanMembers("§f§o" + player.getName() + "§7 hat den Clan betreten§8.");
+
+        updateMemberInventory();
+        updateClanInfo();
+    }
+
+    public void openMemberInventory(final Player player) {
+        updateMemberInventory();
+        player.openInventory(memberInventory);
+    }
+
+    public void sendMessageToAllClanMembers(final String message) {
+        for (final String textUUID : memberList) {
+            final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(textUUID));
+
+            if(offlinePlayer.isOnline())
+                messageUtil.sendMessage(offlinePlayer.getPlayer(), message);
+        }
+    }
+
+    public void addXP(long amount) {
+        if (Bools.doubleXP)
+            amount *= 2;
+
+        xp += amount;
+        ClanLevelUtil.checkForLevelUp(this);
+    }
+
+    public boolean isMod(final UUID uuid) {
+        return moderatorList.contains(uuid.toString());
+    }
+
+    public boolean isLeader(final UUID uuid) {
+        return ownerUUID.toString().equalsIgnoreCase(uuid.toString());
     }
 
     public boolean isNeeded() {

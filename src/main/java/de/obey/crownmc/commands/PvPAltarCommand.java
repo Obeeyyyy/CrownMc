@@ -10,12 +10,15 @@ package de.obey.crownmc.commands;
 
 import de.obey.crownmc.handler.PvPAltarHandler;
 import de.obey.crownmc.objects.pvp.PvPAltar;
+import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,7 +28,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
 
 @RequiredArgsConstructor @NonNull
 public final class PvPAltarCommand implements CommandExecutor, Listener {
@@ -58,14 +66,33 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
                     player.sendMessage("§7   -§8> §7MoneyReward§8: §e" + messageUtil.formatLong(altar.getMoneyReward()));
                     player.sendMessage("§7   -§8> §7EloReward§8: §d" + messageUtil.formatLong(altar.getEloReward()));
                     player.sendMessage("§7   -§8> §7XpReward§8: §a" + messageUtil.formatLong(altar.getXpReward()));
+                    player.sendMessage("§7   -§8> §7Items§8: §a" + altar.getItemRewards().size());
+                    player.sendMessage("§7   -§8> §7MoneyPunish§8: §a" + messageUtil.formatLong(altar.getMoneyPunish()));
+                    player.sendMessage("§7   -§8> §7EloPunish§8: §a" + messageUtil.formatLong(altar.getEloPunish()));
                     player.sendMessage("");
                 }
 
                 return false;
             }
+
+            if(args[0].equalsIgnoreCase("reload")) {
+                pvPAltarHandler.shutdown();
+                pvPAltarHandler.loadAllPvPAltars();
+                return false;
+            }
         }
 
         if(args.length == 2){
+            if(args[0].equalsIgnoreCase("unblock")) {
+                if(!messageUtil.isOnline(sender, args[1]))
+                    return false;
+
+                pvPAltarHandler.unBlock(Bukkit.getPlayer(args[1]));
+                messageUtil.sendMessage(sender, "Done.");
+
+                return false;
+            }
+
             if(args[0].equalsIgnoreCase("create")) {
                 try {
                     final int id = Integer.parseInt(args[1]);
@@ -120,6 +147,36 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
                     altar.spawnAltar();
 
                     messageUtil.sendMessage(player, "Altar §8(§f" + id + "§8)§7 respawnt§8.");
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("setitems")) {
+
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+                    final Inventory inv = Bukkit.createInventory(null, 9*6, "Altar " + id);
+
+                    if(!altar.getItemRewards().isEmpty()) {
+                        int slot = 0;
+                        for (ItemStack itemReward : altar.getItemRewards()) {
+                            inv.setItem(slot, itemReward);
+                            slot++;
+                        }
+                    }
+
+                    player.openInventory(inv);
 
                 } catch (final NumberFormatException exception) {
                     messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
@@ -208,6 +265,129 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
 
                 return false;
             }
+
+            if(args[0].equalsIgnoreCase("setMoney")) {
+
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+                    final long amount = Long.parseLong(args[2]);
+
+                    altar.setMoneyReward(amount);
+
+                    messageUtil.sendMessage(player, "Altar Money -> " + messageUtil.formatLong(amount));
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+
+                return false;
+            }
+
+
+            if(args[0].equalsIgnoreCase("setXp")) {
+
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+                    final long amount = Long.parseLong(args[2]);
+
+                    altar.setXpReward(amount);
+
+                    messageUtil.sendMessage(player, "Altar XP -> " + messageUtil.formatLong(amount));
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("setElo")) {
+
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+                    final long amount = Long.parseLong(args[2]);
+
+                    altar.setEloReward(amount);
+
+                    messageUtil.sendMessage(player, "Altar Elo -> " + messageUtil.formatLong(amount));
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("setElo-")) {
+
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+                    final long amount = Long.parseLong(args[2]);
+
+                    altar.setEloPunish(amount);
+
+                    messageUtil.sendMessage(player, "Altar Elo- -> " + messageUtil.formatLong(amount));
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("setMoney-")) {
+
+                try {
+                    final int id = Integer.parseInt(args[1]);
+
+                    if(!pvPAltarHandler.getPvpAltarMap().containsKey(id)) {
+                        messageUtil.sendMessage(player, "Es exisiert kein Altar mit der ID " + id + "§8.");
+                        return false;
+                    }
+
+                    final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+                    final long amount = Long.parseLong(args[2]);
+
+                    altar.setMoneyPunish(amount);
+
+                    messageUtil.sendMessage(player, "Altar Money- -> " + messageUtil.formatLong(amount));
+
+                } catch (final NumberFormatException exception) {
+                    messageUtil.sendMessage(player, "Bitte gib eine Zahl an§8.");
+                }
+
+                return false;
+            }
         }
 
         if(args.length >= 3) {
@@ -246,16 +426,43 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
 
         messageUtil.sendSyntax(sender,
                 "/pvpaltar list",
+                "/pvpaltar reload",
+                "/pvpaltar unblock <name>",
                 "/pvpaltar respawn <id>",
                 "/pvpaltar settime <id> <10m>",
                 "/pvpaltar setcd <id> <10m>",
                 "/pvpaltar setloc <id>",
                 "/pvpaltar setprefix <id> <string>",
+                "/pvpaltar setMoney <id> <long>",
+                "/pvpaltar setXP <id> <long>",
+                "/pvpaltar setElo <id> <long>",
+                "/pvpaltar setMoney- <id> <long>",
+                "/pvpaltar setElo- <id> <long>",
+                "/pvpaltar setItems <id>",
                 "/pvpaltar create <id>",
                 "/pvpaltar delete <id>"
                 );
 
         return false;
+    }
+
+    @EventHandler
+    public void on(final InventoryCloseEvent event) {
+        if(!InventoryUtil.startsWithInventoryTitle(event.getInventory(), "Altar"))
+            return;
+
+        final int id = Integer.parseInt(event.getInventory().getTitle().split(" ")[1]);
+        final PvPAltar altar = pvPAltarHandler.getPvpAltarMap().get(id);
+
+        final ArrayList<ItemStack> temp = new ArrayList<>();
+
+        for (final ItemStack item : event.getInventory().getContents()) {
+            if(item != null && item.getType() != Material.AIR) {
+                temp.add(item);
+            }
+        }
+
+        altar.setItemRewards(temp);
     }
 
     @EventHandler

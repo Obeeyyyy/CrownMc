@@ -49,7 +49,6 @@ public final class PvPAltar {
     private final String identifier = "§9§9";
 
     private UUID playerUUID;
-
     private ArmorStandBuilder base, holo;
 
     private BukkitTask runnable;
@@ -72,8 +71,8 @@ public final class PvPAltar {
         timeToCapture = cfg.getLong(path + "timeToCapture", 1000*60*10);
         cooldownMillis = cfg.getLong(path + "cooldownMillis", 1000*60*10);
 
-        if (cfg.contains(path + "itemReward"))
-            itemRewards = (ArrayList<ItemStack>) cfg.getList(path + "itemReward", new ArrayList<>());
+        if (cfg.contains(path + "itemRewards"))
+            itemRewards = (ArrayList<ItemStack>) cfg.getList(path + "itemRewards", new ArrayList<>());
 
         if (cfg.contains(path + "location"))
             location = LocationUtil.decode(cfg.getString(path + "location"));
@@ -84,8 +83,10 @@ public final class PvPAltar {
     }
 
     public void spawnAltar() {
-        if(location == null)
+        if(location == null) {
+            messageUtil.log("Cant spawn Altar " + id);
             return;
+        }
 
         shutdown();
 
@@ -103,6 +104,11 @@ public final class PvPAltar {
                 .setCustomName(2, "§7Status§8: " + getStringFromState())
                 .setCustomName(3, "§7Nutze das Schild um den Vorgang zu starten§8.")
                 .setCustomName(4, "§7Zeit um den Altar einzunehmen§8: §f§o" + MathUtil.getMinutesAndSecondsFromSeconds(timeToCapture/1000));
+
+        messageUtil.log("Loaded PvPAltar " + id);
+
+        while (base == null)
+            spawnAltar();
     }
 
     public void startCapturing(final Player player) {
@@ -122,12 +128,6 @@ public final class PvPAltar {
             @Override
             public void run() {
 
-                if(neededMillis <= System.currentTimeMillis()) {
-                    end();
-                    cancel();
-                    return;
-                }
-
                 if(player.getLocation().distance(base.getLocation()) > 20) {
                     wentTooFar();
                     cancel();
@@ -138,6 +138,11 @@ public final class PvPAltar {
                 holo.setCustomName(4, "§7" + MathUtil.getMinutesAndSecondsFromSeconds((neededMillis - System.currentTimeMillis()) / 1000));
 
                 ticks++;
+
+                if(neededMillis <= System.currentTimeMillis()) {
+                    end();
+                    cancel();
+                }
             }
         }.runTaskTimerAsynchronously(CrownMain.getInstance(), 0, 20);
     }
@@ -146,36 +151,64 @@ public final class PvPAltar {
 
         final Player player = Bukkit.getPlayer(playerUUID);
 
+        pvPAltarHandler.getCapturing().remove(playerUUID);
+
         player.sendMessage("");
         messageUtil.sendMessage(player, "Du hast es Geschafft§8,§7 deine Belohnung§8:");
-        messageUtil.sendMessage(player, "§8  - §7Money§8: §e§o" + messageUtil.formatLong(getMoneyReward()) + "§6§l$");
-        messageUtil.sendMessage(player, "§8  - §7Elo§8: §f§o" + messageUtil.formatLong(getEloReward()));
-        messageUtil.sendMessage(player, "§8  - §7XP§8: §f§o" + messageUtil.formatLong(getXpReward()));
+        messageUtil.sendMessage(player, "§8  - §7Money§8: §e§o" + messageUtil.formatLong(moneyReward) + "§6§l$");
+        messageUtil.sendMessage(player, "§8  - §7Elo§8: §f§o" + messageUtil.formatLong(eloReward));
+        messageUtil.sendMessage(player, "§8  - §7XP§8: §f§o" + messageUtil.formatLong(xpReward));
         messageUtil.sendMessage(player, "§8  - §7Items§8: §f§o" + messageUtil.formatLong(itemRewards.size()));
         player.sendMessage("");
 
-        if(!getItemRewards().isEmpty()) {
-            for (final ItemStack item : getItemRewards())
-                InventoryUtil.addItem(player, item);
+        player.playSound(player.getLocation(), Sound.FIREWORK_TWINKLE2, 0.5f, 1);
 
-            return;
-        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
 
-        userHandler.getUser(playerUUID).thenAcceptAsync(user -> {
-            user.addLong(DataType.MONEY, getMoneyReward());
-            user.addLong(DataType.ELOPOINTS, getEloReward());
-            user.addLong(DataType.XP, getXpReward());
-        });
+                userHandler.getUser(playerUUID).thenAcceptAsync(user -> {
+                    user.addLong(DataType.MONEY, moneyReward);
+                    user.addLong(DataType.ELOPOINTS,eloReward);
+                    user.addXP(xpReward);
+                });
 
-        pvPAltarHandler.getCapturing().remove(playerUUID);
-        startCooldown();
+                if(!getItemRewards().isEmpty()) {
+                    for (final ItemStack item : getItemRewards()) {
+                        if(item == null || item.getType() == Material.AIR)
+                            continue;
+
+                        InventoryUtil.addItem(player, item);
+                    }
+                }
+
+                startCooldown();
+            }
+        }.runTask(CrownMain.getInstance());
     }
 
     public void died(final Player player, final Player killer) {
         if(!player.getName().equalsIgnoreCase(killer.getName())) {
-            messageUtil.broadcast(prefix + " §c§o" + player.getName() + "§7 wurde von §c§o" + killer.getName() + "§7 getötet§8.");
-            messageUtil.broadcast(prefix + " §c§o" + player.getName() + "§7 hat es nicht geschafft den Altar einzunehmen§8.");
+            messageUtil.broadcast("§8(" + prefix + "§8) §c§o" + player.getName() + "§7 wurde von §c§o" + killer.getName() + "§7 getötet§8.");
+            messageUtil.broadcast("§8(" + prefix + "§8) §c§o" + player.getName() + "§7 hat es nicht geschafft den Altar einzunehmen§8.");
         }
+
+        final long a = moneyReward / 4;
+        final long b = xpReward / 4;
+        final long c = eloReward / 4;
+
+        killer.sendMessage("");
+        messageUtil.sendMessage(killer, "Du hast " + player.getName() + " aufgehalten§8,§7 deine Belohnung§8:");
+        messageUtil.sendMessage(killer, "§8  - §7Money§8: §e§o" + messageUtil.formatLong(a) + "§6§l$");
+        messageUtil.sendMessage(killer, "§8  - §7Elo§8: §f§o" + messageUtil.formatLong(c));
+        messageUtil.sendMessage(killer, "§8  - §7XP§8: §f§o" + messageUtil.formatLong(b));
+        killer.sendMessage("");
+
+        userHandler.getUser(killer.getUniqueId()).thenAcceptAsync(user -> {
+            user.addLong(DataType.MONEY, a);
+            user.addLong(DataType.ELOPOINTS, c);
+            user.addLong(DataType.XP, b);
+        });
 
         pvPAltarHandler.getCapturing().remove(playerUUID);
         startCooldown();
@@ -185,8 +218,12 @@ public final class PvPAltar {
         final Player player = Bukkit.getPlayer(playerUUID);
 
         if(player != null) {
+            player.sendMessage("");
             messageUtil.sendMessage(player, "Du hast dich zu weit vom Altar entfernt§8.");
-            messageUtil.sendMessage(player, "Der Vorgang wurde abgebrochen und du wurdest bestraft§8.");
+            messageUtil.sendMessage(player, "§8  - §7Money§8: §c§o-" + messageUtil.formatLong(moneyPunish) + "§4§l$");
+            messageUtil.sendMessage(player, "§8  - §7Elo§8: §c§o-" + messageUtil.formatLong(eloPunish));
+            player.sendMessage("");
+
             player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
         }
 
@@ -275,7 +312,7 @@ public final class PvPAltar {
         if(holo != null)
             holo.delete();
 
-        for (final Entity entity : location.getWorld().getEntities()) {
+        for (final Entity entity : location.getChunk().getEntities()) {
             if(!(entity instanceof ArmorStand))
                 continue;
 
@@ -301,7 +338,7 @@ public final class PvPAltar {
         cfg.set(path + "xpReward", xpReward);
         cfg.set(path + "eloPunish", eloPunish);
         cfg.set(path + "moneyPunish", moneyPunish);
-        cfg.set(path + "itemReward", itemRewards);
+        cfg.set(path + "itemRewards", itemRewards);
         cfg.set(path + "cooldownMillis", cooldownMillis);
         cfg.set(path + "timeToCapture", timeToCapture);
         cfg.set(path + "prefix", prefix);

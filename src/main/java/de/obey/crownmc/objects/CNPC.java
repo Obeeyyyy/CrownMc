@@ -68,6 +68,7 @@ public class CNPC {
         armorStand.setSmall(small);
         armorStand.setLeftArmPose(leftArm);
         armorStand.setRightArmPose(rightArm);
+        armorStand.setBasePlate(false);
 
         if(helmet != null)
             armorStand.setHelmet(helmet);
@@ -184,6 +185,8 @@ public class CNPC {
 
     public void setLocation(final Location location) {
         this.location = location.clone();
-        armorStand.teleport(location);
+
+        if(armorStand != null)
+            armorStand.teleport(location);
     }
 }

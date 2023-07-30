@@ -19,13 +19,14 @@ public final class LevelUtil {
     private MessageUtil messageUtil;
 
     public void checkForLevelUp(final User user) {
-        final long level = user.getLong(DataType.LEVEL);
         final long xp = user.getLong(DataType.XP);
+        long level = user.getLong(DataType.LEVEL);
+        long xpForNextLevel = getXPForNextLevel(level + 1);
 
-        final long xpForNextLevel = getXPForNextLevel(level + 1);
-
-        if(xp >= xpForNextLevel) {
-            levelUP(user, xp - xpForNextLevel, level + 1);
+        while(xp >= xpForNextLevel) {
+            level++;
+            levelUP(user, xp - xpForNextLevel, level);
+            xpForNextLevel = getXPForNextLevel(level + 1);
         }
     }
 

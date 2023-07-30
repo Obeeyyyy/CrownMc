@@ -8,7 +8,10 @@ package de.obey.crownmc.objects.vote;
  without permission from me, obey, the creator of this code.
 */
 
+import com.google.common.collect.Maps;
 import de.obey.crownmc.CrownMain;
+import de.obey.crownmc.backend.enums.DataType;
+import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.handler.VotePartyHandler;
 import de.obey.crownmc.util.MessageUtil;
 import org.bukkit.Effect;
@@ -18,18 +21,24 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 public final class VoteParty {
 
     private final MessageUtil messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
+    private final UserHandler userHandler = CrownMain.getInstance().getInitializer().getUserHandler();
     private final VotePartyHandler votePartyHandler;
 
     private BukkitTask runnable;
+
+    private final Map<UUID, Double> bossDamage = Maps.newConcurrentMap();
 
     private final String prefix = "&a&lV&6&lo&d&lt&3&le&2&lP&5&la&b&lr&c&lt&e&ly";
 
@@ -94,7 +103,10 @@ public final class VoteParty {
                         playeSoundForEveryOne(location, Sound.FIREWORK_LARGE_BLAST2);
                         playEffectForEveryone(location, Effect.ENDER_SIGNAL);
 
-                        final Item item = location.getWorld().dropItem(location, votePartyHandler.getRandomItem());
+                        final ItemStack stack = votePartyHandler.getRandomItem();
+                        final Item item = location.getWorld().dropItem(location, stack);
+                        item.setCustomNameVisible(true);
+                        item.setCustomName(stack.hasItemMeta() ? stack.getItemMeta().hasDisplayName() ? stack.getItemMeta().getDisplayName() : stack.getType().name() : stack.getType().name());
                         item.setVelocity(getRandomVelocity(random));
                     }
                 }
@@ -121,6 +133,36 @@ public final class VoteParty {
         }.runTaskLater(CrownMain.getInstance(), 60);
     }
 
+    public void damageBoss(final Player player, final double damage) {
+        if(bossDamage.containsKey(player.getUniqueId())) {
+            bossDamage.put(player.getUniqueId(), damage + bossDamage.get(player.getUniqueId()));
+            return;
+        }
+
+        bossDamage.put(player.getUniqueId(), damage);
+    }
+
+    public void end() {
+        messageUtil.broadcast("§8(" + prefix + "§8) §7Der Boss ist gestorben§8.");
+
+        for (final UUID uuid : bossDamage.keySet()) {
+            userHandler.getUser(uuid).thenAcceptAsync(user -> {
+                final long money = (long) (bossDamage.get(uuid) * 20L);
+                final long xp = (long) (bossDamage.get(uuid) * 12L);
+
+                user.addLong(DataType.MONEY, money);
+                user.addXP(xp);
+
+                if(user.getOfflinePlayer().isOnline()) {
+                    messageUtil.sendMessage(user.getOfflinePlayer().getPlayer(), "Du hast " + bossDamage.get(uuid) + " Schaden am Boss verursacht§8.");
+                    messageUtil.sendMessage(user.getOfflinePlayer().getPlayer(), "§a§o+" + messageUtil.formatLong(money) + "§2§l$");
+                    messageUtil.sendMessage(user.getOfflinePlayer().getPlayer(), "§a§o+" + messageUtil.formatLong(xp) + " §2§lXP");
+                    user.getOfflinePlayer().getPlayer().playSound(user.getOfflinePlayer().getPlayer().getLocation(), Sound.ENDERDRAGON_DEATH, 0.5f, 1);
+                }
+            });
+        }
+    }
+
     private void playEffectForEveryone(final Location location, final Effect effect) {
         for (Entity entity : location.getWorld().getEntities()) {
 
@@ -137,7 +179,7 @@ public final class VoteParty {
             if(!(entity instanceof Player))
                 continue;
 
-            ((Player) entity).playSound(location, sound, 0.5f, 1);
+            ((Player) entity).playSound(location, sound, 1, 1);
         }
     }
 

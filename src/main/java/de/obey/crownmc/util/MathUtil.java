@@ -7,6 +7,7 @@ package de.obey.crownmc.util;
 */
 
 import lombok.experimental.UtilityClass;
+import org.bukkit.command.CommandSender;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -180,6 +181,10 @@ public final class MathUtil {
         }
 
         return millis;
+    }
+
+    public int getIntFromStringwithSuffix(final String text) {
+        return (int) getLongFromStringwithSuffix(text);
     }
 
     public long getLongFromStringwithSuffix(final String text) {

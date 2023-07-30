@@ -35,7 +35,7 @@ public final class BankTabComplete implements TabCompleter {
 
             args1.add("info");
             args1.add("withdraw");
-            args1.add("desposit");
+            args1.add("deposit");
             args1.add("add");
             args1.add("remove");
             args1.add("trust");

@@ -10,6 +10,7 @@ import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.backend.enums.StoreType;
 import de.obey.crownmc.handler.ScoreboardHandler;
 import de.obey.crownmc.handler.UserHandler;
+import de.obey.crownmc.util.LevelUtil;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
@@ -33,7 +34,7 @@ public final class UserCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "edituser", true))
+        if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "edituser", true))
             return false;
 
         if (args.length == 1) {
@@ -161,32 +162,6 @@ public final class UserCommand implements CommandExecutor {
                 return false;
             }
 
-            if(args[0].equalsIgnoreCase("getint")) {
-                final DataType dataType = DataType.getTypeFromName(args[2]);
-
-                if (dataType == null) {
-                    messageUtil.sendMessage(sender, "Ungültiger typ.");
-                    return false;
-                }
-
-                final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
-
-                try {
-
-                    userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
-                        messageUtil.sendMessage(sender, target.getName() + " hat " + dataType.getSavedAs() + " = " + user.getLong(dataType));
-
-                        if (user.getPlayer() != null)
-                            scoreboardHandler.updateScoreboard(user.getPlayer());
-                    });
-
-                } catch (final NumberFormatException exception) {
-                    messageUtil.sendMessage(sender, "Ungültiger datentyp.");
-                }
-
-                return false;
-            }
-
             if (args[0].equalsIgnoreCase("resetcd")) {
 
                 final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
@@ -258,6 +233,11 @@ public final class UserCommand implements CommandExecutor {
 
                     userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
                         user.getData().put(dataType, amount);
+
+                        if(dataType == DataType.XP)
+                            LevelUtil.checkForLevelUp(user);
+
+
                         messageUtil.sendMessage(sender, target.getName() + " set " + dataType.getSavedAs() + " = " + user.getLong(dataType));
 
                         if (user.getPlayer() != null)
@@ -271,7 +251,8 @@ public final class UserCommand implements CommandExecutor {
                 return false;
             }
 
-            if (args[0].equalsIgnoreCase("setint")) {
+
+            if (args[0].equalsIgnoreCase("addlong")) {
 
                 final DataType dataType = DataType.getTypeFromName(args[2]);
 
@@ -281,10 +262,15 @@ public final class UserCommand implements CommandExecutor {
                 }
 
                 try {
-                    final int amount = Integer.parseInt(args[3]);
+                    final long amount = Long.parseLong(args[3]);
 
                     userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
-                        user.getData().put(dataType, amount);
+                        if(dataType == DataType.XP) {
+                            user.addXP(amount);
+                        } else {
+                            user.addLong(dataType, amount);
+                        }
+
                         messageUtil.sendMessage(sender, target.getName() + " set " + dataType.getSavedAs() + " = " + user.getLong(dataType));
 
                         if (user.getPlayer() != null)
@@ -292,7 +278,7 @@ public final class UserCommand implements CommandExecutor {
                     });
 
                 } catch (final NumberFormatException exception) {
-                    messageUtil.sendMessage(sender, "Ungültiger datentyp.");
+                    messageUtil.sendMessage(sender, "Bitte gebe eine Zahl an.");
                 }
 
                 return false;
@@ -309,9 +295,8 @@ public final class UserCommand implements CommandExecutor {
                 "/user resetcd <spielername>",
                 "/user resetcd <spielername> <type>",
                 "/user getlong <spielername> <type>",
-                "/user getint <spielername> <type>",
                 "/user setlong <spielername> <type> <amount>",
-                "/user setint <spielername> <type> <amount>",
+                "/user addlong <spielername> <type> <amount>",
                 "/user setfirstjoin <spielername> <text>");
 
         return false;

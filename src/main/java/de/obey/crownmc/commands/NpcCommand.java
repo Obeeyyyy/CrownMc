@@ -38,6 +38,24 @@ public class NpcCommand implements CommandExecutor, Listener {
 
         final Player player = (Player) sender;
 
+        if(args.length == 1) {
+            if(args[0].equalsIgnoreCase("list")) {
+                if (npcHandler.getNpcs().isEmpty()) {
+                    messageUtil.sendMessage(sender, "§c§oEs existieren noch keine NPCS§8.");
+                    return false;
+                }
+
+                for (final CNPC npc : npcHandler.getNpcs().values()) {
+
+                    messageUtil.sendMessage(player, " -> "+ npc.getName());
+                    messageUtil.sendMessage(player, "    Command: " + npc.getCommand());
+                    player.sendMessage("");
+                }
+
+                return false;
+            }
+        }
+
         if(args.length == 2) {
             if(args[0].equalsIgnoreCase("select")) {
 

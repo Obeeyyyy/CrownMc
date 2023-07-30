@@ -60,7 +60,7 @@ public final class Backend {
 
     private void createTables() {
         execute("CREATE TABLE IF NOT EXISTS users(id bigint, uuid text, name text, money bigint, crowns bigint, kills bigint, deaths bigint, bounty bigint, level bigint, xp bigint, killstreak bigint, killstreakrecord bigint, elopoints bigint, votes bigint, playtime bigint, destroyedBlocks bigint, destroyedEventBlocks bigint)");
-        execute("CREATE TABLE IF NOT EXISTS clans(name text, leader text, trophies int, kills int, deaths int);");
+        execute("CREATE TABLE IF NOT EXISTS clans(name text, leader text, trophies int, kills int, deaths int, xp int, level int);");
         System.out.println("CREATED TABLES");
     }
 

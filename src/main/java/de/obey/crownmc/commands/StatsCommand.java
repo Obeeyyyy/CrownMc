@@ -72,6 +72,7 @@ public final class StatsCommand implements CommandExecutor {
             sender.sendMessage("§8▰§7▱ §6§lInformationen");
             sender.sendMessage("");
             sender.sendMessage("  §8- §7Name§8: §e§o" + user.getOfflinePlayer().getName() + " §8(§6§l#§e§o" + user.getLong(DataType.ID) + "§8)");
+            sender.sendMessage("  §8- §7Clan§8: §f§o" + (user.getClan() == null ? "Kein Clan" : "" + user.getClan().getClanName() + "§8 ( §f" + user.getClan().getClanTag() + " §8)"));
             sender.sendMessage("  §8- §7Level§8: §f§o" + user.getLong(DataType.LEVEL) + " §8(§f§o" + messageUtil.formatLong(user.getLong(DataType.XP)) + "§8/§f§l" + messageUtil.formatLong(LevelUtil.getXPForNextLevel(user.getLong(DataType.LEVEL) + 1)) + "§8)");
             sender.sendMessage("  §8- §7Balance§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.MONEY)) + "§6§l$ §8- §7Crowns§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.CROWNS)) + "§6§l¢" );
             sender.sendMessage("  §8- §7Bounty§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.BOUNTY)) + "§6§l$");

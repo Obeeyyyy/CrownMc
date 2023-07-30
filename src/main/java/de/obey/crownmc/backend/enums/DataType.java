@@ -59,7 +59,8 @@ public enum DataType {
     REGISTERED("registered", StoreType.CONFIG, true),
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
     LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 0L),
-    LASTVOTE("lastvote", StoreType.CONFIG, 0L);
+    LASTVOTE("lastvote", StoreType.CONFIG, 0L),
+    CLANNAME("clan", StoreType.CONFIG, "-");
 
     private final String savedAs;
     private final StoreType storeType;

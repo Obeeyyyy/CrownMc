@@ -93,7 +93,7 @@ public final class Initializer {
         final VoteKickCommand voteKickCommand = new VoteKickCommand(messageUtil);
         final GuessTheNumberCommand guessTheNumberCommand = new GuessTheNumberCommand(messageUtil);
         final NpcCommand npcCommand = new NpcCommand(messageUtil, npcHandler);
-        final ClanCommand clanCommand = new ClanCommand(messageUtil, userHandler, clanHandler);
+        final ClanCommand clanCommand = new ClanCommand(messageUtil, clanHandler, userHandler);
 
         crownMain.getCommand("whitelist").setExecutor(new WhitelistCommand(serverConfig, messageUtil));
         crownMain.getCommand("stop").setExecutor(new StopCommand(this));
@@ -229,6 +229,7 @@ public final class Initializer {
         crownMain.getCommand("npc").setExecutor(npcCommand);
         crownMain.getCommand("clan").setExecutor(clanCommand);
         crownMain.getCommand("scramble").setExecutor(new ScrambleCommand(wordScrumbleHandler));
+        crownMain.getCommand("ranginfo").setExecutor(new RangInfoCommand());
 
         final PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -238,7 +239,7 @@ public final class Initializer {
         pluginManager.registerEvents(new QuitListener(this), crownMain);
         pluginManager.registerEvents(new PickupPotionsListener(), crownMain);
         pluginManager.registerEvents(new PortalMeisterListener(messageUtil, serverConfig, userHandler, locationHandler), crownMain);
-        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, jackPotHandler, rouletteHandler, plotAPI, warpAugeListener, wordScrumbleHandler), crownMain);
+        pluginManager.registerEvents(new AsyncChatListener(messageUtil, userHandler, rangHandler, chatFilterHandler, coinflipHandler, crashHandler, jackPotHandler, rouletteHandler, plotAPI, warpAugeListener, wordScrumbleHandler, clanHandler), crownMain);
         pluginManager.registerEvents(blockStuffListener, crownMain);
         pluginManager.registerEvents(new InvseeCommand(messageUtil), crownMain);
         pluginManager.registerEvents(new FirstJoinItems(messageUtil, serverConfig), crownMain);
@@ -291,6 +292,7 @@ public final class Initializer {
         pluginManager.registerEvents(voteKickCommand, crownMain);
         pluginManager.registerEvents(npcCommand, crownMain);
         pluginManager.registerEvents(clanCommand, crownMain);
+        pluginManager.registerEvents(new RangInfoCommand(), crownMain);
     }
 
     private void loadTabCompleter() {
@@ -360,7 +362,7 @@ public final class Initializer {
                     backend = new Backend(serverConfig);
                 }
 
-                if (ticks == 4) {
+                if (ticks == 3) {
                     rangHandler = new RangHandler(messageUtil);
                     eloHandler = new EloHandler();
                     combatHandler = new CombatHandler();
@@ -395,7 +397,7 @@ public final class Initializer {
                         plotAPI = new PlotAPI();
                 }
 
-                if(ticks == 6) {
+                if(ticks == 5) {
                     scoreboardHandler.unregisterAllTeams();
                     coinflipHandler.updateInventory();
                     locationHandler.loadLocations();
@@ -412,9 +414,11 @@ public final class Initializer {
                     rouletteHandler.loadTables();
                     pvPAltarHandler.loadAllPvPAltars();
                     npcHandler.loadStands();
+
+                    rankingHandler.startUpdater();
                 }
 
-                if (ticks == 7) {
+                if (ticks == 6) {
 
                     loadCommandsAndListener();
                     loadTabCompleter();
@@ -434,11 +438,9 @@ public final class Initializer {
 
                     runnables.start10TickTimerAsync();
                     runnables.start2TickTimerAsync();
-
-                    rankingHandler.startUpdater();
                 }
 
-                if (ticks == 8) {
+                if (ticks == 7) {
                     restarting = false;
                     messageUtil.log("§a§oSystem is ready !");
                     cancel();
@@ -476,6 +478,7 @@ public final class Initializer {
         banHandler.save();
         npcHandler.shutdown();
 
+        clanHandler.save();
         userHandler.getUserCache().values().forEach(userHandler::saveData);
     }
 

@@ -84,7 +84,7 @@ public final class RankingCommand implements CommandExecutor, Listener {
             openInv(player, "money");
 
         if (slot == 14)
-            openInv(player, "xp");
+            openInv(player, "level");
 
         if (slot == 15)
             openInv(player, "votes");

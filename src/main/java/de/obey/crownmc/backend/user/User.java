@@ -84,9 +84,16 @@ public final class User {
         this.punishment = new UserPunishment(this);
         this.loginStreak = new UserLoginStreak(this);
         this.userPeace = new UserPeace(this);
+    }
 
-        if(cfg.contains("clan")) {
-            initializer.getClanHandler().loadData(cfg.getString("clan")).thenAcceptAsync(data -> {
+    public void loadClan() {
+        if(!getString(DataType.CLANNAME).equalsIgnoreCase("-")) {
+            initializer.getClanHandler().loadData(getString(DataType.CLANNAME)).thenAcceptAsync(data -> {
+                if (data == null) {
+                    setString(DataType.CLANNAME, "-");
+                    return;
+                }
+
                 clan = data;
             });
         }
@@ -107,6 +114,9 @@ public final class User {
     public void addXP(long amount) {
         if (Bools.doubleXP)
             amount *= 2;
+
+        if(clan != null)
+            clan.addXP(amount);
 
         addLong(DataType.XP, amount);
         LevelUtil.checkForLevelUp(this);

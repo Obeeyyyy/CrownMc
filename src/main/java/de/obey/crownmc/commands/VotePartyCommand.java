@@ -24,6 +24,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -115,6 +116,18 @@ public final class VotePartyCommand implements CommandExecutor, Listener {
         if(!(event.getDamager() instanceof Player))
             return;
 
-        messageUtil.sendMessage(event.getDamager(), "Noch§8: §f§o" + ((Giant) event.getEntity()).getHealth() + "§c§l❤");
+        messageUtil.sendActionBar((Player) event.getDamager(), "Noch§8: §f§o" + ((Giant) event.getEntity()).getHealth() + "§c§l❤");
+        votePartyHandler.getParties().get(votePartyHandler.getParties().size() - 1).damageBoss((Player) event.getDamager(), event.getDamage());
+    }
+
+    @EventHandler
+    public void on(final EntityDeathEvent event) {
+        if(!(event.getEntity() instanceof Giant))
+            return;
+
+        if(!event.getEntity().isCustomNameVisible())
+            return;
+
+        votePartyHandler.getParties().get(votePartyHandler.getParties().size() - 1).end();
     }
 }

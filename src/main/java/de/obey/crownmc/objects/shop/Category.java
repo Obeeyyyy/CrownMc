@@ -112,17 +112,17 @@ public final class Category {
                     lore.add("");
                     lore.add("§8▰§7▱ §6§lInformationen");
                     lore.add("§8 - §7ID§8: §7" + shopItem.getID());
-                    lore.add("§8 - §7Preis§8: §fx1 §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice()) + currency + (item.getMaxStackSize() > 1 ? "§fx64 §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice() * 64) + currency : ""));
+                    lore.add("§8 - §7Preis§8: §fx" + shopItem.getItemStack().getAmount() + " §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice()) + currency + (item.getMaxStackSize() > 1 ? "§fx" + (shopItem.getItemStack().getAmount() * 64) + " §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice() * 64) + currency : ""));
                     lore.add("§8 - §7" + (categoryType == CategoryType.BUY ? "Gekauft§8: §fx§e§o" : "§7Verkauft§8: §fx§e§o") + shopItem.getCount());
                     lore.add("");
 
                     if (categoryType == CategoryType.BUY) {
                         lore.add("§8▰§7▱ §6§lLinksklick");
-                        lore.add("§8 - §7Kaufen§8: §f§ox1");
+                        lore.add("§8 - §7Kaufen§8: §f§ox" + shopItem.getItemStack().getAmount());
                         if (item.getMaxStackSize() > 1) {
                             lore.add("");
                             lore.add("§8▰§7▱ §6§lShift + Linksklick");
-                            lore.add("§8 - §7Kaufen§8: §f§ox64");
+                            lore.add("§8 - §7Kaufen§8: §f§ox" + (shopItem.getItemStack().getAmount() * 64));
                             lore.add("");
                         }
                     } else {

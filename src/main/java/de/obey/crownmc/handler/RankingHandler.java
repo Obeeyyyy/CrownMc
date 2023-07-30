@@ -6,8 +6,8 @@ package de.obey.crownmc.handler;
 
 */
 
-import de.obey.crownmc.Initializer;
 import de.obey.crownmc.CrownMain;
+import de.obey.crownmc.Initializer;
 import de.obey.crownmc.backend.Backend;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.util.InventoryUtil;
@@ -57,9 +57,9 @@ public final class RankingHandler {
         inventories.put("elopoints", elopoints);
         fill(elopoints);
 
-        final Inventory xp = inventories.containsKey("xp") ? inventories.get("xp") : Bukkit.createInventory(null, 9 * 6, "§9§lRanking §c§oXp");
-        inventories.put("xp", xp);
-        fill(xp);
+        final Inventory level = inventories.containsKey("level") ? inventories.get("level") : Bukkit.createInventory(null, 9 * 6, "§9§lRanking §c§oLevel");
+        inventories.put("level", level);
+        fill(level);
 
         final Inventory votes = inventories.containsKey("votes") ? inventories.get("votes") : Bukkit.createInventory(null, 9 * 6, "§9§lRanking §c§oVotes");
         inventories.put("votes", votes);
@@ -87,14 +87,39 @@ public final class RankingHandler {
     }
 
     public void updateInventories() {
-        updateDataForInventory("kills");
-        updateDataForInventory("money");
-        updateDataForInventory("killstreak");
-        updateDataForInventory("elopoints");
-        updateDataForInventory("votes");
-        updateDataForInventory("xp");
-        updateDataForInventory("playtime");
-        updateDataForInventory("crowns");
+        new BukkitRunnable() {
+            int slot = 0;
+            @Override
+            public void run() {
+                if(slot == 0 )
+                    updateDataForInventory("kills");
+
+                if(slot == 1)
+                    updateDataForInventory("money");
+
+                if(slot == 2)
+                    updateDataForInventory("killstreak");
+
+                if(slot == 3)
+                    updateDataForInventory("elopoints");
+
+                if(slot == 4)
+                    updateDataForInventory("votes");
+
+                if(slot == 5)
+                    updateDataForInventory("level");
+
+                if(slot == 6)
+                    updateDataForInventory("playtime");
+
+                if(slot == 7) {
+                    updateDataForInventory("crowns");
+                    cancel();
+                }
+
+                slot++;
+            }
+        }.runTaskTimer(CrownMain.getInstance(), 0, 5);
     }
 
     private void fill(final Inventory inventory) {
@@ -126,7 +151,7 @@ public final class RankingHandler {
 
         inventory.setItem(14, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                 .setTextur("ZTEzODM1MmY0NzQ1ZTAyYzA5MzkxNDZkYmQzNjZlNjUzNWE3ZjRlZjM5NjUzMDA5YjVjMzljMjRiOTRkNGNhNyJ9fX0=", UUID.randomUUID())
-                .setDisplayname("§7Top 10 §8(§d§lXP§8)").build());
+                .setDisplayname("§7Top 10 §8(§d§lLevel§8)").build());
 
         inventory.setItem(15, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                 .setTextur("OTk2MGQ2ZmZhZjQ0ZThhZmNiZGY4YjI5YTc3ZDg0Y2UyMmM3MWQwMGM2NGJmZDk5YWYzNDBhNjk1MzViZmQ3In19fQ==", UUID.randomUUID())
@@ -151,7 +176,6 @@ public final class RankingHandler {
                     if (resultSet == null)
                         return;
 
-
                     int rank = 1;
 
                     try {
@@ -165,7 +189,6 @@ public final class RankingHandler {
 
                     for (int i = 1; i < 11; i++)
                         setPlayerHead(ranking.size() >= i ? ranking.get(i) : null, i, what, inventory, getSlotFromRank(i));
-
 
                     return;
                 }
@@ -277,10 +300,10 @@ public final class RankingHandler {
                     return;
                 }
 
-                if (what.equals("xp")) {
-                    final Inventory inventory = inventories.get("xp");
+                if (what.equals("level")) {
+                    final Inventory inventory = inventories.get("level");
                     final HashMap<Integer, UUID> ranking = new HashMap<>();
-                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY xp DESC LIMIT 11");
+                    final ResultSet resultSet = backend.getResultSet("SELECT uuid FROM users ORDER BY level DESC LIMIT 11");
 
                     if (resultSet == null)
                         return;
@@ -380,6 +403,16 @@ public final class RankingHandler {
 
         initializer.getUserHandler().getUser(uuid).thenAcceptAsync(user -> {
 
+            if(user == null) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        setPlayerHead(uuid, rank, what, inventory, slot);
+                    }
+                }.runTaskLater(CrownMain.getInstance(), 40);
+                return;
+            }
+
             user.setUsedForRanking(true);
 
             if (what.equals("money")) {
@@ -406,7 +439,7 @@ public final class RankingHandler {
                 final long elopunkte = user.getLong(DataType.ELOPOINTS);
                 inventory.setItem(slot, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7" + player.getName() + "§8 (§a#" + rank + "§8)")
-                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Elopunkte§8: §e" + initializer.getMessageUtil().formatLong(elopunkte), "§8    ×§7 Elorang§8: §r" + initializer.getEloHandler().getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)))
+                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 Elopunkte§8: §e" + initializer.getMessageUtil().formatLong(elopunkte), "§8    ×§7 Elorang§8: §r" + initializer.getEloHandler().getEloRangFromEloPoints(user.getLong(DataType.ELOPOINTS)).getPrefix())
                         .setSkullOwner(player.getName())
                         .build());
 
@@ -434,11 +467,14 @@ public final class RankingHandler {
                 return;
             }
 
-            if (what.equals("xp")) {
+            if (what.equals("level")) {
                 final long xp = user.getLong(DataType.XP);
                 inventory.setItem(slot, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7" + player.getName() + "§8 (§a#" + rank + "§8)")
-                        .setLore("§7", "§8  »§6 Information§8:", "§8    ×§7 XP§8: §e" + initializer.getMessageUtil().formatLong(xp))
+                        .setLore("§7", "§8  »§6 Information§8:",
+                                "§8    ×§7 Level§8: §e" + user.getLong(DataType.LEVEL),
+                                "§8    ×§7 XP§8: §e" + initializer.getMessageUtil().formatLong(xp)
+                        )
                         .setSkullOwner(player.getName())
                         .build());
 

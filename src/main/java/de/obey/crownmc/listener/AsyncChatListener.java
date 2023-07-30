@@ -49,6 +49,7 @@ public final class AsyncChatListener implements Listener {
     private final PlotAPI plotAPI;
     private final WarpAugeListener warpAugeListener;
     private final WordScrambleHandler wordScrambleHandler;
+    private final ClanHandler clanHandler;
 
     private boolean checkPlotChat(final Player player) {
         if (Bukkit.getPluginManager().getPlugin("PlotSquared") == null)
@@ -98,6 +99,14 @@ public final class AsyncChatListener implements Listener {
         if (crashHandler.isJoiningCrash(player, message))
             return;
         /* Joining Crash coins end */
+
+        /* Clan start*/
+        if (clanHandler.isCreatingClan(player, message))
+            return;
+
+        if (clanHandler.isInviting(player, message))
+            return;
+        /* Clan end */
 
         /* Setting Jackpot start*/
         if (jackPotHandler.isCreatingJackpot(player, message))

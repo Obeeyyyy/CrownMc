@@ -136,13 +136,13 @@ public final class MessageUtil {
     }
 
     public void log(final String message) {
-        Bukkit.getConsoleSender().sendMessage("§8§o(§a§oLOG§8§o)§f§o " + ChatColor.translateAlternateColorCodes('&', message));
-        Bukkit.getLogger().log(Level.INFO, ChatColor.translateAlternateColorCodes('&', message));
+        //Bukkit.getConsoleSender().sendMessage("§8§o(§a§oLOG§8§o)§f§o " + ChatColor.translateAlternateColorCodes('&', message));
+        Bukkit.getLogger().log(Level.INFO, ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
     }
 
     public void warn(final String message) {
-        Bukkit.getConsoleSender().sendMessage("§8§o(§4§oWARN§8§o)§f§o " + ChatColor.translateAlternateColorCodes('&', message));
-        Bukkit.getLogger().log(Level.WARNING, ChatColor.translateAlternateColorCodes('&', message));
+        //Bukkit.getConsoleSender().sendMessage("§8§o(§4§oWARN§8§o)§f§o " + ChatColor.translateAlternateColorCodes('&', message));
+        Bukkit.getLogger().log(Level.WARNING, ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
     }
 
     public void sendHoverTextCommandToTeamMembers(final String message, final String command) {
@@ -172,6 +172,54 @@ public final class MessageUtil {
 
     public String formatLong(final long value) {
         return NumberFormat.getInstance().format(value);
+    }
+
+    public long getLong(final CommandSender sender, final String text) {
+        long amount = 0L;
+
+        try {
+            amount = Long.parseLong(text);
+
+            if (amount <= 0) {
+                sendMessage(sender, "Bitte gebe eine Zahl an die größer als 0 ist.");
+                return -99L;
+            }
+
+        } catch (final NumberFormatException exception) {
+
+            amount = MathUtil.getLongFromStringwithSuffix(text);
+
+            if (amount <= 0) {
+                sendMessage(sender, "Bitte gebe eine Zahl an, oder benutze folgende Abkürzungen. (k, m, mrd, b, brd, t)");
+                return -99L;
+            }
+        }
+
+        return amount;
+    }
+
+    public int getInt(final CommandSender sender, final String text) {
+        int amount = 0;
+
+        try {
+            amount = Integer.parseInt(text);
+
+            if (amount <= 0) {
+                sendMessage(sender, "Bitte gebe eine Zahl an die größer als 0 ist.");
+                return -99;
+            }
+
+        } catch (final NumberFormatException exception) {
+
+            amount = MathUtil.getIntFromStringwithSuffix(text);
+
+            if (amount <= 0) {
+                sendMessage(sender, "Bitte gebe eine Zahl an, oder benutze folgende Abkürzungen. (k, m, mrd, b, brd, t)");
+                return -99;
+            }
+        }
+
+        return amount;
     }
 
     public String getColoredPercentage(final int percentage) {
