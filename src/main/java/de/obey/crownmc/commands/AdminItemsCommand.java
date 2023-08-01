@@ -75,9 +75,20 @@ public final class AdminItemsCommand implements CommandExecutor {
                         "")
                 .build());
 
+        inventory.addItem(new ItemBuilder(Material.PAPER)
+                .setDisplayname("§8» §6§lCUSTOM §e§lTMOTE")
+                .setLore("",
+                        "§8▰§7▱  §6§lRechtsklick",
+                        "  §8- §7Schreibe den gewünschten TMOTE",
+                        "  §8- §7in den Chat und bestätige ihn§8.",
+                        "")
+                .build());
+
         rangHandler.getGroupMap().values().forEach(rang -> {
-            if (rang.getId() >= 20 && rang.getId() <= 90) {
-                inventory.addItem(new ItemBuilder(Material.BOOK).setDisplayname("§a§lRANGGUTSCHEIN").setLore("",
+            if (rang.getId() >= 20 && rang.getId() < 100) {
+                inventory.addItem(new ItemBuilder(Material.BOOK)
+                        .setDisplayname("§a§lRANGGUTSCHEIN")
+                        .setLore("",
                         "§8▰§7▱ §a§lRechtsklick",
                         "§8 - §7Löst den Gutschein ein§8.",
                         "",
@@ -85,6 +96,14 @@ public final class AdminItemsCommand implements CommandExecutor {
                         "§8 -§7 " + rang.getShowprefix(),
                         ""
                 ).build());
+
+                inventory.addItem(new ItemBuilder(Material.BOOK)
+                        .setDisplayname("§5§l♥ " + rang.getShowprefix() + " §7Rang §8(§f§o 1w §8)")
+                                .setLore("",
+                                        "§8▰§7▱ §5§lRechtsklick",
+                                        "§8  -§7 Löst den Rang für 1ne Woche ein§8.",
+                                        "")
+                        .build());
             }
         });
 
@@ -164,6 +183,17 @@ public final class AdminItemsCommand implements CommandExecutor {
                                 "§8» §7Position Name§8:§f kein name",
                                 "")
                 .build());
+
+        inventory.addItem(new ItemBuilder(Material.PRISMARINE_CRYSTALS)
+                        .setDisplayname("§a§lRandom Teleport")
+                        .setLore("",
+                                "§a§lInformation",
+                                "§8  - §7Dieses Item teleportiert dich an eine",
+                                "§8  - §7zufällige Position in der Farmwelt§8.",
+                                "")
+                .build());
+
+
 
         player.openInventory(inventory);
 

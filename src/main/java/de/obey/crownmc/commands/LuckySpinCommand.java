@@ -144,9 +144,8 @@ public final class LuckySpinCommand implements CommandExecutor, Listener {
 
             ArrayList<String> lore = new ArrayList<>();
 
-            if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+            if (item.hasItemMeta() && item.getItemMeta().hasLore())
                 lore = (ArrayList<String>) item.getItemMeta().getLore();
-            }
 
             final Player player = (Player) event.getWhoClicked();
             final DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.ENGLISH));

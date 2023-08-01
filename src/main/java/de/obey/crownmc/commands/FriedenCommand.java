@@ -92,7 +92,7 @@ public final class FriedenCommand implements CommandExecutor {
             userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
                 if (user.getUserPeace().hasPeaceWith(target)) {
                     messageUtil.sendMessage(player, "Du hast bereits Frieden mit §f§o" + target.getName() + "§8.");
-                    new MessageBuilder("§8» §7Klicke hier, um den Frieden mit §f§o" + target.getName() + "§7 zu §c§obeenden§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/friede remove " + player.getName()).send(player);
+                    new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um den Frieden mit §f§o" + target.getName() + "§7 zu §c§obeenden§8.", "§c§oFrieden beenden", "/friede remove " + player.getName()).send(player);
                     player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
                     return;
                 }
@@ -112,9 +112,9 @@ public final class FriedenCommand implements CommandExecutor {
                 messageUtil.sendMessage(target, "§f§o" + player.getName() + "§7 hat dir ein Friedensangebot gesendet§8.");
 
                 target.sendMessage("");
-                new MessageBuilder("§8» §7Klicke hier, um das Friedensangebot §a§oanzunehmen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/friede accept " + player.getName()).send(target);
+                new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um das Friedensangebot §a§oanzunehmen§8.", "§a§oAnnehmen", "/friede accept " + player.getName()).send(target);
                 target.sendMessage("");
-                new MessageBuilder("§8» §7Klicke hier, um das Friedensangebot §c§oabzulehnen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/friede deny " + player.getName()).send(target);
+                new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um das Friedensangebot §c§oabzulehnen§8.", "§c§oAblehnen", "/friede deny " + player.getName()).send(target);
 
             });
 

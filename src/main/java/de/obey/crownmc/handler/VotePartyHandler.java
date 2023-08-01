@@ -12,32 +12,34 @@ import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.objects.vote.VoteParty;
 import de.obey.crownmc.util.FileUtil;
 import lombok.Getter;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+@Getter
 public final class VotePartyHandler {
 
-    @Getter
     private final File file = FileUtil.getFile("voteparty.yml");
-
-    @Getter
     private final YamlConfiguration cfg ;
 
-    @Getter
     private final ArrayList<Location> locations = new ArrayList<>();
-
-    @Getter
     private final ArrayList<VoteParty> parties = new ArrayList<>();
-
-    @Getter
     private ArrayList<ItemStack> items = new ArrayList<>();
+    private ArrayList<ItemStack> chanceList = new ArrayList<>();
 
     public VotePartyHandler() {
 
@@ -57,13 +59,48 @@ public final class VotePartyHandler {
         } else {
             items = cfg.contains("items") ? (ArrayList<ItemStack>) cfg.getList("items") : new ArrayList<>();
         }
+
+        setChanceItems();
+    }
+
+    public void setChanceItems() {
+        if(items.isEmpty())
+            return;
+
+        chanceList = new ArrayList<>();
+
+        items.forEach(item -> {
+            final double chance = getChanceFromItem(item);
+
+            if (chance > 0) {
+                for (int i = 0; i < chance * 100; i++) {
+                    chanceList.add(item);
+                }
+            }
+        });
+    }
+
+    public double getChanceFromItem(final ItemStack item) {
+        if(!item.hasItemMeta())
+            return 0;
+
+        if(!item.getItemMeta().hasLore())
+            return 0;
+
+        return Double.parseDouble(item.getItemMeta().getLore().get(item.getItemMeta().getLore().size() - 1).split(" ")[1].replace("%", ""));
     }
 
     public ItemStack getRandomItem() {
-        if(items.isEmpty())
-            return new ItemStack(Material.STICK);
+        final ItemStack item =  chanceList.get(new Random().nextInt(chanceList.size())).clone();
+        final ItemMeta meta = item.getItemMeta();
 
-        return items.get(new Random().nextInt(items.size()));
+        final ArrayList<String> lore = (ArrayList<String>) meta.getLore();
+        lore.remove(lore.size() - 1);
+        lore.remove(lore.size() - 1);
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
     }
 
     public void startVoteParty() {
@@ -92,12 +129,73 @@ public final class VotePartyHandler {
         FileUtil.saveToFile(file, cfg);
     }
 
-    public void setItems(final ArrayList<ItemStack> items) {
-        this.items.clear();
-        this.items = items;
-        cfg.set("items", items);
-        saveFile();
+    public void setItems(final Inventory inventory) {
+        items.clear();
+
+        final ArrayList<ItemStack> temp = new ArrayList<>();
+
+        for (final ItemStack item : inventory.getContents()) {
+            if(item != null && item.getType() != Material.AIR) {
+                setLoreWithChanceForItem(item);
+                temp.add(item);
+            }
+        }
+
+        items = temp;
+
+        setChanceItems();
+        save();
     }
+
+    private void setLoreWithChanceForItem(final ItemStack item){
+        final ItemMeta meta = item.getItemMeta();
+        ArrayList<String> lore = new ArrayList<>();
+
+        if(meta.hasLore()) {
+            lore = (ArrayList<String>) meta.getLore();
+
+            if(!lore.get(lore.size() - 1).startsWith("Chance ")) {
+                lore.add("");
+                lore.add("Chance 0.00%");
+            }
+
+        } else {
+            lore.add("");
+            lore.add("Chance 0.00%");
+        }
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
+    public void playEffectForEveryone(final Location location, final Effect effect) {
+        for (Entity entity : location.getWorld().getEntities()) {
+
+            if(!(entity instanceof Player))
+                continue;
+
+            ((Player) entity).playEffect(location, effect, 1);
+        }
+    }
+
+    public void playeSoundForEveryOne(final Location location, final Sound sound) {
+        for (Entity entity : location.getWorld().getEntities()) {
+
+            if(!(entity instanceof Player))
+                continue;
+
+            ((Player) entity).playSound(location, sound, 1, 1);
+        }
+    }
+
+    public Vector getRandomVelocity(Random random) {
+        double x = random.nextDouble() - random.nextDouble();
+        double y = random.nextDouble() + 0.2;
+        double z = random.nextDouble() - random.nextDouble();
+
+        return new Vector(x, y, z).normalize().multiply(0.9);
+    }
+
 
     public void shutdown()  {
         if(parties.isEmpty())
@@ -107,6 +205,11 @@ public final class VotePartyHandler {
             if(party != null)
                 party.shutdown();
         }
+    }
+
+    private void save() {
+        cfg.set("items", items);
+        FileUtil.saveToFile(file, cfg);
     }
 
 }

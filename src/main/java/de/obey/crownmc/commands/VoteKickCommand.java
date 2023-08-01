@@ -83,8 +83,8 @@ public class VoteKickCommand implements CommandExecutor, Listener {
             messageUtil.broadcast("Die Abstimmung endet in 20 Sekunden§8.");
 
             for (final Player all : Bukkit.getOnlinePlayers()) {
-                new MessageBuilder("§8» §7Kicke hier um §adafür§7 zu stimmen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/votekick ja " + target.getName()).send(all);
-                new MessageBuilder("§8» §7Kicke hier um §cdagegen§7 zu stimmen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/votekick nein " + target.getName()).send(all);
+                new MessageBuilder().addClickableCommand("§8» §7Kicke hier um §adafür§7 zu stimmen§8.", "§a§oDafür stimmen", "/votekick ja " + target.getName()).send(all);
+                new MessageBuilder().addClickableCommand("§8» §7Kicke hier um §cdagegen§7 zu stimmen§8.", "§c§oDagegen stimmen", "/votekick nein " + target.getName()).send(all);
             }
 
             return false;

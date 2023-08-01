@@ -75,6 +75,7 @@ public final class RangInfoCommand implements CommandExecutor, Listener {
                                 "§8  -§7 /joinmessage",
                                 "§8  -§7 /leavemessage",
                                 "§8  -§7 /skull",
+                                "§8  -§7 /block",
                                 "")
                 .build());
 

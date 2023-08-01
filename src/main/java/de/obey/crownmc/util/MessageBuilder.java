@@ -6,83 +6,65 @@ package de.obey.crownmc.util;
 
 */
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.experimental.FieldDefaults;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+
 @Getter
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class MessageBuilder {
 
-    TextComponent textComponent;
+    private final ArrayList<TextComponent> components = new ArrayList<>();
 
-    public MessageBuilder() {
-        this.textComponent = new TextComponent();
-    }
+    public MessageBuilder() {}
 
-    public MessageBuilder(String message) {
-        this.textComponent = new TextComponent(message);
-    }
-
-    public MessageBuilder addText(String text) {
-        this.textComponent.addExtra(text);
+    public MessageBuilder add(final String text) {
+        components.add(new TextComponent(text));
         return this;
     }
 
-    public MessageBuilder addSpace() {
-        this.textComponent.addExtra(" ");
+    public MessageBuilder addClickableCommand(final String text, final String hover, final String command) {
+        final TextComponent temp = new TextComponent(text);
+        temp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + command));
+        temp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create()));
+        components.add(temp);
         return this;
     }
 
-    public MessageBuilder addLine() {
-        this.textComponent.addExtra("\n");
+    public MessageBuilder addHoverShowText(final String text, final String hover) {
+        final TextComponent temp = new TextComponent(text);
+        temp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create()));
+        components.add(temp);
         return this;
     }
-
-    public MessageBuilder addClickable(ClickEvent.Action action, String value) {
-        this.textComponent.setClickEvent(new ClickEvent(action, value));
-        return this;
-    }
-
-    public MessageBuilder addClickable(String text, ClickEvent.Action action, String value) {
-        TextComponent secondComponent = new TextComponent(text);
-        secondComponent.setClickEvent(new ClickEvent(action, value));
-        this.textComponent.addExtra(secondComponent);
-        return this;
-    }
-
-    public TextComponent addClickable(String text, String hover, ClickEvent.Action action, String command) {
-        TextComponent textComponent = new TextComponent(text);
-        textComponent.setClickEvent(new ClickEvent(action, "/" + command));
-        textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create()));
-        return textComponent;
-    }
-
-    public MessageBuilder addHover(String text) {
-        ComponentBuilder componentBuilder = new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', text));
-        this.textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, componentBuilder.create()));
-        return this;
-    }
-
-    public MessageBuilder addHover(String text, HoverEvent.Action action) {
-        ComponentBuilder componentBuilder = new ComponentBuilder(ChatColor.translateAlternateColorCodes('&', text));
-        this.textComponent.setHoverEvent(new HoverEvent(action, componentBuilder.create()));
-        return this;
-    }
-
 
     public void broadcast() {
-        Bukkit.getOnlinePlayers().forEach(player -> player.spigot().sendMessage(this.textComponent));
+
+        if(components.isEmpty())
+            return;
+
+        final TextComponent[] temp = new TextComponent[components.size()];
+
+        for (int i = 0; i < components.size(); i++)
+            temp[i] = components.get(i);
+
+        Bukkit.getOnlinePlayers().forEach(player -> player.spigot().sendMessage(temp));
     }
 
     public void send(Player player) {
-        player.spigot().sendMessage(this.textComponent);
+        if(components.isEmpty())
+            return;
+
+        final TextComponent[] temp = new TextComponent[components.size()];
+
+        for (int i = 0; i < components.size(); i++)
+            temp[i] = components.get(i);
+
+        player.spigot().sendMessage(temp);
     }
 }

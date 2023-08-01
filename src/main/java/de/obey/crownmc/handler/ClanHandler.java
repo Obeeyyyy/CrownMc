@@ -143,9 +143,9 @@ public final class ClanHandler {
 
         messageUtil.sendMessage(target, "§f§o" + player.getName() + "§7 hat dich in den Clan §8'§f" + user.getClan().getClanName() + "§8'§7 eingeladen§8.");
         target.sendMessage("");
-        new MessageBuilder("§8» §7Klicke hier, um die Einladung §a§oanzunehmen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/clan accept " + user.getClan().getClanName()).send(target);
+        new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um die Einladung §a§oanzunehmen§8.", "§a§oAnnehmen","/clan accept " + user.getClan().getClanName()).send(target);
         target.sendMessage("");
-        new MessageBuilder("§8» §7Klicke hier, um die Einladung §c§oabzulehnen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/clan deny " + user.getClan().getClanName()).send(target);
+        new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um die Einladung §c§oabzulehnen§8.", "§c§oAblehnen","/clan deny " + user.getClan().getClanName()).send(target);
 
         target.playSound(target.getLocation(), Sound.VILLAGER_HAGGLE, 1f, 1);
 

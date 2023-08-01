@@ -425,29 +425,32 @@ public final class BadgeCommand implements CommandExecutor, Listener {
 
         event.setCancelled(true);
 
-        userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+        final User user = userHandler.getUserInstant(player.getUniqueId());
 
-            if (!InventoryUtil.isItemInHandStartsWith(player, "§f§lBADGE "))
-                return;
+        if (user == null) {
+            messageUtil.sendMessage(player, "Deine Daten werden noch geladen, bitte habe einen Augenblock Geduld§8.");
+            return;
+        }
 
-            final String name = ChatColor.stripColor(player.getItemInHand().getItemMeta().getLore().get(4));
-            final Badge badge = badgeHandler.getBadgeFromName(name);
+        if (!InventoryUtil.isItemInHandStartsWith(player, "§f§lBADGE "))
+            return;
 
-            if (badge == null) {
-                messageUtil.sendMessage(player, "Die Badge " + name + " existiert nicht§8.");
-                return;
-            }
+        final String name = ChatColor.stripColor(player.getItemInHand().getItemMeta().getLore().get(4));
+        final Badge badge = badgeHandler.getBadgeFromName(name);
 
-            if (user.getBadges().getBadges().containsKey(badge.getName())) {
-                messageUtil.sendMessage(player, "Du hast die " + name + " Badge schon§8.");
-                return;
-            }
+        if (badge == null) {
+            messageUtil.sendMessage(player, "Die Badge " + name + " existiert nicht§8.");
+            return;
+        }
 
-            player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
-            user.getBadges().addBadge(badge.getName());
-            InventoryUtil.removeItemInHand(player, 1);
-        });
+        if (user.getBadges().getBadges().containsKey(badge.getName())) {
+            messageUtil.sendMessage(player, "Du hast die " + name + " Badge schon§8.");
+            return;
+        }
 
+        player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+        user.getBadges().addBadge(badge.getName());
+        InventoryUtil.removeItemInHand(player, 1);
     }
 
     private final HashMap<UUID, Long> cooldowns = new HashMap<>();
@@ -491,8 +494,9 @@ public final class BadgeCommand implements CommandExecutor, Listener {
 
         cooldowns.put(player.getUniqueId(), System.currentTimeMillis() + (1000 * 10));
 
-        new MessageBuilder("§f§lBADGES§8 × §7" + player.getName() + " zeigt§8: " + badge.getPrefix())
-                .addHover(badge.getPrefix() + "§8 ( §7" + player.getName() + " §8)\n\n"
+        new MessageBuilder()
+                .addHoverShowText("§f§lBADGES§8 × §7" + player.getName() + " zeigt§8: " + badge.getPrefix(),
+                        badge.getPrefix() + "§8 ( §7" + player.getName() + " §8)\n\n"
                         + "§7Beschreibung§8: §f§o" + badge.getDescription() + "\n" +
                         "\n" +
                         "§7Freigeschaltet am§8: §f§o" + userHandler.getUserInstant(player.getUniqueId()).getBadges().getBadges().get(badge.getName()).getReceivedDate() +

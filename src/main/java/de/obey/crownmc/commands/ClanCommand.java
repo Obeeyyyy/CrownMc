@@ -271,6 +271,14 @@ public class ClanCommand implements CommandExecutor, Listener {
 
             // Open clan chest
             if(event.getSlot() == 30) {
+
+                if(clan.isTrusted(player.getUniqueId()) ||
+                    clan.isMod(player.getUniqueId()) ||
+                    clan.isLeader(player.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Du kannst nicht auf die Clantruhe zugreifen§8.");
+                    return;
+                }
+
                 player.closeInventory();
                 player.openInventory(clan.getClanChest());
                 player.updateInventory();
@@ -378,7 +386,7 @@ public class ClanCommand implements CommandExecutor, Listener {
                 }
 
                 if(clan.isMod(player.getUniqueId()) && clan.isMod(target.getUniqueId())) {
-                    messageUtil.sendMessage(player, "Du bist nicht dazu berechtigt Mitglieder zu kicken§8.");
+                    messageUtil.sendMessage(player, "Du bist nicht dazu berechtigt dieses Mitglieder zu kicken§8.");
                     player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
                     return;
                 }
@@ -389,8 +397,87 @@ public class ClanCommand implements CommandExecutor, Listener {
                 return;
             }
 
+            // demote player
+            if(event.isRightClick() && event.isShiftClick()) {
+                if(!clan.isLeader(player.getUniqueId()) && !clan.isMod(player.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Du bist nicht dazu berechtigt Mitglieder zu demoten§8.");
+                    player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                    return;
+                }
+
+                final String targetName = event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[1];
+                final OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);
+
+                if(clan.isLeader(target.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Der Clanleader kann nicht demotet werden§8.");
+                    player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                    return;
+                }
+
+                if(!clan.isMod(target.getUniqueId()) && !clan.isTrusted(target.getUniqueId()))
+                    return;
+
+                if(clan.isMod(player.getUniqueId()) && clan.isMod(target.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Du bist nicht dazu berechtigt dieses Mitglied zu demoten§8.");
+                    player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                    return;
+                }
+
+                if(clan.isMod(target.getUniqueId())) {
+                    clan.getModeratorList().remove(target.getUniqueId().toString());
+                    clan.getTrustedList().add(target.getUniqueId().toString());
+                    clan.sendMessageToAllClanMembers("§f" + target.getName() + " §7wurde von §f" + player.getName() + " §7demotet§8. (§5§lMod §7-> §a§oTrusted§8)");
+                } else {
+                    clan.getTrustedList().remove(target.getUniqueId().toString());
+                    clan.sendMessageToAllClanMembers("§f" + target.getName() + " §7wurde von §f" + player.getName() + " §7demotet§8. (§a§oTrusted §7-> Member§8)");
+                }
+
+                clan.updateMemberInventory();
+                player.playSound(player.getLocation(), Sound.NOTE_PLING, 0.5f, 1);
+
+                return;
+            }
+
+            // promote player
+            if(event.isLeftClick() && event.isShiftClick()) {
+                if(!clan.isLeader(player.getUniqueId()) && !clan.isMod(player.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Du bist nicht dazu berechtigt Mitglieder zu promoten§8.");
+                    player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                    return;
+                }
+
+                final String targetName = event.getCurrentItem().getItemMeta().getDisplayName().split(" ")[1];
+                final OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);
+
+                if(clan.isLeader(target.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Der Clanleader kann nicht promotet werden§8.");
+                    player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                    return;
+                }
+
+                if(clan.isMod(target.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Clanmods können nicht promotet werden§8.");
+                    return;
+                }
+
+                if(clan.isTrusted(target.getUniqueId())) {
+                    clan.getModeratorList().add(target.getUniqueId().toString());
+                    clan.getTrustedList().remove(target.getUniqueId().toString());
+                    clan.sendMessageToAllClanMembers("§f" + target.getName() + " §7wurde von §f" + player.getName() + " §7promotet§8. (§a§oTrusted §7-> §5§lMod§8)");
+                } else {
+                    clan.getTrustedList().add(target.getUniqueId().toString());
+                    clan.sendMessageToAllClanMembers("§f" + target.getName() + " §7wurde von §f" + player.getName() + " §7promotet§8. (§7Member -> §a§oTrusted§8)");
+                }
+
+                clan.updateMemberInventory();
+                player.playSound(player.getLocation(), Sound.NOTE_PLING, 0.5f, 1);
+
+                return;
+            }
+
         }
 
+        // Clan löschen
         if(InventoryUtil.isInventoryTitle(event.getInventory(), "§c§oClan löschen")) {
             event.setCancelled(true);
 
@@ -425,9 +512,9 @@ public class ClanCommand implements CommandExecutor, Listener {
             }
         }
 
-        if(InventoryUtil.startsWithInventoryTitle(event.getInventory(), "§c§iKick")) {
+        // Member kicken
+        if(InventoryUtil.startsWithInventoryTitle(event.getInventory(), "§c§oKick")) {
             event.setCancelled(true);
-
 
             if(!InventoryUtil.startsWithInventoryTitle(event.getClickedInventory(), "§c§oKick "))
                 return;

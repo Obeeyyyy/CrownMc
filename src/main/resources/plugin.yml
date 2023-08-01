@@ -175,8 +175,12 @@ commands:
   pvpaltar:
   banreason:
     aliases: [banr]
+  mutereason:
+    aliases: [ muter ]
   votekick:
   npc:
   clan:
   scramble:
   ranginfo:
+  stattrack:
+  rangcheck:

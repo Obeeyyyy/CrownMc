@@ -8,6 +8,7 @@ package de.obey.crownmc.listener;
  without permission from me, obey, the creator of this code.
 */
 
+import de.obey.crownmc.handler.CombatHandler;
 import de.obey.crownmc.handler.LocationHandler;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.LocationUtil;
@@ -35,6 +36,9 @@ public final class WarpAugeListener implements Listener {
 
     @NonNull
     private final MessageUtil messageUtil;
+
+    @NonNull
+    private final CombatHandler combatHandler;
 
     @NonNull
     private final LocationHandler locationHandler;
@@ -86,7 +90,12 @@ public final class WarpAugeListener implements Listener {
             }
 
             if(millis.containsKey(player) && System.currentTimeMillis() < millis.get(player)) {
-                messageUtil.sendMessage(player,"Du kannst das Auge erst in " + MathUtil.getSecondsFromMillis(millis.get(player) - System.currentTimeMillis()) + "nutzen§8.");
+                messageUtil.sendMessage(player,"Du kannst das Auge erst in " + MathUtil.getSecondsFromMillis(millis.get(player) - System.currentTimeMillis()) + " nutzen§8.");
+                return;
+            }
+
+            if(combatHandler.isInCombat(player) != null) {
+                messageUtil.sendMessage(player, "Das §5§lWarpAuge §7funktioniert im Kampf nicht§8.");
                 return;
             }
 
@@ -95,11 +104,13 @@ public final class WarpAugeListener implements Listener {
             if(uses > 0) {
                 lore.set(11, "§8» §7Energie§8:§f " + uses);
                 meta.setLore(lore);
+                item.setItemMeta(meta);
                 player.updateInventory();
             } else {
                 InventoryUtil.removeItemInHand(player, 1);
             }
 
+            millis.put(player, System.currentTimeMillis() + 1000 * 5);
             locationHandler.teleportToLocation(player, location);
         }
     }

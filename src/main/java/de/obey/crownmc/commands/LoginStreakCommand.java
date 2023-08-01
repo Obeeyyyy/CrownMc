@@ -67,7 +67,7 @@ public final class LoginStreakCommand implements CommandExecutor, Listener {
 
                     userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
 
-                        if(!user.getLoginStreak().isRewardSlot(tag - 1)) {
+                        if(!user.getLoginStreak().isRewardSlot(user.getLoginStreak().getSlotFromDay(10))) {
                             messageUtil.sendMessage(player, tag + " ist kein Reward Tag§8.");
                             return;
                         }

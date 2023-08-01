@@ -64,8 +64,10 @@ public final class Initializer {
     private RouletteHandler rouletteHandler;
     private PvPAltarHandler pvPAltarHandler;
     private BanHandler banHandler;
+    private MuteHandler muteHandler;
     private NpcHandler npcHandler;
     private WordScrambleHandler wordScrumbleHandler;
+    private StatTrackHandler statTrackHandler;
 
     private PlotAPI plotAPI;
 
@@ -89,11 +91,12 @@ public final class Initializer {
         banCommand = new BanCommand(messageUtil, banHandler);
         blockStuffListener = new BlockStuffListener(messageUtil, locationHandler, combatHandler, userHandler, serverConfig, worldProtectionHandler);
         final PvPAltarListener pvPAltarListener = new PvPAltarListener(messageUtil, pvPAltarHandler);
-        final WarpAugeListener warpAugeListener = new WarpAugeListener(messageUtil, locationHandler);
+        final WarpAugeListener warpAugeListener = new WarpAugeListener(messageUtil, combatHandler, locationHandler);
         final VoteKickCommand voteKickCommand = new VoteKickCommand(messageUtil);
         final GuessTheNumberCommand guessTheNumberCommand = new GuessTheNumberCommand(messageUtil);
         final NpcCommand npcCommand = new NpcCommand(messageUtil, npcHandler);
         final ClanCommand clanCommand = new ClanCommand(messageUtil, clanHandler, userHandler);
+        final StatTrackCommand statTrackCommand = new StatTrackCommand(messageUtil, statTrackHandler);
 
         crownMain.getCommand("whitelist").setExecutor(new WhitelistCommand(serverConfig, messageUtil));
         crownMain.getCommand("stop").setExecutor(new StopCommand(this));
@@ -208,9 +211,8 @@ public final class Initializer {
         crownMain.getCommand("guessthenumber").setExecutor(guessTheNumberCommand);
         crownMain.getCommand("sudo").setExecutor(new SudoCommand(messageUtil));
         crownMain.getCommand("dailypot").setExecutor(new DailyPotCommand(messageUtil, dailyPotHandler));
-        crownMain.getCommand("mute").setExecutor(new MuteCommand(messageUtil, userHandler));
-        crownMain.getCommand("unmute").setExecutor(new MuteCommand(messageUtil, userHandler));
-        crownMain.getCommand("check").setExecutor(new MuteCommand(messageUtil, userHandler));
+        crownMain.getCommand("mute").setExecutor(new MuteCommand(messageUtil, muteHandler));
+        crownMain.getCommand("unmute").setExecutor(new MuteCommand(messageUtil, muteHandler));
         crownMain.getCommand("luckyspin").setExecutor(new LuckySpinCommand(messageUtil, userHandler, luckySpinHandler));
         crownMain.getCommand("voteparty").setExecutor(new VotePartyCommand(messageUtil, votePartyHandler));
         crownMain.getCommand("crowns").setExecutor(new CrownCommand(messageUtil, userHandler));
@@ -225,11 +227,15 @@ public final class Initializer {
         crownMain.getCommand("frieden").setExecutor(new FriedenCommand(messageUtil, userHandler));
         crownMain.getCommand("pvpaltar").setExecutor(new PvPAltarCommand(messageUtil, pvPAltarHandler));
         crownMain.getCommand("banreason").setExecutor(new BanReasonCommand(messageUtil, banHandler));
+        crownMain.getCommand("mutereason").setExecutor(new MuteReasonCommand(messageUtil, muteHandler));
         crownMain.getCommand("votekick").setExecutor(voteKickCommand);
         crownMain.getCommand("npc").setExecutor(npcCommand);
         crownMain.getCommand("clan").setExecutor(clanCommand);
         crownMain.getCommand("scramble").setExecutor(new ScrambleCommand(wordScrumbleHandler));
         crownMain.getCommand("ranginfo").setExecutor(new RangInfoCommand());
+        crownMain.getCommand("check").setExecutor(new CheckCommand(messageUtil, userHandler));
+        crownMain.getCommand("stattrack").setExecutor(statTrackCommand);
+        crownMain.getCommand("rangcheck").setExecutor(new RangCheckCommand(messageUtil, rangHandler));
 
         final PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -246,7 +252,7 @@ public final class Initializer {
         pluginManager.registerEvents(new EnderchestListener(userHandler), crownMain);
         pluginManager.registerEvents(new MotdCommand(messageUtil, serverConfig), crownMain);
         pluginManager.registerEvents(new SettingsCommand(this), crownMain);
-        pluginManager.registerEvents(new DeathListener(messageUtil, userHandler, killFarmHandler, combatHandler, serverConfig, locationHandler, pvPAltarHandler), crownMain);
+        pluginManager.registerEvents(new DeathListener(messageUtil, userHandler, killFarmHandler, combatHandler, serverConfig, locationHandler, pvPAltarHandler, statTrackHandler), crownMain);
         pluginManager.registerEvents(new BodySeeCommand(messageUtil), crownMain);
         pluginManager.registerEvents(new GutscheinCommand(messageUtil, userHandler), crownMain);
         pluginManager.registerEvents(new RankingCommand(messageUtil, rankingHandler), crownMain);
@@ -293,6 +299,7 @@ public final class Initializer {
         pluginManager.registerEvents(npcCommand, crownMain);
         pluginManager.registerEvents(clanCommand, crownMain);
         pluginManager.registerEvents(new RangInfoCommand(), crownMain);
+        pluginManager.registerEvents(new RandomTeleportListener(messageUtil, combatHandler, locationHandler), crownMain);
     }
 
     private void loadTabCompleter() {
@@ -390,8 +397,10 @@ public final class Initializer {
                     rouletteHandler = new RouletteHandler(locationHandler, messageUtil, userHandler);
                     pvPAltarHandler = new PvPAltarHandler(messageUtil);
                     banHandler = new BanHandler(messageUtil, userHandler);
+                    muteHandler = new MuteHandler(messageUtil, userHandler);
                     npcHandler = new NpcHandler(messageUtil);
                     wordScrumbleHandler = new WordScrambleHandler(messageUtil, userHandler);
+                    statTrackHandler = new StatTrackHandler();
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
@@ -462,6 +471,8 @@ public final class Initializer {
         jackPotHandler.shutdown();
         rouletteHandler.shutdown();
         pvPAltarHandler.shutdown();
+        banHandler.save();
+        muteHandler.save();
 
         for (final Player onlinePlayer : Bukkit.getOnlinePlayers())
             onlinePlayer.kickPlayer("§c§oDer Server startet neu.");
@@ -476,6 +487,7 @@ public final class Initializer {
         serverConfig.save();
         dailyPotHandler.save();
         banHandler.save();
+        muteHandler.save();
         npcHandler.shutdown();
 
         clanHandler.save();

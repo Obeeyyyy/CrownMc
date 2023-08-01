@@ -11,11 +11,14 @@ package de.obey.crownmc.commands;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.handler.BanHandler;
 import de.obey.crownmc.handler.UserHandler;
+import de.obey.crownmc.util.InventoryUtil;
+import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -53,13 +56,35 @@ public final class BuyCommand implements CommandExecutor {
                     userHandler.getUser(target.getUniqueId()).thenAcceptAsync(user -> {
                         user.addLong(DataType.CROWNS, amount);
 
-                        messageUtil.broadcast(target.getName() + " hat sich §e§o" + messageUtil.formatLong(amount) + "§7 Crowns in unserem §8§l/§6§lstore §7gekauft§8.");
+                        messageUtil.broadcast("§f§o" + target.getName() + " §7hat sich §e§o" + messageUtil.formatLong(amount) + "§7 Crowns in unserem §8§l/§6§lstore §7gekauft§8.");
 
                         if (target.isOnline())
                             target.getPlayer().playSound(target.getPlayer().getLocation(), Sound.WITHER_DEATH, 0.5f, 1);
                     });
 
                     return false;
+                }
+            }
+
+            if(args.length == 2) {
+                if(args[0].equalsIgnoreCase("tmote")) {
+                    final OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+
+                    if (!messageUtil.hasPlayedBefore(sender, args[1]))
+                        return false;
+
+                    if(!target.isOnline())
+                        return false;
+
+                    messageUtil.broadcast("§f§o" + target.getName() + " §7hat sich ein §6§lTMOTE §7in unserem §8§l/§6§lstore §7gekauft§8.");
+                    InventoryUtil.addItem(target.getPlayer(), new ItemBuilder(Material.PAPER)
+                            .setDisplayname("§8» §6§lCUSTOM §e§lTMOTE")
+                            .setLore("",
+                                    "§8▰§7▱  §6§lRechtsklick",
+                                    "  §8- §7Schreibe den gewünschten TMOTE",
+                                    "  §8- §7in den Chat und bestätige ihn§8.",
+                                    "")
+                            .build());
                 }
             }
             return false;

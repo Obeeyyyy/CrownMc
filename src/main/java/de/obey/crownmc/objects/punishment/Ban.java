@@ -10,19 +10,42 @@ package de.obey.crownmc.objects.punishment;
 
 import de.obey.crownmc.CrownMain;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 @Getter
 public class Ban {
 
-    final int id;
-    final String author;
-    final BanReason banReason;
+    private final int id;
+    private final BanReason banReason;
+
+    private final YamlConfiguration cfg;
+
+    @Setter
+    private String author;
+    @Setter
+    private long bannedUntil;
 
     public Ban(final int id, final YamlConfiguration cfg) {
+        this.cfg = cfg;
         this.id = id;
-        author = cfg.getString("bans." + id + ".author");
-        banReason = CrownMain.getInstance().getInitializer().getBanHandler().getReadsonFromID(cfg.getInt("bans." + id + ".reason"));
+        this.banReason = CrownMain.getInstance().getInitializer().getBanHandler().getReadsonFromID(cfg.getInt("bans." + id + ".reason"));
+
+        bannedUntil = System.currentTimeMillis() + banReason.getDuration();
+    }
+
+    public Ban(final int id, final BanReason banReason, final YamlConfiguration cfg) {
+        this.cfg = cfg;
+        this.id = id;
+        this.banReason = banReason;
+
+        bannedUntil = System.currentTimeMillis() + banReason.getDuration();
+    }
+
+    public void save() {
+        cfg.set("bans." + id + ".reason", banReason.getId());
+        cfg.set("bans." + id + ".bannedUntil", bannedUntil);
+        cfg.set("bans." + id + ".author", author);
     }
 
 }

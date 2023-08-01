@@ -37,7 +37,7 @@ public final class UserLoginStreak {
         updateInventory();
     }
 
-    private int getSlotFromDay(final int day) {
+    public int getSlotFromDay(final int day) {
 
         switch (day) {
             case 1 : return 0;

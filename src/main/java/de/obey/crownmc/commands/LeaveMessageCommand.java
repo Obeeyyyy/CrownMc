@@ -106,7 +106,7 @@ public final class LeaveMessageCommand implements CommandExecutor {
 
                 user.setString(DataType.LEAVEMESSAGE, message);
                 messageUtil.sendMessage(sender, "Deine LeaveMessage wurde gesetzt.");
-                messageUtil.sendMessage(sender, message);
+                messageUtil.sendMessage(sender, message.replace("%name%", player.getName()));
 
                 return;
             }

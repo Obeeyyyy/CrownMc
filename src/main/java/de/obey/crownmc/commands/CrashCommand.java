@@ -23,6 +23,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 @RequiredArgsConstructor
 @NonNull
@@ -135,6 +136,16 @@ public final class CrashCommand implements CommandExecutor, Listener {
             messageUtil.sendMessage(player, "Schreibe den §a§ogewünschten Betrag§7 in den Chat§8.");
             messageUtil.sendMessage(player, "Schreibe §c§ocancel§7 um den Vorgang abzubrechen§8.");
             player.playSound(player.getLocation(), Sound.STEP_LADDER, 0.5f, 1);
+        }
+    }
+
+    @EventHandler
+    public void on(final PlayerToggleSneakEvent event) {
+        if(event.isSneaking()) {
+            if(crashHandler.getCrash().getBets().containsKey(event.getPlayer().getUniqueId())) {
+                crashHandler.getCrash().leaveCrash(event.getPlayer());
+            }
+
         }
     }
 }

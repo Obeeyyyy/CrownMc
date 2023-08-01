@@ -20,13 +20,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @NonNull
 public final class LoreCommand implements CommandExecutor {
 
     private final MessageUtil messageUtil;
+
+    private final HashMap<UUID, List<String>> copies = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -38,6 +42,46 @@ public final class LoreCommand implements CommandExecutor {
 
         if (!PermissionUtil.hasPermission(player, "editlore", true))
             return false;
+
+        if (args.length == 1) {
+            if(args[0].equalsIgnoreCase("copy")) {
+
+                if(!InventoryUtil.hasItemInHand(player, true))
+                    return false;
+
+                final ItemStack stack = player.getItemInHand();
+
+                if(!stack.hasItemMeta() || !stack.getItemMeta().hasLore()) {
+                    messageUtil.sendMessage(player, "Dieses Item hat keine Lore§8.");
+                    return false;
+                }
+
+                copies.put(player.getUniqueId(), stack.getItemMeta().getLore());
+                messageUtil.sendMessage(player, "Lore gespeichert§8.");
+
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("paste")) {
+                if(!InventoryUtil.hasItemInHand(player, true))
+                    return false;
+
+                if (!copies.containsKey(player.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Du hast keine Lore gespeichert§8.");
+                    return false;
+                }
+
+                final ItemStack stack = player.getItemInHand();
+                final ItemMeta meta = stack.getItemMeta();
+
+                meta.setLore(copies.get(player.getUniqueId()));
+                stack.setItemMeta(meta);
+                player.setItemInHand(stack);
+                messageUtil.sendMessage(player, "Lore gepasted§8.");
+
+                return false;
+            }
+        }
 
         if (args.length > 0) {
 
@@ -98,6 +142,8 @@ public final class LoreCommand implements CommandExecutor {
                             }
                         }
 
+                        text = text.replaceAll("'", "§r ");
+
                         lore.set(line, ChatColor.translateAlternateColorCodes('&', text));
                         meta.setLore(lore);
                         item.setItemMeta(meta);
@@ -152,7 +198,9 @@ public final class LoreCommand implements CommandExecutor {
 
         messageUtil.sendSyntax(player, "/lore add <text>",
                 "/lore remove <1, 2 = line >",
-                "/lore set <1, 2 = line> <text>");
+                "/lore set <1, 2 = line> <text>",
+                "/lore copy",
+                "/lore paste");
 
         return false;
     }

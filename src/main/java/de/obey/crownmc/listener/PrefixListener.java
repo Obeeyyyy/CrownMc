@@ -7,7 +7,9 @@ package de.obey.crownmc.listener;
 */
 
 import de.obey.crownmc.CrownMain;
+import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.backend.user.User;
+import de.obey.crownmc.handler.ScoreboardHandler;
 import de.obey.crownmc.handler.UserHandler;
 import de.obey.crownmc.util.InventoryUtil;
 import de.obey.crownmc.util.ItemBuilder;
@@ -39,7 +41,9 @@ public final class PrefixListener implements Listener {
     private final UserHandler userHandler;
 
     private static final ArrayList<UUID> settingChatPrefix = new ArrayList<>();
-    private static final Map<Player, String> confirming = new HashMap<>();
+    private static final ArrayList<UUID> settingTmote = new ArrayList<>();
+    private static final Map<Player, String> confirmingPrefix = new HashMap<>();
+    private static final Map<Player, String> confirmingTmote = new HashMap<>();
 
     public static boolean isSettingChatPrefix(final Player player, final String message) {
         final MessageUtil messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
@@ -74,27 +78,27 @@ public final class PrefixListener implements Listener {
             }
 
             settingChatPrefix.remove(player.getUniqueId());
-            confirming.put(player, message);
+            confirmingPrefix.put(player, message);
 
             messageUtil.sendMessage(player, "Schreibe §8'§c§ocancel§8'§7 um den Vorgang abzubrechen§8.");
             messageUtil.sendMessage(player, "Schreibe §8'§c§oNEIN§8' §7um einen neuen Prefix zu wählen§8.");
             messageUtil.sendMessage(player, "Schreibe §8'§a§oJA§8' §7um einen neuen Prefix zu bestätigen§8.");
-            messageUtil.sendMessage(player, "Preview§8:§r " + confirming.get(player) + " " + player.getName());
+            messageUtil.sendMessage(player, "Preview§8:§r " + confirmingPrefix.get(player) + " " + player.getName());
 
             return true;
         }
 
-        if (confirming.containsKey(player)) {
+        if (confirmingPrefix.containsKey(player)) {
 
             if (message.equalsIgnoreCase("ja")) {
-                if (!userHandler.getUserInstant(player.getUniqueId()).getPrefix().addPrefix(confirming.get(player))) {
+                if (!userHandler.getUserInstant(player.getUniqueId()).getPrefix().addPrefix(confirmingPrefix.get(player))) {
                     messageUtil.sendMessage(player, "Du hast diesen Prefix bereits, wähle einen anderen§8.");
                     return true;
                 }
-                messageUtil.sendMessage(player, "Du hast den Prefix§8: §r" + confirming.get(player) + "§7 erstellt§8.");
-                userHandler.getUserInstant(player.getUniqueId()).getPrefix().setActivePrefix(confirming.get(player));
+                messageUtil.sendMessage(player, "Du hast den Prefix§8: §r" + confirmingPrefix.get(player) + "§7 erstellt§8.");
+                userHandler.getUserInstant(player.getUniqueId()).getPrefix().setActivePrefix(confirmingPrefix.get(player));
 
-                confirming.remove(player);
+                confirmingPrefix.remove(player);
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
                 return true;
             }
@@ -102,12 +106,12 @@ public final class PrefixListener implements Listener {
             if (message.equalsIgnoreCase("nein")) {
                 messageUtil.sendMessage(player, "Schreibe §8'§c§ocancel§8'§7 um den Vorgang abzubrechen§8,§7 oder wähle einen neuen Prefix§8.");
                 settingChatPrefix.add(player.getUniqueId());
-                confirming.remove(player);
+                confirmingPrefix.remove(player);
                 return true;
             }
 
             if (message.equalsIgnoreCase("cancel")) {
-                confirming.remove(player);
+                confirmingPrefix.remove(player);
                 player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
                 messageUtil.sendMessage(player, "Abgebrochen, du hast deinen Gutschein zurück bekommen§8.");
                 InventoryUtil.addItem(player, new ItemBuilder(Material.PAPER)
@@ -123,8 +127,97 @@ public final class PrefixListener implements Listener {
 
             messageUtil.sendMessage(player, "Schreibe §8'§c§ocancel§8'§7 um den Vorgang abzubrechen§8.");
             messageUtil.sendMessage(player, "Schreibe §8'§c§oNEIN§8' §7um einen neuen Prefix zu wählen§8.");
-            messageUtil.sendMessage(player, "Schreibe §8'§a§oJA§8' §7um einen neuen Prefix zu bestätigen§8.");
-            messageUtil.sendMessage(player, "Preview§8:§r " + confirming.get(player) + " " + player.getName());
+            messageUtil.sendMessage(player, "Schreibe §8'§a§oJA§8' §7um zu bestätigen§8.");
+            messageUtil.sendMessage(player, "Preview§8:§r " + confirmingPrefix.get(player) + " " + player.getName());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isSettingTmote(final Player player, final String message) {
+        final MessageUtil messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
+        final UserHandler userHandler = CrownMain.getInstance().getInitializer().getUserHandler();
+        final ScoreboardHandler scoreboardHandler = CrownMain.getInstance().getInitializer().getScoreboardHandler();
+
+        if (settingTmote.contains(player.getUniqueId())) {
+            if (message.equalsIgnoreCase("cancel")) {
+                settingTmote.remove(player.getUniqueId());
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                messageUtil.sendMessage(player, "Abgebrochen, du hast deinen Gutschein zurück bekommen§8.");
+                InventoryUtil.addItem(player, new ItemBuilder(Material.PAPER)
+                        .setDisplayname("§8» §6§lCUSTOM §e§lTMOTE")
+                        .setLore("",
+                                "§8▰§7▱  §6§lRechtsklick",
+                                "  §8- §7Schreibe den gewünschten TMOTE",
+                                "  §8- §7in den Chat und bestätige ihn§8.",
+                                "")
+                        .build());
+                return true;
+            }
+
+            if (ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)).length() > 1 ||
+                    ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)).length() <= 0) {
+                messageUtil.sendMessage(player, "Der TMOTE ist zu lang/kurz, bitte wähle einen TMTE der weniger als 2 und mehr als 0 Zeichen hat§8.");
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                return true;
+            }
+
+            if(!CrownMain.getInstance().getInitializer().getChatFilterHandler().runChatFilterCheck(player, message)) {
+                messageUtil.sendMessage(player, "Der TMOTE §8'§r" + message + "§8'§7 enthält verbotene Wörter oder Buchstaben§8.");
+                return true;
+            }
+
+            settingTmote.remove(player.getUniqueId());
+            confirmingTmote.put(player, message);
+
+            messageUtil.sendMessage(player, "Schreibe §8'§c§ocancel§8'§7 um den Vorgang abzubrechen§8.");
+            messageUtil.sendMessage(player, "Schreibe §8'§c§oNEIN§8' §7um einen neuen TMOTE zu wählen§8.");
+            messageUtil.sendMessage(player, "Schreibe §8'§a§oJA§8' §7um zu bestätigen§8.");
+            messageUtil.sendMessage(player, "Preview§8:§r " + player.getName() + " " + confirmingTmote.get(player));
+
+            return true;
+        }
+
+        if (confirmingTmote.containsKey(player)) {
+
+            if (message.equalsIgnoreCase("ja")) {
+                messageUtil.sendMessage(player, "Du hast den TMOTE§8: §r" + confirmingTmote.get(player) + "§7 erstellt§8.");
+                userHandler.getUserInstant(player.getUniqueId()).setString(DataType.TMOTE, confirmingTmote.get(player));
+
+                confirmingTmote.remove(player);
+                scoreboardHandler.setTablistName(player);
+                player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
+                return true;
+            }
+
+            if (message.equalsIgnoreCase("nein")) {
+                messageUtil.sendMessage(player, "Schreibe §8'§c§ocancel§8'§7 um den Vorgang abzubrechen§8,§7 oder wähle einen neuen TMOTE§8.");
+                settingTmote.add(player.getUniqueId());
+                confirmingTmote.remove(player);
+                return true;
+            }
+
+            if (message.equalsIgnoreCase("cancel")) {
+                confirmingTmote.remove(player);
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                messageUtil.sendMessage(player, "Abgebrochen, du hast deinen Gutschein zurück bekommen§8.");
+                InventoryUtil.addItem(player, new ItemBuilder(Material.PAPER)
+                        .setDisplayname("§8» §6§lCUSTOM §e§lTMOTE")
+                        .setLore("",
+                                "§8▰§7▱  §6§lRechtsklick",
+                                "  §8- §7Schreibe den gewünschten TMOTE",
+                                "  §8- §7in den Chat und bestätige ihn§8.",
+                                "")
+                        .build());
+                return true;
+            }
+
+            messageUtil.sendMessage(player, "Schreibe §8'§c§ocancel§8'§7 um den Vorgang abzubrechen§8.");
+            messageUtil.sendMessage(player, "Schreibe §8'§c§oNEIN§8' §7um einen neuen TMOTE zu wählen§8.");
+            messageUtil.sendMessage(player, "Schreibe §8'§a§oJA§8' §7um einen neuen TMOTE zu bestätigen§8.");
+            messageUtil.sendMessage(player, "Preview§8:§r " + player.getName() + " " + confirmingTmote.get(player) );
 
             return true;
         }
@@ -143,8 +236,8 @@ public final class PrefixListener implements Listener {
         if (InventoryUtil.isItemInHandWithDisplayname(event.getPlayer(), "§8» §6§lCUSTOM §e§lPREFIX")) {
             event.setCancelled(true);
 
-            if (settingChatPrefix.contains(player.getUniqueId())) {
-                messageUtil.sendSyntax(player, "Du setzt bereits einen CustomPrefix§8.");
+            if (settingTmote.contains(player.getUniqueId()) || settingChatPrefix.contains(player.getUniqueId())) {
+                messageUtil.sendSyntax(player, "Bitte beende die aktuelle Aktion§8.");
                 return;
             }
 
@@ -158,6 +251,26 @@ public final class PrefixListener implements Listener {
 
             return;
         }
+
+        if (InventoryUtil.isItemInHandWithDisplayname(event.getPlayer(), "§8» §6§lCUSTOM §e§lTMOTE")) {
+            event.setCancelled(true);
+
+            if (settingTmote.contains(player.getUniqueId()) || settingChatPrefix.contains(player.getUniqueId())) {
+                messageUtil.sendSyntax(player, "Bitte beende die aktuelle Aktion§8.");
+                return;
+            }
+
+            InventoryUtil.removeItemInHand(player, 1);
+            messageUtil.sendMessage(player, "Gebe deinen gewünschten TMOTE in den Chat ein§8.");
+            messageUtil.sendMessage(player, "Nutze Farbcodes wie §f&§f6 §7um Farben zu nutzen§8.");
+            messageUtil.sendMessage(player, "Schreibe §8'§c§ocancel§8'§7 um abzubrechen§8.");
+
+            settingTmote.add(player.getUniqueId());
+            player.playSound(player.getLocation(), Sound.CHICKEN_EGG_POP, 1, 1);
+
+            return;
+        }
+
 
         if (InventoryUtil.isItemInHandWithDisplayname(event.getPlayer(), "§8» §f§lPrefix Gutschein")) {
             event.setCancelled(true);

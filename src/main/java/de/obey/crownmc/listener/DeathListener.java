@@ -47,6 +47,7 @@ public final class DeathListener implements Listener {
     private final ServerConfig serverConfig;
     private final LocationHandler locationHandler;
     private final PvPAltarHandler pvPAltarHandler;
+    private final StatTrackHandler statTrackHandler;
 
     private final DecimalFormat format = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
 
@@ -92,6 +93,7 @@ public final class DeathListener implements Listener {
         user.removeLong(DataType.ELOPOINTS, serverConfig.getDeathEloLose());
         // Punishment end
 
+        statTrackHandler.addCount(killer);
 
         // Reward stuff start
         long killerUserKillstreak;

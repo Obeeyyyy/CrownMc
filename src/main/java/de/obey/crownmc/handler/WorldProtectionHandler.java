@@ -12,6 +12,7 @@ import de.obey.crownmc.objects.WorldProtection;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -131,6 +132,9 @@ public final class WorldProtectionHandler {
 
     public boolean canDrop(final Player player) {
         final WorldProtection protection = getWorldProtection(player.getWorld());
+
+        if(player.getGameMode() == GameMode.CREATIVE)
+            return true;
 
         return protection == null || protection.isItemDrops();
     }

@@ -11,9 +11,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,6 +29,7 @@ public class Clan {
     private final YamlConfiguration cfg;
     private ArrayList<String> memberList = new ArrayList<>();
     private ArrayList<String> moderatorList = new ArrayList<>();
+    private ArrayList<String> trustedList = new ArrayList<>();
 
     private String clanName, clanTag;
     private UUID ownerUUID;
@@ -43,6 +47,7 @@ public class Clan {
     public void saveFileData() {
         cfg.set("clan.members", memberList);
         cfg.set("clan.mods", moderatorList);
+        cfg.set("clan.trusted", trustedList);
         cfg.set("clan.tag", clanTag);
         cfg.set("clan.memberCap", memberCap);
         cfg.set("clan.chest.slots", chestSlots);
@@ -67,6 +72,9 @@ public class Clan {
 
         if (cfg.contains("clan.mods"))
             moderatorList = (ArrayList<String>) cfg.getStringList("clan.mods");
+
+        if (cfg.contains("clan.trusted"))
+            trustedList = (ArrayList<String>) cfg.getStringList("clan.trusted");
 
         clanTag = cfg.getString("clan.tag", clanName);
         chestSlots = cfg.getInt("clan.chest.slots", 9);
@@ -175,20 +183,45 @@ public class Clan {
             final UUID uuid = UUID.fromString(text);
             final OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
 
-            memberInventory.addItem(new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
-                            .setSkullOwner(player.getName())
-                            .setDisplayname("§8»§7 " + player.getName() + (isLeader(uuid) ? " §8(§4§lLeader§8)" : isMod(uuid) ? " §8(§5§lMod§8)" : ""))
-                            .setLore("",
-                                    "§f§lRechtsklick",
-                                    "§8  - §7Kickt diesen Spieler aus dem Clan§8.",
-                                    "",
-                                    "§f§lShift + Rechtsklick",
-                                    "§8  - §7Demotet diesen Spieler§8.",
-                                    "",
-                                    "§f§lShift + Linksklick",
-                                    "§8  - §7Promotet diesen Spieler§8.",
-                                    "")
-                    .build());
+            final ItemStack item = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
+            final SkullMeta meta = (SkullMeta) item.getItemMeta();
+
+            meta.setOwner(player.getName());
+            meta.setDisplayName("§8»§7 " + player.getName() + (isLeader(uuid) ? " §8(§4§lLeader§8)" : (isMod(uuid) ? " §8(§5§lMod§8)" : isTrusted(uuid) ? " §8(§a§oTrusted§8)" : "")));
+
+            final List<String> lore = new ArrayList<>();
+
+            lore.add("");
+            if(isMod(uuid)) {
+                lore.add("§f§lRechtsklick");
+                lore.add("§8  - §7Kickt diesen Spieler aus dem Clan§8.");
+                lore.add("");
+                lore.add("§f§lShift + Rechtsklick");
+                lore.add("§8  - §7Demotet diesen Spieler§8.");
+                lore.add("");
+            } else if(isTrusted(uuid)) {
+                lore.add("§f§lRechtsklick");
+                lore.add("§8  - §7Kickt diesen Spieler aus dem Clan§8.");
+                lore.add("");
+                lore.add("§f§lShift + Rechtsklick");
+                lore.add("§8  - §7Demotet diesen Spieler§8.");
+                lore.add("");
+                lore.add("§f§lShift + Linksklick");
+                lore.add("§8  - §7Promotet diesen Spieler§8.");
+                lore.add("");
+            } else if (!isLeader(uuid)) {
+                lore.add("§f§lRechtsklick");
+                lore.add("§8  - §7Kickt diesen Spieler aus dem Clan§8.");
+                lore.add("");
+                lore.add("§f§lShift + Linksklick");
+                lore.add("§8  - §7Promotet diesen Spieler§8.");
+                lore.add("");
+            }
+
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+
+            memberInventory.addItem(item);
         }
 
         if(memberList.size() < memberCap) {
@@ -236,6 +269,10 @@ public class Clan {
 
         xp += amount;
         ClanLevelUtil.checkForLevelUp(this);
+    }
+
+    public boolean isTrusted(final UUID uuid) {
+        return trustedList.contains(uuid.toString());
     }
 
     public boolean isMod(final UUID uuid) {

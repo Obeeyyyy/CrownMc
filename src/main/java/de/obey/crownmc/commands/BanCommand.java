@@ -105,7 +105,10 @@ public final class BanCommand implements CommandExecutor {
                         return false;
                     }
 
-                    banHandler.banPlayer(args[0], reasonID, sender.getName());
+                    if(!banHandler.banPlayer(args[0], reasonID, sender.getName())) {
+                        messageUtil.sendMessage(sender, args[0] + " kann nicht gebannt werden§8.");
+                        return false;
+                    }
 
                     if(!PermissionUtil.hasPermission(sender, "admin", false))
                         banCounter.put(sender.getName(), banCounter.containsKey(sender.getName()) ? banCounter.get(sender.getName()) + 1 : 1);

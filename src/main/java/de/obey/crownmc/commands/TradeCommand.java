@@ -75,9 +75,9 @@ public final class TradeCommand implements CommandExecutor {
             messageUtil.sendMessage(player, "Du hast §e§o" + target.getName() + "§7 eine Tradeanfrage gesendet§8.");
             messageUtil.sendMessage(target, "§e§o" + player.getName() + "§7 hat dir eine Tradeanfrage gesendet§8.");
 
-            new MessageBuilder("§8» §7Klicke hier, um die Tradeanfrage §a§oanzunehmen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/trade accept " + player.getName()).send(target);
+            new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um die Tradeanfrage §a§oanzunehmen§8.", "§a§oAkzeptieren", "/trade accept " + player.getName()).send(target);
             target.sendMessage("");
-            new MessageBuilder("§8» §7Klicke hier, um die Tradeanfrage §c§oabzulehnen§8.").addClickable(ClickEvent.Action.RUN_COMMAND, "/trade deny " + player.getName()).send(target);
+            new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um die Tradeanfrage §c§oabzulehnen§8.", "§c§oAblehnen", "/trade deny " + player.getName()).send(target);
 
             return false;
         }

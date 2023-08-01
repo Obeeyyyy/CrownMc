@@ -216,6 +216,9 @@ public final class ScoreboardHandler {
                 value = value.replace(player.getName(), rainbowName);
             }
 
+            if(user.getClan() != null)
+                value = value + " §8(§f" + user.getClan().getClanTag() + "§8)";
+
             player.setPlayerListName(ChatColor.translateAlternateColorCodes('&', value));
         });
     }
@@ -266,7 +269,7 @@ public final class ScoreboardHandler {
 
             sidebar_normal.setDisplayName("§6§lCrownMc §8(§f" + (Bukkit.getOnlinePlayers().size() - VanishCommand.vanished.size()) + "§8)");
 
-            sidebar_normal.getScore("§7           SkyPvP").setScore(16);
+            sidebar_normal.getScore("§7              SkyPvP").setScore(16);
             sidebar_normal.getScore("§3").setScore(15);
 
             sidebar_normal.getScore("§6§l" + player.getName()).setScore(14);

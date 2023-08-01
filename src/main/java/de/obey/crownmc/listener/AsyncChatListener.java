@@ -16,12 +16,11 @@ import de.obey.crownmc.commands.SupportCommand;
 import de.obey.crownmc.commands.VanishCommand;
 import de.obey.crownmc.handler.*;
 import de.obey.crownmc.objects.SupportChat;
-import de.obey.crownmc.util.Bools;
-import de.obey.crownmc.util.MathUtil;
-import de.obey.crownmc.util.MessageUtil;
-import de.obey.crownmc.util.PermissionUtil;
+import de.obey.crownmc.util.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -88,6 +87,9 @@ public final class AsyncChatListener implements Listener {
         /* Setting prefix start*/
         if (PrefixListener.isSettingChatPrefix(player, message))
             return;
+
+        if (PrefixListener.isSettingTmote(player, message))
+            return;
         /* Setting prefix end */
 
         /* Trade setting coins start*/
@@ -140,28 +142,57 @@ public final class AsyncChatListener implements Listener {
             return;
         }
 
-        if(message.contains("&") && message.length() <= 2) {
+        if(message.contains("&") && message.length() <= 2)
             return;
-        }
 
         message = checkForPlayerNames(player, event.getMessage(), rang);
 
-        if (PermissionUtil.hasPermission(player, "chatcolor", false))
+        if (PermissionUtil.hasPermission(player, "chatcolor", false)) {
             message = ChatColor.translateAlternateColorCodes('&', message);
+        } else {
+            message = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message));
+        }
 
         final String prefix = rang.getChatPrefix();
         final String suffix = " " + rang.getChatSuffix();
+        final String chatColor = ChatColor.translateAlternateColorCodes('&', rang.getChatcolor());
 
-        String preLine = prefix + player.getName() + suffix + rang.getChatcolor();
+        String preLine = prefix + player.getName() + suffix + chatColor;
 
         final String activePrefix = user.getPrefix().getActivePrefix();
 
         if (!activePrefix.equalsIgnoreCase(""))
-            preLine = "§8(" + activePrefix + "§8)" + user.getPrefix().getNameColor() + " " + player.getName() + suffix + rang.getChatcolor();
+            preLine = "§8(" + activePrefix + "§8)" + user.getPrefix().getNameColor() + " " + player.getName() + suffix + chatColor;
 
-        message = checkForItem(player, message);
+        preLine = ChatColor.translateAlternateColorCodes('&', preLine);
 
-        final String line = ChatColor.translateAlternateColorCodes('&', preLine + message);
+        final MessageBuilder messageBuilder = new MessageBuilder().addHoverShowText(preLine, getUserStatsMessage(user));
+
+        if(checkForItem(player, message)) {
+            final String[] splitted = message.split("<i>");
+
+            messageBuilder.add(chatColor + splitted[0]);
+
+            final String displayname = player.getItemInHand().hasItemMeta() ? (player.getItemInHand().getItemMeta().hasDisplayName() ? player.getItemInHand().getItemMeta().getDisplayName() : player.getItemInHand().getType().name()) : player.getItemInHand().getType().name();
+
+            String hover = "";
+
+            if(player.getItemInHand().hasItemMeta() && player.getItemInHand().getItemMeta().hasLore()) {
+                for (String s : player.getItemInHand().getItemMeta().getLore()) {
+                    hover = hover + s + "\n";
+                }
+            }
+
+            messageBuilder.addHoverShowText( displayname, hover);
+
+            if(splitted.length > 1)
+                messageBuilder.add(chatColor + splitted[1]);
+
+        } else {
+            messageBuilder.add(chatColor + message);
+        }
+
+        //final String line = preLine + message;
 
         /* SupportChat Start */
         final SupportChat supportChat = SupportCommand.isInSupportChat(player.getUniqueId());
@@ -169,7 +200,9 @@ public final class AsyncChatListener implements Listener {
         if (supportChat != null) {
             if (supportChat.getState() == 1) {
                 //supportChat.sendMessageToMemebers(textComponent.getText());
-                supportChat.sendMessageToMemebers(line);
+                for (final Player player1 : supportChat.getMember()) {
+                    messageBuilder.send(player1);
+                }
                 return;
             }
         }
@@ -199,11 +232,13 @@ public final class AsyncChatListener implements Listener {
             if (PermissionUtil.hasPermission(player, "chatlines", false) && userHandler.getUserInstant(player.getUniqueId()).is(DataType.CHATLINESSTATE)) {
                 online.sendMessage("§8»");
                 //online.spigot().sendMessage(textComponent);
-                online.sendMessage(line.replace("§a§o@" + online.getName(), "§c§o§n@" + online.getName()));
+                //online.sendMessage(line.replace("§a§o@" + online.getName(), "§c§o§n@" + online.getName()));
+                messageBuilder.broadcast();
                 online.sendMessage("§8»");
             } else {
                 //online.spigot().sendMessage(textComponent);
-                online.sendMessage(line.replace("§a§o@" + online.getName(), "§c§o§n@" + online.getName()));
+                //online.sendMessage(line.replace("§a§o@" + online.getName(), "§c§o§n@" + online.getName()));
+                messageBuilder.broadcast();
             }
         });
 
@@ -214,20 +249,21 @@ public final class AsyncChatListener implements Listener {
             user.addXP(50);
     }
 
-    private String checkForItem(final Player player, String message) {
+    private boolean checkForItem(final Player player, String message) {
         if (message.contains("<i>")) {
-            if (player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR) {
-
-                String displayname = player.getItemInHand().getType().toString();
-
-                if (player.getItemInHand().hasItemMeta() && player.getItemInHand().getItemMeta().hasDisplayName())
-                    displayname = player.getItemInHand().getItemMeta().getDisplayName();
-
-                message = message.replaceAll("<i>", displayname + "§7");
-            }
+            return player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR;
         }
 
-        return message;
+        return false;
+    }
+
+    private String getUserStatsMessage(final User user) {
+        return "§6§l" + user.getOfflinePlayer().getName() + "\n" +
+                "§8» §7Clan§8: §f" + (user.getClan() == null ? "§c§oKein Clan": user.getClan().getClanName() + "§8 (§f§o" + user.getClan().getClanTag() + "§8) \n" +
+                "§8» §7Money§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.MONEY)) + "§6§l$\n" +
+                "§8» §7Kills§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.KILLS)) + "\n" +
+                "§8» §7Tode§8: §c§o" + messageUtil.formatLong(user.getLong(DataType.DEATHS))
+        );
     }
 
     private String checkForPlayerNames(final Player player, String message, final Rang rang) {

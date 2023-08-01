@@ -100,14 +100,14 @@ public final class VoteParty {
                     itemDrops++;
 
                     for (final Location location : votePartyHandler.getLocations()) {
-                        playeSoundForEveryOne(location, Sound.FIREWORK_LARGE_BLAST2);
-                        playEffectForEveryone(location, Effect.ENDER_SIGNAL);
+                        votePartyHandler.playeSoundForEveryOne(location, Sound.FIREWORK_LARGE_BLAST2);
+                        votePartyHandler.playEffectForEveryone(location, Effect.ENDER_SIGNAL);
 
                         final ItemStack stack = votePartyHandler.getRandomItem();
                         final Item item = location.getWorld().dropItem(location, stack);
                         item.setCustomNameVisible(true);
                         item.setCustomName(stack.hasItemMeta() ? stack.getItemMeta().hasDisplayName() ? stack.getItemMeta().getDisplayName() : stack.getType().name() : stack.getType().name());
-                        item.setVelocity(getRandomVelocity(random));
+                        item.setVelocity(votePartyHandler.getRandomVelocity(random));
                     }
                 }
             }
@@ -161,34 +161,6 @@ public final class VoteParty {
                 }
             });
         }
-    }
-
-    private void playEffectForEveryone(final Location location, final Effect effect) {
-        for (Entity entity : location.getWorld().getEntities()) {
-
-            if(!(entity instanceof Player))
-                continue;
-
-            ((Player) entity).playEffect(location, effect, 1);
-        }
-    }
-
-    private void playeSoundForEveryOne(final Location location, final Sound sound) {
-        for (Entity entity : location.getWorld().getEntities()) {
-
-            if(!(entity instanceof Player))
-                continue;
-
-            ((Player) entity).playSound(location, sound, 1, 1);
-        }
-    }
-
-    private Vector getRandomVelocity(Random random) {
-        double x = random.nextDouble() - 0.5;
-        double y = random.nextDouble() - 0.5;
-        double z = random.nextDouble() - 0.5;
-
-        return new Vector(x, y, z).normalize().multiply(0.6);
     }
 
     public void shutdown() {

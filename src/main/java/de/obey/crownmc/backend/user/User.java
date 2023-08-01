@@ -123,13 +123,13 @@ public final class User {
     }
 
     private void updateData() {
-        if (player == null)
+        if (!offlinePlayer.isOnline())
             return;
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                initializer.getScoreboardHandler().updateScoreboard(player);
+                initializer.getScoreboardHandler().updateScoreboard(offlinePlayer.getPlayer());
             }
         }.runTask(initializer.getCrownMain());
     }

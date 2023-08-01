@@ -201,6 +201,7 @@ public final class Category {
                 cfg.set(path + "items." + item.getID() + ".item", item.getItemStack());
                 cfg.set(path + "items." + item.getID() + ".price", item.getPrice());
                 cfg.set(path + "items." + item.getID() + ".slot", item.getSlot());
+                cfg.set(path + "items." + item.getID() + ".count", item.getCount());
             }
         }
     }

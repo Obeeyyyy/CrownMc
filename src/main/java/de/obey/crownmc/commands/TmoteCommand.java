@@ -32,10 +32,8 @@ public final class TmoteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "*", true))
+        if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "*", true))
             return false;
-
-        final Player player = (Player) sender;
 
         if (args.length == 1) {
 
@@ -56,7 +54,7 @@ public final class TmoteCommand implements CommandExecutor {
             return false;
         }
 
-        if (args.length == 2) {
+        if (args.length >= 2) {
             if (!messageUtil.hasPlayedBefore(sender, args[0]))
                 return false;
 
@@ -75,10 +73,16 @@ public final class TmoteCommand implements CommandExecutor {
                     return;
                 }
 
-                user.setString(DataType.TMOTE, args[1]);
+                String tmote = args[1];
+                if(args.length > 2) {
+                    for (int i = 2; i < args.length ; i++)
+                        tmote = tmote + " " + args[i];
+                }
+
+                user.setString(DataType.TMOTE, tmote);
 
                 if (target.isOnline())
-                    scoreboardHandler.setTablistName(target.getPlayer());
+                    scoreboardHandler.updateScoreboard(target.getPlayer());
 
                 messageUtil.sendMessage(sender, "TMOTE von " + target.getName() + " wurde auf " + ChatColor.translateAlternateColorCodes('&', args[1]) + " §7gesetzt.");
             });
