@@ -36,6 +36,10 @@ public final class VoteListener implements Listener {
         initializer.getScoreboardHandler().updateEverythingForEveryone();
         initializer.getDailyPotHandler().addMoney(500);
 
+        initializer.getMessageUtil().broadcast("§e§o" + target.getName() + "§7 hat für uns gevotet §8!§7 Vote auch du für eine Belohnung§8.");
+        initializer.getMessageUtil().broadcast("§a+§e§o500§6§l$ §7in den §9§lDailyPot§8.");
+        initializer.getMessageUtil().broadcast("§7Voteparty§8: §a" + initializer.getServerConfig().getVotes()+ "§8/§2" + initializer.getServerConfig().getVoteparty());
+
         initializer.getUserHandler().getUser(target.getUniqueId()).thenAcceptAsync(user -> {
             user.addLong(DataType.VOTES, 1);
 
@@ -51,10 +55,6 @@ public final class VoteListener implements Listener {
                 target.getPlayer().playSound(target.getPlayer().getLocation(), Sound.LEVEL_UP, 0.5f, 1);
             }
         });
-
-        initializer.getMessageUtil().broadcast("§e§o" + target.getName() + "§7 hat für uns gevotet §8!§7 Vote auch du für eine Belohnung§8.");
-        initializer.getMessageUtil().broadcast("§a+§e§o500§6§l$ §7in den §9§lDailyPot§8.");
-        initializer.getMessageUtil().broadcast("§7Voteparty§8: §a" + initializer.getServerConfig().getVotes()+ "§8/§2" + initializer.getServerConfig().getVoteparty());
 
         if(initializer.getServerConfig().getVotes() >= initializer.getServerConfig().getVoteparty()) {
             initializer.getServerConfig().setVotes(0);

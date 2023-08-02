@@ -111,7 +111,7 @@ public final class BlockStuffListener implements Listener {
 
     // INSTAND RESPAWN
     @EventHandler
-    public void onDie(final PlayerDeathEvent event) {
+    public void on(final PlayerDeathEvent event) {
         final Player player = event.getEntity();
 
         event.setDeathMessage("");
@@ -187,7 +187,7 @@ public final class BlockStuffListener implements Listener {
     }
 
     @EventHandler
-    public void onToggle(final PlayerInteractEvent event) {
+    public void on(final PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK
                 || event.getAction() == Action.LEFT_CLICK_BLOCK
@@ -243,7 +243,7 @@ public final class BlockStuffListener implements Listener {
     }
 
     @EventHandler
-    public void onCrashSign(final SignChangeEvent event) {
+    public void on(final SignChangeEvent event) {
         final Player player = event.getPlayer();
 
         if (event.getLine(0).length() > 49 || event.getLine(1).length() > 49 || event.getLine(2).length() > 49 || event.getLine(3).length() > 49) {
@@ -264,19 +264,19 @@ public final class BlockStuffListener implements Listener {
     }
 
     @EventHandler
-    public void onWeatherChange(final WeatherChangeEvent event) {
+    public void on(final WeatherChangeEvent event) {
         boolean rain = event.toWeatherState();
         if (rain)
             event.setCancelled(true);
     }
 
     @EventHandler
-    public void handleAchievement(final PlayerAchievementAwardedEvent event) {
+    public void on(final PlayerAchievementAwardedEvent event) {
         event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
+    public void on(final PlayerCommandPreprocessEvent event) {
         final Player player = event.getPlayer();
 
         if (userHandler.getUserInstant(player.getUniqueId()) == null) {

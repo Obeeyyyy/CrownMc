@@ -55,7 +55,7 @@ public final class StackCommand implements CommandExecutor {
             final ItemStack item = contents[i];
 
             if (item != null && !noStack.contains(item.getType())) {
-                int maxStack = item.getType() == Material.POTION ? 64 : item.getMaxStackSize();
+                int maxStack = item.getType() == Material.POTION ? 64 : item.getType() == Material.ENDER_PEARL ? 64 : item.getMaxStackSize();
 
                 int needed = maxStack - item.getAmount();
                 int i2 = i + 1;

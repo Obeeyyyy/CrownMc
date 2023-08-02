@@ -145,13 +145,13 @@ public final class AsyncChatListener implements Listener {
         if(message.contains("&") && message.length() <= 2)
             return;
 
-        message = checkForPlayerNames(player, event.getMessage(), rang);
-
         if (PermissionUtil.hasPermission(player, "chatcolor", false)) {
             message = ChatColor.translateAlternateColorCodes('&', message);
         } else {
             message = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message));
         }
+
+        message = checkForPlayerNames(player, event.getMessage(), rang);
 
         final String prefix = rang.getChatPrefix();
         final String suffix = " " + rang.getChatSuffix();
@@ -233,12 +233,12 @@ public final class AsyncChatListener implements Listener {
                 online.sendMessage("§8»");
                 //online.spigot().sendMessage(textComponent);
                 //online.sendMessage(line.replace("§a§o@" + online.getName(), "§c§o§n@" + online.getName()));
-                messageBuilder.broadcast();
+                messageBuilder.send(online);
                 online.sendMessage("§8»");
             } else {
                 //online.spigot().sendMessage(textComponent);
                 //online.sendMessage(line.replace("§a§o@" + online.getName(), "§c§o§n@" + online.getName()));
-                messageBuilder.broadcast();
+                messageBuilder.send(online);
             }
         });
 
@@ -253,16 +253,16 @@ public final class AsyncChatListener implements Listener {
         if (message.contains("<i>")) {
             return player.getItemInHand() != null && player.getItemInHand().getType() != Material.AIR;
         }
-
         return false;
     }
 
     private String getUserStatsMessage(final User user) {
         return "§6§l" + user.getOfflinePlayer().getName() + "\n" +
-                "§8» §7Clan§8: §f" + (user.getClan() == null ? "§c§oKein Clan": user.getClan().getClanName() + "§8 (§f§o" + user.getClan().getClanTag() + "§8) \n" +
+                "§8» §7Clan§8: §f" + (user.getClan() == null ? "§c§oKein Clan": user.getClan().getClanName() + "§8 (§f§o" + user.getClan().getClanTag() + "§8)") + "\n" +
+                "§8» §7Level§8: §f" + messageUtil.formatLong(user.getLong(DataType.LEVEL)) + " §8(§f§o" + messageUtil.formatLong(user.getLong(DataType.XP)) +  " XP§8)\n" +
                 "§8» §7Money§8: §e§o" + messageUtil.formatLong(user.getLong(DataType.MONEY)) + "§6§l$\n" +
                 "§8» §7Kills§8: §a§o" + messageUtil.formatLong(user.getLong(DataType.KILLS)) + "\n" +
-                "§8» §7Tode§8: §c§o" + messageUtil.formatLong(user.getLong(DataType.DEATHS))
+                "§8» §7Tode§8: §c§o" + messageUtil.formatLong(user.getLong(DataType.DEATHS)
         );
     }
 

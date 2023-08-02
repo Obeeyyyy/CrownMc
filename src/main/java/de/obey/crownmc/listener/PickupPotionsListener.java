@@ -40,13 +40,13 @@ public final class PickupPotionsListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    stackPotions(player, event.getItem().getItemStack());
+                    stackItems(player, event.getItem().getItemStack());
                 }
             }.runTaskLater(CrownMain.getInstance(), 3);
         }
     }
 
-    private void stackPotions(final Player player, final ItemStack newItem) {
+    private void stackItems(final Player player, final ItemStack newItem) {
         final ItemStack[] contents = player.getInventory().getContents();
         int changed = 0;
         int slot = 0;
@@ -62,29 +62,52 @@ public final class PickupPotionsListener implements Listener {
             final ItemStack slotItem = contents[slot];
 
             if (slotItem != null && slotItem.getType() != Material.AIR &&
-                    slotItem.getAmount() > 0 && slotItem.getAmount() < 64 &&
-                    slotItem.getType() == Material.POTION) {
+                    slotItem.getAmount() > 0 && slotItem.getAmount() < 64) {
 
-                int needed = 64 - slotItem.getAmount();
+                if(slotItem.getType() == Material.POTION) {
+                    int needed = 64 - slotItem.getAmount();
 
-                if (newItem.getType() != Material.AIR &&
-                        newItem.getAmount() > 0 && newItem.getAmount() < 64 &&
-                        slotItem.getType() == newItem.getType() &&
-                        slotItem.getDurability() == newItem.getDurability() &&
-                        (slotItem.getItemMeta() == null && newItem.getItemMeta() == null ||
-                                slotItem.getItemMeta() != null && slotItem.getItemMeta().equals(newItem.getItemMeta()))) {
+                    if (newItem.getType() != Material.AIR &&
+                            newItem.getAmount() > 0 && newItem.getAmount() < 64 &&
+                            slotItem.getType() == newItem.getType() &&
+                            slotItem.getDurability() == newItem.getDurability() &&
+                            (slotItem.getItemMeta() == null && newItem.getItemMeta() == null ||
+                                    slotItem.getItemMeta() != null && slotItem.getItemMeta().equals(newItem.getItemMeta()))) {
 
-                    if (newItem.getAmount() > needed) {
-                        slotItem.setAmount(64);
-                        newItem.setAmount(newItem.getAmount() - needed);
+                        if (newItem.getAmount() > needed) {
+                            slotItem.setAmount(64);
+                            newItem.setAmount(newItem.getAmount() - needed);
+                            changed++;
+                            break;
+                        }
+
+                        slotItem.setAmount(slotItem.getAmount() + newItem.getAmount());
+                        newItem.setAmount(0);
                         changed++;
                         break;
                     }
+                } else if(slotItem.getType() == Material.ENDER_PEARL) {
+                    int needed = 64 - slotItem.getAmount();
 
-                    slotItem.setAmount(slotItem.getAmount() + newItem.getAmount());
-                    newItem.setAmount(0);
-                    changed++;
-                    break;
+                    if (newItem.getType() != Material.AIR &&
+                            newItem.getAmount() > 0 && newItem.getAmount() < 64 &&
+                            slotItem.getType() == newItem.getType() &&
+                            slotItem.getDurability() == newItem.getDurability() &&
+                            (slotItem.getItemMeta() == null && newItem.getItemMeta() == null ||
+                                    slotItem.getItemMeta() != null && slotItem.getItemMeta().equals(newItem.getItemMeta()))) {
+
+                        if (newItem.getAmount() > needed) {
+                            slotItem.setAmount(64);
+                            newItem.setAmount(newItem.getAmount() - needed);
+                            changed++;
+                            break;
+                        }
+
+                        slotItem.setAmount(slotItem.getAmount() + newItem.getAmount());
+                        newItem.setAmount(0);
+                        changed++;
+                        break;
+                    }
                 }
             }
             ++slot;

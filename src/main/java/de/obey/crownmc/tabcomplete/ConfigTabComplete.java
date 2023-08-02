@@ -6,13 +6,9 @@ package de.obey.crownmc.tabcomplete;
 
 */
 
-import de.obey.crownmc.commands.VanishCommand;
-import de.obey.crownmc.util.PermissionUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +36,7 @@ public final class ConfigTabComplete implements TabCompleter {
         name.add("soulReward");
         name.add("netherLevel");
         name.add("endLevel");
+        name.add("epCooldown");
         name.add("clanPrice");
 
         if (args.length > 0) {
