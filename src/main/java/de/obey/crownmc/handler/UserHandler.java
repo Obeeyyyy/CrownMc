@@ -158,6 +158,10 @@ public final class UserHandler {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+
+                // Checking playtest
+                if(CrownMain.getInstance().getInitializer().getPlaytestHandler().isTester(player.getUniqueId()))
+                    CrownMain.getInstance().getInitializer().getPlaytestHandler().reward(user);
             });
 
             // Saving data

@@ -66,6 +66,11 @@ public final class QuitListener implements Listener {
             if (user.getString(DataType.LEAVEMESSAGE).length() > 0 && PermissionUtil.hasPermission(player, "leavemessage", false))
                 initializer.getMessageUtil().broadcastNoPrefix("§e§lLEAVE§8 × §r" + ChatColor.translateAlternateColorCodes('&', user.getString(DataType.LEAVEMESSAGE)).replace("%name%", player.getName()));
 
+            if(initializer.getServerConfig().isPlaytest()) {
+                if(user.getPlaytime().getCurrentPlaytime() >= 60*60)
+                    initializer.getPlaytestHandler().addTester(player.getUniqueId());
+            }
+
             initializer.getMessageUtil().log("#> " + player.getName() + " LEFT ( " + initializer.getMessageUtil().formatLong(user.getLong(DataType.MONEY)) + "$, " + user.getLong(DataType.KILLS) + "/" + user.getLong(DataType.DEATHS) + " - " + initializer.getMessageUtil().formatLong(user.getLong(DataType.CROWNS)) + "C )");
         });
 

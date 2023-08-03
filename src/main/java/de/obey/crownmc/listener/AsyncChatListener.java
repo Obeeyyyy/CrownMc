@@ -284,7 +284,7 @@ public final class AsyncChatListener implements Listener {
                             messageUtil.sendMessage(player, check.getName() + " ist §c§lAFK§8.");
                         }
                         pingedNames.add(check.getName().toLowerCase());
-                        message = message + " " + "§a§o@" + check.getName() + rang.getChatcolor();
+                        message = message + " " + "§a§o@" + check.getName() + ChatColor.translateAlternateColorCodes('&', rang.getChatcolor());
                         check.playSound(check.getLocation(), Sound.SUCCESSFUL_HIT, 3f, 10);
                     } else {
                         message = message + " " + word;

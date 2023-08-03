@@ -20,7 +20,7 @@ import java.util.logging.Level;
 public final class LocationUtil {
 
     public String encodeEuler(final EulerAngle angle) {
-        return "#" + angle.getX() + "#" + angle.getY() + "#" + angle.getZ();
+        return "#" + Math.toDegrees(angle.getX()) + "#" + Math.toDegrees(angle.getY()) + "#" + Math.toDegrees(angle.getZ());
     }
 
     public EulerAngle decodeEuler(final String value) {

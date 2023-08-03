@@ -275,21 +275,24 @@ public class ClanCommand implements CommandExecutor, Listener {
                 if(clan.isTrusted(player.getUniqueId()) ||
                     clan.isMod(player.getUniqueId()) ||
                     clan.isLeader(player.getUniqueId())) {
-                    messageUtil.sendMessage(player, "Du kannst nicht auf die Clantruhe zugreifen§8.");
+
+                    player.closeInventory();
+                    player.openInventory(clan.getClanChest());
+                    player.updateInventory();
+                    player.playSound(player.getLocation(), Sound.CHEST_OPEN, 0.25f, 1);
                     return;
                 }
 
-                player.closeInventory();
-                player.openInventory(clan.getClanChest());
-                player.updateInventory();
-                player.playSound(player.getLocation(), Sound.CHEST_OPEN, 0.25f, 1);
+                messageUtil.sendMessage(player, "Du kannst nicht auf die Clantruhe zugreifen§8.");
+                player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+
                 return;
             }
 
             // Open clan shop
             if(event.getSlot() == 31) {
                 player.closeInventory();
-                // soon
+                player.openInventory(clan.getClanShop());
                 player.updateInventory();
                 player.playSound(player.getLocation(), Sound.CHEST_OPEN, 0.25f, 1);
                 return;
@@ -317,6 +320,36 @@ public class ClanCommand implements CommandExecutor, Listener {
 
             if(event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.BARRIER)
                 event.setCancelled(true);
+
+            return;
+        }
+
+        // Clan Inventory
+        if(InventoryUtil.isInventoryTitle(event.getInventory(), "§7ClanShop")) {
+            event.setCancelled(true);
+
+            if(!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§7ClanShop"))
+                return;
+
+            if(event.isLeftClick() && !event.isShiftClick()) {
+                if(event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR ||
+                !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasLore())
+                    return;
+
+                // Member slot
+                if(event.getSlot() == 1) {
+                    final long price = Long.parseLong(event.getCurrentItem().getItemMeta().getLore().get(2).split(" ")[2].replace("§6§l$", "").replace(",", ""));
+
+                    userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                        if(!messageUtil.hasEnougthMoney(user, price))
+                            return;
+
+                        user.removeLong(DataType.MONEY, price);
+                        user.getClan().buyMemberSlot(player, price);
+
+                    });
+                }
+            }
 
             return;
         }
@@ -526,7 +559,7 @@ public class ClanCommand implements CommandExecutor, Listener {
                 final String targetName = event.getInventory().getTitle().split(" ")[1];
                 final OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);
 
-                clan.sendMessageToAllClanMembers("§f" + target.getName() + "§7 wurde von §f" + player.getName() + " aus dem Clan §c§ogekickt§8.");
+                clan.sendMessageToAllClanMembers("§f" + target.getName() + "§7 wurde von §f" + player.getName() + "§7 aus dem Clan §c§ogekickt§8.");
 
                 clan.getMemberList().remove(target.getUniqueId().toString());
 
@@ -542,6 +575,8 @@ public class ClanCommand implements CommandExecutor, Listener {
 
                 clan.updateClanInfo();
                 clan.updateMemberInventory();
+                player.closeInventory();
+                player.openInventory(clan.getMemberInventory());
 
                 player.playSound(player.getLocation(), Sound.NOTE_PLING, 0.5f,1);
 

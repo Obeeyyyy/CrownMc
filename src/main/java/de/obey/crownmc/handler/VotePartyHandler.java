@@ -193,7 +193,7 @@ public final class VotePartyHandler {
         double y = random.nextDouble() + 0.2;
         double z = random.nextDouble() - random.nextDouble();
 
-        return new Vector(x, y, z).normalize().multiply(0.9);
+        return new Vector(x, y, z).normalize().multiply(1.1);
     }
 
 

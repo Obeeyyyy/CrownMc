@@ -181,6 +181,11 @@ public final class BlockStuffListener implements Listener {
                 if(player == null)
                     continue;
 
+                if(enderpearlCooldown.get(uuid) + 100 <= System.currentTimeMillis())  {
+                    messageUtil.sendActionBar(player, "§a§oEnderperlen - Ready");
+                    return;
+                }
+
                 messageUtil.sendActionBar(player, "§c§oEnderperlen - " + MathUtil.getSecondsFromMillis(enderpearlCooldown.get(player.getUniqueId()) - System.currentTimeMillis()));
             }
         }
@@ -194,33 +199,35 @@ public final class BlockStuffListener implements Listener {
                 || event.getAction() == Action.RIGHT_CLICK_AIR
                 || event.getAction() == Action.LEFT_CLICK_AIR) {
             if (player.getItemInHand() != null) {
-                if (player.getItemInHand().getType() == Material.ENDER_PEARL) {
+                if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-                    if (!Bools.ep && !PermissionUtil.hasPermission(event.getPlayer(), "toggle.bypass", false)) {
-                        event.setCancelled(true);
-                        player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
-                        player.updateInventory();
-                        messageUtil.sendMessage(player, "Enderperlen sind §c§odeaktiviert§7.");
+                    if (player.getItemInHand().getType() == Material.ENDER_PEARL) {
+                        if (!Bools.ep && !PermissionUtil.hasPermission(event.getPlayer(), "toggle.bypass", false)) {
+                            event.setCancelled(true);
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
+                            player.updateInventory();
+                            messageUtil.sendMessage(player, "Enderperlen sind §c§odeaktiviert§7.");
+                        }
+
+                        /* Enderperlen Cooldown */
+                        if (enderpearlCooldown.containsKey(player.getUniqueId()) && enderpearlCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
+                            event.setCancelled(true);
+                            player.updateInventory();
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
+                            return;
+                        } else {
+                            enderpearlCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (1000L * serverConfig.getEpCooldown()));
+                        }
+                        /* Enderperlen Cooldown end */
                     }
 
-                    /* Enderperlen Cooldown */
-                    if (enderpearlCooldown.containsKey(player.getUniqueId()) && enderpearlCooldown.get(player.getUniqueId()) > System.currentTimeMillis()) {
-                        event.setCancelled(true);
-                        player.updateInventory();
-                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
-                        return;
-                    } else {
-                        enderpearlCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (1000L * serverConfig.getEpCooldown()));
-                    }
-                    /* Enderperlen Cooldown end */
-                }
-
-                if (player.getItemInHand().getType() == Material.POTION) {
-                    if (!Bools.potions && !PermissionUtil.hasPermission(event.getPlayer(), "toggle.bypass", false)) {
-                        event.setCancelled(true);
-                        player.updateInventory();
-                        player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
-                        messageUtil.sendMessage(player, "Potions sind §c§odeaktiviert§7.");
+                    if (player.getItemInHand().getType() == Material.POTION) {
+                        if (!Bools.potions && !PermissionUtil.hasPermission(event.getPlayer(), "toggle.bypass", false)) {
+                            event.setCancelled(true);
+                            player.updateInventory();
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 1, 1);
+                            messageUtil.sendMessage(player, "Potions sind §c§odeaktiviert§7.");
+                        }
                     }
                 }
             }
