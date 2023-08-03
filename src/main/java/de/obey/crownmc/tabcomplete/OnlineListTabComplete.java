@@ -32,6 +32,11 @@ public final class OnlineListTabComplete implements TabCompleter {
                 name.add(all.getName());
             }
         }
+        for (Player all: Bukkit.getOnlinePlayers()) {
+            if (sender instanceof Player && PermissionUtil.hasPermission(((Player) sender).getPlayer(), "team", false)) {
+                if (VanishCommand.vanished.contains(all)) name.add(all.getName());
+            }
+        }
 
         if (args.length > 0) {
             final String looking = args[args.length - 1];
