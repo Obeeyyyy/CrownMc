@@ -24,6 +24,7 @@ public class GuessTheNumberCommand implements CommandExecutor, Listener {
     private ItemStack itemStack;
     private Integer score;
     private int taskId;
+    private boolean alreadyStarted;
 
     public GuessTheNumberCommand(MessageUtil messageUtil) {
         this.messageUtil = messageUtil;
@@ -45,6 +46,11 @@ public class GuessTheNumberCommand implements CommandExecutor, Listener {
             return true;
         }
 
+        if (alreadyStarted) {
+            messageUtil.sendMessage(sender, "Es läuft bereits ein GuessTheNumber Event§8.");
+            messageUtil.sendMessage(sender, "Die zu erratene Zahl ist §e§o" + this.score + "§8.");
+        }
+
         Integer solution = Ints.tryParse(args[0]);
         if (solution == null || solution < 1) {
             messageUtil.sendMessage(sender, "Bitte gib eine Lösungszahl an, die größer oder gleich 1 ist.");
@@ -58,6 +64,7 @@ public class GuessTheNumberCommand implements CommandExecutor, Listener {
         }
 
         score = solution;
+        alreadyStarted = true;
 
         messageUtil.broadcastNoPrefix("");
         messageUtil.broadcast(player.getName() + " Hat ein Event gestartet§8. §7Errate die §eZahl§7 von 1 §8- §7" + numberCap + "§8.");
@@ -76,6 +83,7 @@ public class GuessTheNumberCommand implements CommandExecutor, Listener {
             score = null;
             itemStack = null;
             taskId = 0;
+            alreadyStarted = false;
         }, 60 * 20);
         return false;
     }
@@ -90,6 +98,7 @@ public class GuessTheNumberCommand implements CommandExecutor, Listener {
         messageUtil.broadcast(event.getPlayer().getName() + " hat die Zahl §8'§e" + score + "§8'§7 erraten§8.");
         messageUtil.broadcastNoPrefix("");
         messageUtil.broadcastNoPrefix("");
+        alreadyStarted = false;
         score = null;
         Bukkit.getScheduler().cancelTask(taskId);
 
