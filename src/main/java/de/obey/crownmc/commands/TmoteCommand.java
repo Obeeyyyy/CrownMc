@@ -82,7 +82,7 @@ public final class TmoteCommand implements CommandExecutor {
                 user.setString(DataType.TMOTE, tmote);
 
                 if (target.isOnline())
-                    scoreboardHandler.updateScoreboard(target.getPlayer());
+                    scoreboardHandler.setTablistName(target.getPlayer());
 
                 messageUtil.sendMessage(sender, "TMOTE von " + target.getName() + " wurde auf " + ChatColor.translateAlternateColorCodes('&', args[1]) + " §7gesetzt.");
             });

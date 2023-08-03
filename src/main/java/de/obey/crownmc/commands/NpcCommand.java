@@ -1,5 +1,6 @@
 package de.obey.crownmc.commands;
 
+import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.handler.NpcHandler;
 import de.obey.crownmc.objects.CNPC;
 import de.obey.crownmc.util.LocationUtil;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 
 import java.util.HashMap;
@@ -258,6 +260,11 @@ public class NpcCommand implements CommandExecutor, Listener {
         if(npc.getCommand() == null)
             return;
 
-        Bukkit.dispatchCommand(event.getPlayer(), npc.getCommand());
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Bukkit.dispatchCommand(event.getPlayer(), npc.getCommand());
+            }
+        }.runTask(CrownMain.getInstance());
     }
 }

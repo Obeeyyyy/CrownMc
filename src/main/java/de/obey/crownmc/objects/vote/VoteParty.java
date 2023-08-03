@@ -106,6 +106,7 @@ public final class VoteParty {
                         final ItemStack stack = votePartyHandler.getRandomItem();
                         final Item item = location.getWorld().dropItem(location, stack);
                         item.setCustomNameVisible(true);
+                        item.setPickupDelay(3000);
                         item.setCustomName(stack.hasItemMeta() ? stack.getItemMeta().hasDisplayName() ? stack.getItemMeta().getDisplayName() : stack.getType().name() : stack.getType().name());
                         item.setVelocity(votePartyHandler.getRandomVelocity(random));
                     }

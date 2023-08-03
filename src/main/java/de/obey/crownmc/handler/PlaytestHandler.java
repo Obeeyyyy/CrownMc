@@ -48,9 +48,8 @@ public final class PlaytestHandler {
             final YamlConfiguration cfg = serverConfig.getCfg();
             final ArrayList<String> temp = new ArrayList<>();
 
-            for (UUID uuid1 : uuids) {
+            for (UUID uuid1 : uuids)
                 temp.add(uuid1.toString());
-            }
 
             cfg.set("tester", temp);
 

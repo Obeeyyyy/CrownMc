@@ -67,7 +67,7 @@ public final class QuitListener implements Listener {
                 initializer.getMessageUtil().broadcastNoPrefix("§e§lLEAVE§8 × §r" + ChatColor.translateAlternateColorCodes('&', user.getString(DataType.LEAVEMESSAGE)).replace("%name%", player.getName()));
 
             if(initializer.getServerConfig().isPlaytest()) {
-                if(user.getPlaytime().getCurrentPlaytime() >= 1000*60*60)
+                if(user.getPlaytime().getCurrentPlaytime() >= 60*60)
                     initializer.getPlaytestHandler().addTester(player.getUniqueId());
             }
 

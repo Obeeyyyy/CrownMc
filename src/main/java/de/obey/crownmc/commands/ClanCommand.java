@@ -292,7 +292,7 @@ public class ClanCommand implements CommandExecutor, Listener {
             // Open clan shop
             if(event.getSlot() == 31) {
                 player.closeInventory();
-                // soon
+                player.openInventory(clan.getClanShop());
                 player.updateInventory();
                 player.playSound(player.getLocation(), Sound.CHEST_OPEN, 0.25f, 1);
                 return;
@@ -320,6 +320,36 @@ public class ClanCommand implements CommandExecutor, Listener {
 
             if(event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.BARRIER)
                 event.setCancelled(true);
+
+            return;
+        }
+
+        // Clan Inventory
+        if(InventoryUtil.isInventoryTitle(event.getInventory(), "§7ClanShop")) {
+            event.setCancelled(true);
+
+            if(!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§7ClanShop"))
+                return;
+
+            if(event.isLeftClick() && !event.isShiftClick()) {
+                if(event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR ||
+                !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasLore())
+                    return;
+
+                // Member slot
+                if(event.getSlot() == 1) {
+                    final long price = Long.parseLong(event.getCurrentItem().getItemMeta().getLore().get(2).split(" ")[2].replace("§6§l$", "").replace(",", ""));
+
+                    userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                        if(!messageUtil.hasEnougthMoney(user, price))
+                            return;
+
+                        user.removeLong(DataType.MONEY, price);
+                        user.getClan().buyMemberSlot(player, price);
+
+                    });
+                }
+            }
 
             return;
         }

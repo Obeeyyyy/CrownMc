@@ -33,7 +33,7 @@ public class Clan {
 
     private String clanName, clanTag;
     private UUID ownerUUID;
-    private Inventory clanChest, clanInfo, memberInventory;
+    private Inventory clanChest, clanInfo, memberInventory, clanShop;
 
     private int kills, deaths, trophies, chestSlots, memberCap, xp, level;
 
@@ -83,12 +83,15 @@ public class Clan {
         clanChest = Bukkit.createInventory(null, 9*6, "§7Chest §8(§f " + clanTag + "§8)");
         clanInfo = Bukkit.createInventory(null, 9*5, "§7Clan §8(§f" + clanTag + "§8)");
         memberInventory = Bukkit.createInventory(null, 9*6, "§7Member §8(§f" + clanTag + "§8)");
+        clanShop = Bukkit.createInventory(null, 9*6, "§7ClanShop");
 
         InventoryUtil.fillSideRows(clanInfo, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
+        InventoryUtil.fillSideRows(clanShop, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
 
         loadChestContents();
         updateClanChest();
         updateClanInfo();
+        updateClanShop();
     }
 
     public void loadChestContents() {
@@ -238,6 +241,30 @@ public class Clan {
                     .setTextur("M2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==", UUID.randomUUID())
                     .build());
         }
+    }
+
+    public void updateClanShop() {
+        clanShop.setItem(1, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                        .setDisplayname("§7Member Slot")
+                        .setTextur("M2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=", UUID.randomUUID())
+                        .setLore("",
+                                "§7§lInformation",
+                                "§8- §7Preis§8:§e§o " + messageUtil.formatLong(memberCap * 2500L) + "§6§l$",
+                                "",
+                                "§7§lLinksklick",
+                                "§8 -§7 Kauf einen member Slot für den Clan§8.",
+                                "")
+                .build());
+    }
+
+    public void buyMemberSlot(final Player player, final long amount) {
+        memberCap++;
+
+        updateMemberInventory();
+        updateClanInfo();
+        updateClanShop();
+
+        sendMessageToAllClanMembers(player.getName() + " hat einen member Slot für " + messageUtil.formatLong(amount) + "§6§l$§7 gekauft§8.");
     }
 
     public void newMemberJoin(final Player player) {
