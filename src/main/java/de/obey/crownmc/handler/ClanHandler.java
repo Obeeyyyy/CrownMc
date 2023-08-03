@@ -232,9 +232,9 @@ public final class ClanHandler {
             return false;
         }
 
-        if(!clanTag.matches(regex) || clanTag.length() < 2 || clanTag.length() > 3) {
+        if(!clanTag.matches(regex) || clanTag.length() < 2 || clanTag.length() > 4) {
             messageUtil.sendMessage(player, "Clantag " + clanTag + " ist ungültig§8.");
-            messageUtil.sendMessage(player, "Der Clantag darf nur aus Buchstaben und Zahlen bestehen und muss länger als 1 und kürzer als 4 sein§8.");
+            messageUtil.sendMessage(player, "Der Clantag darf nur aus Buchstaben und Zahlen bestehen und muss länger als 1 und kürzer als 5 sein§8.");
             player.playSound(player.getLocation(), Sound.EXPLODE, 0.1f, 1);
             return false;
         }

@@ -35,17 +35,6 @@ public final class LoginListener implements Listener {
         if (initializer.isRestarting())
             return;
 
-        initializer.getUserHandler().getUser(event.getPlayer().getUniqueId()).thenAccept(user -> {
-            final UserPunishment punishment = user.getPunishment();
-
-            if(user.getPunishment().isBanned()) {
-                final Ban ban = punishment.getBans().get(punishment.getBans().size() - 1);
-                final BanReason reason = ban.getBanReason();
-                event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, initializer.getBanHandler().getKickMessage(reason.getId(), punishment.getRemainingBanMillis(), ban.getAuthor(), false));
-            }
-        });
-
         if(event.getResult() == PlayerLoginEvent.Result.KICK_OTHER)
             return;
 
@@ -81,8 +70,22 @@ public final class LoginListener implements Listener {
         }
 
         // Register player if not registered
-        if (!initializer.getUserHandler().isRegistered(player))
+        if (!initializer.getUserHandler().isRegistered(player)) {
             initializer.getUserHandler().register(player);
+            return;
+        }
+
+        // Check if banned
+        initializer.getUserHandler().getUser(event.getPlayer().getUniqueId()).thenAccept(user -> {
+            final UserPunishment punishment = user.getPunishment();
+
+            if(user.getPunishment().isBanned()) {
+                final Ban ban = punishment.getBans().get(punishment.getBans().size() - 1);
+                final BanReason reason = ban.getBanReason();
+                event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, initializer.getBanHandler().getKickMessage(reason.getId(), punishment.getRemainingBanMillis(), ban.getAuthor(), false));
+            }
+        });
     }
 
 }

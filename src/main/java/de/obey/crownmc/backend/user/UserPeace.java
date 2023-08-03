@@ -12,6 +12,7 @@ import lombok.Getter;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class UserPeace {
@@ -23,7 +24,7 @@ public final class UserPeace {
 
     public UserPeace(final User user) {
         this.user = user;
-        peaceList = user.getCfg().getStringList("peacelist");
+        peaceList = user.getCfg().contains("peacelist") ? user.getCfg().getStringList("peacelist") : new ArrayList<>();
     }
 
     public boolean hasPeaceWith(final Player target) {

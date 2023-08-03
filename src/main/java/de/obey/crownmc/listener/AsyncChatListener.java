@@ -145,12 +145,6 @@ public final class AsyncChatListener implements Listener {
         if(message.contains("&") && message.length() <= 2)
             return;
 
-        if (PermissionUtil.hasPermission(player, "chatcolor", false)) {
-            message = ChatColor.translateAlternateColorCodes('&', message);
-        } else {
-            message = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message));
-        }
-
         message = checkForPlayerNames(player, event.getMessage(), rang);
 
         final String prefix = rang.getChatPrefix();
@@ -165,6 +159,9 @@ public final class AsyncChatListener implements Listener {
             preLine = "§8(" + activePrefix + "§8)" + user.getPrefix().getNameColor() + " " + player.getName() + suffix + chatColor;
 
         preLine = ChatColor.translateAlternateColorCodes('&', preLine);
+
+        if(PermissionUtil.hasPermission(player, "chatcolor", false))
+            message = ChatColor.translateAlternateColorCodes('&', message);
 
         final MessageBuilder messageBuilder = new MessageBuilder().addHoverShowText(preLine, getUserStatsMessage(user));
 

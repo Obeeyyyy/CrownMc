@@ -74,7 +74,7 @@ public final class MathUtil {
 
     public String getDaysAndHoursAndMinutesAndSecondsFromSeconds(long seconds) {
 
-        if(seconds <= 0) {
+        if(seconds < 0) {
             return "§4§lPermanent";
         }
 

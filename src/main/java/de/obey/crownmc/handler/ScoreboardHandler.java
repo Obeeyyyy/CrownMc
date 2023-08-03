@@ -19,6 +19,7 @@ import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.luckperms.api.LuckPermsProvider;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
@@ -151,17 +152,17 @@ public final class ScoreboardHandler {
     }
 
     public void setTablistName(final Player player) {
-        executorService.submit(() -> {
-            if (userHandler == null) {
-                userHandler = CrownMain.getInstance().getInitializer().getUserHandler();
-                rangHandler = CrownMain.getInstance().getInitializer().getRangHandler();
-                combatHandler = CrownMain.getInstance().getInitializer().getCombatHandler();
-                executorService = CrownMain.getInstance().getInitializer().getExecutorService();
-                serverConfig = CrownMain.getInstance().getInitializer().getServerConfig();
-                messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
-                eloHandler = CrownMain.getInstance().getInitializer().getEloHandler();
-            }
+        if (userHandler == null) {
+            userHandler = CrownMain.getInstance().getInitializer().getUserHandler();
+            rangHandler = CrownMain.getInstance().getInitializer().getRangHandler();
+            combatHandler = CrownMain.getInstance().getInitializer().getCombatHandler();
+            executorService = CrownMain.getInstance().getInitializer().getExecutorService();
+            serverConfig = CrownMain.getInstance().getInitializer().getServerConfig();
+            messageUtil = CrownMain.getInstance().getInitializer().getMessageUtil();
+            eloHandler = CrownMain.getInstance().getInitializer().getEloHandler();
+        }
 
+        executorService.submit(() -> {
             final Rang rang = rangHandler.getPlayerRang(player);
 
             if (rang == null)

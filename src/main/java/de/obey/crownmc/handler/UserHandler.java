@@ -95,29 +95,27 @@ public final class UserHandler {
         return cfg.getBoolean("registered");
     }
 
-    public boolean register(final Player player) {
+    private final SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+    public void register(final Player player) {
         // NEW PLAYER
+        format.setTimeZone(TimeZone.getTimeZone("CET"));
 
         registering.add(player);
 
         final User user = new User(player);
         final int ID = serverConfig.addAndGetPlayerCount();
 
-        userCache.put(player.getUniqueId(), user);
-
         try {
             if (!user.getPlayerFile().exists())
                 user.getPlayerFile().createNewFile();
-
-            final SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy hh:mm");
-            format.setTimeZone(TimeZone.getTimeZone("CET"));
 
             // Load user Objects after File was created
             user.loadObjects();
 
             executorService.submit(() -> {
-
                 for (DataType value : DataType.values()) {
+                    System.out.println(value.getSavedAs());
+
                     if (value.getDefaultValue() != null)
                         user.getData().put(value, value.getDefaultValue());
                 }
@@ -159,13 +157,14 @@ public final class UserHandler {
                     e.printStackTrace();
                 }
 
+                // Saving data
+                saveData(user);
+                userCache.put(player.getUniqueId(), user);
+
                 // Checking playtest
-                if(CrownMain.getInstance().getInitializer().getPlaytestHandler().isTester(player.getUniqueId()))
+                if (CrownMain.getInstance().getInitializer().getPlaytestHandler().isTester(player.getUniqueId()))
                     CrownMain.getInstance().getInitializer().getPlaytestHandler().reward(user);
             });
-
-            // Saving data
-            saveData(user);
 
             new BukkitRunnable() {
                 @Override
@@ -182,7 +181,7 @@ public final class UserHandler {
 
                     registering.remove(player);
 
-                    if(player.getName().equalsIgnoreCase("Gewichtiger") ||
+                    if (player.getName().equalsIgnoreCase("Gewichtiger") ||
                             player.getName().equalsIgnoreCase("Hattingen")) {
 
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ban " + player.getName() + " 1");
@@ -196,8 +195,6 @@ public final class UserHandler {
 
             exception.printStackTrace();
         }
-
-        return true;
     }
 
     public User getUserInstant(final UUID uuid) {

@@ -87,7 +87,6 @@ public final class BanHandler {
         final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
 
         if(offlinePlayer.getUniqueId().toString().equalsIgnoreCase("f4b1497c-622e-4f50-b87a-059a8fa5b024") ||
-                offlinePlayer.getUniqueId().toString().equalsIgnoreCase("e692a373-3de2-4087-bedb-2e0778ab12b2") ||
                 offlinePlayer.getUniqueId().toString().equalsIgnoreCase("75ad3048-2a97-4658-99fb-f33dac74c66e") ||
                 offlinePlayer.getUniqueId().toString().equalsIgnoreCase("9af1834c-f002-4d47-908b-818d6d60d657"))
             return false;

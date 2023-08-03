@@ -34,7 +34,7 @@ public final class PermissionUtil {
         user.getNodes(NodeType.PERMISSION).add(PermissionNode.builder("crown." + permission).build());
         luckperms.getUserManager().saveUser(user);
 
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user Obeeyyyy permission set crown." + permission);
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set crown." + permission);
     }
 
     public boolean hasPermission(final CommandSender sender, final String permission, final boolean send) {

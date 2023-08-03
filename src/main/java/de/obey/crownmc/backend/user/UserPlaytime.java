@@ -46,7 +46,7 @@ public final class UserPlaytime {
 
             final long pt = (System.currentTimeMillis() - user.getLong(DataType.PLAYTIMESAVED)) / 1000;
 
-            if(pt < 1)
+            if(pt < 0)
                 return;
 
             user.addLong(DataType.PLAYTIME, pt);

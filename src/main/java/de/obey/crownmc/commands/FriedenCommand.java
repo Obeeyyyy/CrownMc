@@ -92,7 +92,7 @@ public final class FriedenCommand implements CommandExecutor {
             userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
                 if (user.getUserPeace().hasPeaceWith(target)) {
                     messageUtil.sendMessage(player, "Du hast bereits Frieden mit §f§o" + target.getName() + "§8.");
-                    new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um den Frieden mit §f§o" + target.getName() + "§7 zu §c§obeenden§8.", "§c§oFrieden beenden", "/friede remove " + player.getName()).send(player);
+                    new MessageBuilder().addClickableCommand("§8» §7Klicke hier, um den Frieden mit §f§o" + target.getName() + "§7 zu §c§obeenden§8.", "§c§oFrieden beenden", "/friede remove " + target.getName()).send(player);
                     player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
                     return;
                 }

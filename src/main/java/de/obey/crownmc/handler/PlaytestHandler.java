@@ -26,6 +26,7 @@ public final class PlaytestHandler {
     private ArrayList<UUID> uuids = new ArrayList<>();
 
     public void reward(final User user) {
+        user.getPrefix().addPrefix("§6§lTester");
         user.getBadges().addBadge("tester");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rang " + user.getOfflinePlayer().getName() + " warrior");
     }

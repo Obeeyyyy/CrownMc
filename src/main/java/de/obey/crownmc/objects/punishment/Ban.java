@@ -31,7 +31,11 @@ public class Ban {
         this.id = id;
         this.banReason = CrownMain.getInstance().getInitializer().getBanHandler().getReadsonFromID(cfg.getInt("bans." + id + ".reason"));
 
-        bannedUntil = System.currentTimeMillis() + banReason.getDuration();
+        if(banReason.getDuration() <= 0) {
+            bannedUntil = -1;
+        } else {
+            bannedUntil = System.currentTimeMillis() + banReason.getDuration();
+        }
     }
 
     public Ban(final int id, final BanReason banReason, final YamlConfiguration cfg) {
@@ -39,7 +43,11 @@ public class Ban {
         this.id = id;
         this.banReason = banReason;
 
-        bannedUntil = System.currentTimeMillis() + banReason.getDuration();
+        if(banReason.getDuration() <= 0) {
+            bannedUntil = -1;
+        } else {
+            bannedUntil = System.currentTimeMillis() + banReason.getDuration();
+        }
     }
 
     public void save() {
