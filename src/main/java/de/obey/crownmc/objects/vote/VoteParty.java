@@ -121,7 +121,7 @@ public final class VoteParty {
             @Override
             public void run() {
 
-                final Location location = votePartyHandler.getLocations().get(new Random().nextInt(votePartyHandler.getLocations().size()));
+                final Location location = votePartyHandler.getLocations().get(0);
                 final Giant giant = location.getWorld().spawn(location, Giant.class);
 
                 giant.setMaxHealth(2000);

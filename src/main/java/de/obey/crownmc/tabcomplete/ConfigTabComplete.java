@@ -19,27 +19,26 @@ public final class ConfigTabComplete implements TabCompleter {
 
         List<String> name = new ArrayList<>();
 
-        name.add("killMoneyReward");
-        name.add("killXPReward");
-        name.add("killEloReward");
-        name.add("deathMoneyLose");
-        name.add("deathEloLose");
-        name.add("voteparty");
-        name.add("votes");
-        name.add("bcdelay");
-        name.add("baseEloKillstreak");
-        name.add("baseXPKillstreak");
-        name.add("baseMoneyKillstreak");
-        name.add("levelUpMoney");
-        name.add("netherPrice");
-        name.add("endPrice");
-        name.add("soulReward");
-        name.add("netherLevel");
-        name.add("endLevel");
-        name.add("epCooldown");
-        name.add("clanPrice");
-
-        if (args.length > 0) {
+        if (args.length > 1 && args[0].equalsIgnoreCase("set")) {
+            name.add("killMoneyReward");
+            name.add("killXPReward");
+            name.add("killEloReward");
+            name.add("deathMoneyLose");
+            name.add("deathEloLose");
+            name.add("voteparty");
+            name.add("votes");
+            name.add("bcdelay");
+            name.add("baseEloKillstreak");
+            name.add("baseXPKillstreak");
+            name.add("baseMoneyKillstreak");
+            name.add("levelUpMoney");
+            name.add("netherPrice");
+            name.add("endPrice");
+            name.add("soulReward");
+            name.add("netherLevel");
+            name.add("endLevel");
+            name.add("epCooldown");
+            name.add("clanPrice");
             final String looking = args[args.length - 1];
 
             List<String> sorted = new ArrayList<>();
@@ -50,6 +49,14 @@ public final class ConfigTabComplete implements TabCompleter {
             }
 
             name = sorted;
+
+        } else if(args.length < 1) {
+            name.add("info");
+            name.add("reload");
+            name.add("set");
+            name.add("set");
+            name.add("add");
+            name.add("remove");
         }
 
         return name;

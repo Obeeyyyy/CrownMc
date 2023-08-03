@@ -68,6 +68,7 @@ public final class Initializer {
     private NpcHandler npcHandler;
     private WordScrambleHandler wordScrumbleHandler;
     private StatTrackHandler statTrackHandler;
+    private PlaytestHandler playtestHandler;
 
     private PlotAPI plotAPI;
 
@@ -401,6 +402,7 @@ public final class Initializer {
                     npcHandler = new NpcHandler(messageUtil);
                     wordScrumbleHandler = new WordScrambleHandler(messageUtil, userHandler);
                     statTrackHandler = new StatTrackHandler();
+                    playtestHandler = new PlaytestHandler(serverConfig);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
@@ -423,6 +425,7 @@ public final class Initializer {
                     rouletteHandler.loadTables();
                     pvPAltarHandler.loadAllPvPAltars();
                     npcHandler.loadStands();
+                    playtestHandler.loadTesters();
 
                     rankingHandler.startUpdater();
                 }

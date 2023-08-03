@@ -43,6 +43,7 @@ public final class ConfigCommand implements CommandExecutor {
 
                 messageUtil.sendMessage(sender, "ServerConfig:");
                 messageUtil.sendMessage(sender, " - Playercount: " + serverConfig.getPlayerCount());
+                messageUtil.sendMessage(sender, " - playtest: " + serverConfig.isPlaytest());
                 messageUtil.sendMessage(sender, " - votes: " + serverConfig.getVotes());
                 messageUtil.sendMessage(sender, " - voteparty: " + serverConfig.getVoteparty());
                 messageUtil.sendMessage(sender, " - bcdelay: " + serverConfig.getAutoBroadcastDelay());

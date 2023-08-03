@@ -42,7 +42,7 @@ public final class PacketReader {
     private void inject() {
         final CraftPlayer craftPlayer = (CraftPlayer) this.player;
         channel = craftPlayer.getHandle().playerConnection.networkManager.channel;
-        channel.pipeline().addAfter("decoder", "SlayerInjector", new MessageToMessageDecoder<Packet<?>>() {
+        channel.pipeline().addAfter("decoder", "ObeyStyle", new MessageToMessageDecoder<Packet<?>>() {
             @Override
             protected void decode(ChannelHandlerContext arg0, Packet<?> packet, List<Object> arg2) throws Exception {
                 arg2.add(packet);
@@ -53,8 +53,8 @@ public final class PacketReader {
 
     public void uninject() {
         if (channel != null) {
-            if (channel.pipeline().get("SlayerInjector") != null) {
-                channel.pipeline().remove("SlayerInjector");
+            if (channel.pipeline().get("ObeyStyle") != null) {
+                channel.pipeline().remove("ObeyStyle");
             }
         }
     }
@@ -93,24 +93,11 @@ public final class PacketReader {
                     cmd.startsWith("/icanhas") ||
                     cmd.contains(":") ||
                     cmd.startsWith("/about")) {
-                setValue(thePacket, "a", "SkySlayer.de");
+                setValue(thePacket, "a", "CrownMc.de");
             }
 
             //System.out.println(getValue(thePacket, "a"));
-            return;
         }
-
-        if (thePacket.getClass().getSimpleName().equalsIgnoreCase("PacketPlayInCustomPayload")) {
-            final PacketPlayInCustomPayload packet = (PacketPlayInCustomPayload) thePacket;
-
-            if (packet.a().equalsIgnoreCase("MC|Brand")) {
-                return;
-            }
-
-            return;
-        }
-
-
         //System.out.println(packet.getClass().getSimpleName());
     }
 

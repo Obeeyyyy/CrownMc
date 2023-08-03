@@ -30,7 +30,7 @@ public final class MessageBuilder {
 
     public MessageBuilder addClickableCommand(final String text, final String hover, final String command) {
         final TextComponent temp = new TextComponent(text);
-        temp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + command));
+        temp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command));
         temp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(hover).create()));
         components.add(temp);
         return this;

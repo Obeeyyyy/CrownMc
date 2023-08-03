@@ -51,7 +51,7 @@ public final class ServerConfig {
     @Setter
     private long dailyMillisCount = 0;
     @Setter
-    private boolean whitelist, betawhitelist;
+    private boolean whitelist, betawhitelist, playtest;
     @Setter
     private String prefix;
     private String host, username, database, password;
@@ -84,7 +84,8 @@ public final class ServerConfig {
         if (!configFile.exists()) {
 
             cfg.set("whitelist", true);
-            cfg.set("betawhitelist", true);
+            cfg.set("betawhitelist", false);
+            cfg.set("playtest", false);
             cfg.set("playercount", 0);
             cfg.set("prefix", "&f&lObeySystem &8>&7 ");
             cfg.set("mysql.host", "change");
@@ -207,12 +208,15 @@ public final class ServerConfig {
 
         clanPrice = cfg.getInt("clanPrice", 20000);
 
+        playtest = cfg.getBoolean("playtest", false);
+
         loadRespawnKitItems();
     }
 
     public void save() {
         cfg.set("whitelist", whitelist);
         cfg.set("betawhitelist", betawhitelist);
+        cfg.set("playtest", playtest);
         cfg.set("playercount", playerCount);
         cfg.set("motd.1", motd1);
         cfg.set("motd.2", motd2);
