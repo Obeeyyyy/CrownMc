@@ -69,6 +69,7 @@ public final class Initializer {
     private WordScrambleHandler wordScrumbleHandler;
     private StatTrackHandler statTrackHandler;
     private PlaytestHandler playtestHandler;
+    private GoalHandler goalHandler;
 
     private PlotAPI plotAPI;
 
@@ -237,6 +238,7 @@ public final class Initializer {
         crownMain.getCommand("check").setExecutor(new CheckCommand(messageUtil, userHandler));
         crownMain.getCommand("stattrack").setExecutor(statTrackCommand);
         crownMain.getCommand("rangcheck").setExecutor(new RangCheckCommand(messageUtil, rangHandler));
+        crownMain.getCommand("goal").setExecutor(new GoalCommand(messageUtil, userHandler, goalHandler));
 
         final PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -402,6 +404,7 @@ public final class Initializer {
                     npcHandler = new NpcHandler(messageUtil);
                     wordScrumbleHandler = new WordScrambleHandler(messageUtil, userHandler);
                     statTrackHandler = new StatTrackHandler();
+                    goalHandler = new GoalHandler(messageUtil, userHandler);
                     playtestHandler = new PlaytestHandler(serverConfig);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)

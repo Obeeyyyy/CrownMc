@@ -42,15 +42,15 @@ public class SudoCommand implements CommandExecutor {
                 return false;
             }
 
-            String text = args[1];
+            StringBuilder text = new StringBuilder(args[1]);
 
             if (args.length > 2) {
                 for (int i = 2; i < args.length; i++) {
-                    text = text + " " + args[i];
+                    text.append(" ").append(args[i]);
                 }
             }
 
-            target.chat(text);
+            target.chat(text.toString().trim());
             messageUtil.sendMessage(player, "§8'§f§o" + args[0] + "§8'§7 executed §8> §e" + text);
 
             return true;
