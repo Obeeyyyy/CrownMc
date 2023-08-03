@@ -70,6 +70,7 @@ public final class Initializer {
     private StatTrackHandler statTrackHandler;
     private PlaytestHandler playtestHandler;
     private GoalHandler goalHandler;
+    private CoinbombHandler coinbombHandler;
 
     private PlotAPI plotAPI;
 
@@ -406,6 +407,7 @@ public final class Initializer {
                     statTrackHandler = new StatTrackHandler();
                     goalHandler = new GoalHandler(messageUtil, userHandler);
                     playtestHandler = new PlaytestHandler(serverConfig);
+                    coinbombHandler = new CoinbombHandler(messageUtil);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
