@@ -12,9 +12,20 @@ import org.bukkit.command.CommandSender;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 @UtilityClass
 public final class MathUtil {
+
+    public long getRandom(long min, long max) {
+        if (min >= max) {
+            throw new IllegalArgumentException("Invalid range: min must be less than max");
+        }
+
+        Random random = new Random();
+        return min + random.nextInt((int) (max - min + 1));
+    }
 
     public String getDaysAnHoursFromSeconds(long seconds) {
 

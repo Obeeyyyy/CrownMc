@@ -71,6 +71,7 @@ public final class Initializer {
     private PlaytestHandler playtestHandler;
     private GoalHandler goalHandler;
     private CoinbombHandler coinbombHandler;
+    private LuckyFishingHandler luckyFishingHandler;
 
     private PlotAPI plotAPI;
 
@@ -304,6 +305,7 @@ public final class Initializer {
         pluginManager.registerEvents(clanCommand, crownMain);
         pluginManager.registerEvents(new RangInfoCommand(), crownMain);
         pluginManager.registerEvents(new RandomTeleportListener(messageUtil, combatHandler, locationHandler), crownMain);
+        pluginManager.registerEvents(new FishingListener(messageUtil, luckyFishingHandler), crownMain);
     }
 
     private void loadTabCompleter() {
@@ -408,6 +410,7 @@ public final class Initializer {
                     goalHandler = new GoalHandler(messageUtil, userHandler);
                     playtestHandler = new PlaytestHandler(serverConfig);
                     coinbombHandler = new CoinbombHandler(messageUtil);
+                    luckyFishingHandler = new LuckyFishingHandler(messageUtil);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();

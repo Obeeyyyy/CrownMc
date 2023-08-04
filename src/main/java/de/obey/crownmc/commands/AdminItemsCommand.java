@@ -44,7 +44,7 @@ public final class AdminItemsCommand implements CommandExecutor {
         if (!PermissionUtil.hasPermission(player, "*", true))
             return false;
 
-        final Inventory inventory = Bukkit.createInventory(null, 9 * 6, "§4§lsuii");
+        final Inventory inventory = Bukkit.createInventory(null, 9 * 6, "§4§lAdminitems");
 
         inventory.addItem(new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                 .setDisplayname("§8» §5§lEnderchest §8× §7Seite")
