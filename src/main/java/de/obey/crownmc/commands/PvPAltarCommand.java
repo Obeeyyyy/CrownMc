@@ -78,6 +78,7 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
             if(args[0].equalsIgnoreCase("reload")) {
                 pvPAltarHandler.shutdown();
                 pvPAltarHandler.loadAllPvPAltars();
+                messageUtil.sendMessage(player, "Altare neu geladen§8.");
                 return false;
             }
         }

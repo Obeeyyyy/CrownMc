@@ -92,22 +92,26 @@ public class Goal {
     }
 
     public boolean joinPlayer(final User player, long einsatz) {
-        if (messageUtil.hasEnougthMoney(player, einsatz)) {
-            long remaining = goal - getCurrentAmount();
-            long extra = einsatz - remaining;
-            if (extra < 0) extra = 0;
-            einsatz -= extra;
-            participants.put(player.getPlayer(), participants.getOrDefault(player.getPlayer(), 0L) + einsatz);
-            player.removeLong(DataType.MONEY, einsatz);
-            if (remaining <= 0) {
-                endGoal();
-                return true;
-            }
-            if (einsatz >= 250) {
-                messageUtil.broadcast(player.getPlayer() + "§7 hat in das §a§lGoal§7 gezahlt§8! (§a" + messageUtil.formatLong(getCurrentAmount()) + "§8/§a" + messageUtil.formatLong(goal) + "§2§o$§8)");
-                return true;
-            }
+        if (!messageUtil.hasEnougthMoney(player, einsatz))
+            return false;
+
+        long remaining = goal - getCurrentAmount();
+        long extra = einsatz - remaining;
+        if (extra < 0) extra = 0;
+        einsatz -= extra;
+        participants.put(player.getPlayer(), participants.getOrDefault(player.getPlayer(), 0L) + einsatz);
+        player.removeLong(DataType.MONEY, einsatz);
+
+        if (remaining <= 0) {
+            endGoal();
+            return true;
         }
+
+        if (einsatz >= 250) {
+            messageUtil.broadcast(player.getPlayer() + "§7 hat in das §a§lGoal§7 gezahlt§8! (§a" + messageUtil.formatLong(getCurrentAmount()) + "§8/§a" + messageUtil.formatLong(goal) + "§2§o$§8)");
+            return true;
+        }
+
         return false;
     }
 

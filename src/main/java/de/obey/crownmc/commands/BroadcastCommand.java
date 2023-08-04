@@ -25,7 +25,7 @@ public final class BroadcastCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (sender instanceof Player && !PermissionUtil.hasPermission((Player) sender, "broadcast", true))
+        if (sender instanceof Player && !PermissionUtil.hasPermission(sender, "broadcast", true))
             return false;
 
         if (args.length >= 1) {

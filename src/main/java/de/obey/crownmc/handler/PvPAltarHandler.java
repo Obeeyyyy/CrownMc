@@ -37,7 +37,7 @@ public final class PvPAltarHandler {
     private final HashMap<UUID, Long> blocked = new HashMap<>();
 
     private final File file;
-    private final YamlConfiguration cfg;
+    private YamlConfiguration cfg;
 
     public PvPAltarHandler(final MessageUtil messageUtil) {
         this.messageUtil = messageUtil;
@@ -48,6 +48,8 @@ public final class PvPAltarHandler {
 
     public void loadAllPvPAltars() {
         pvpAltarMap.clear();
+        cfg = FileUtil.getCfg(file);
+
         if(!cfg.contains("altars"))
             return;
 
