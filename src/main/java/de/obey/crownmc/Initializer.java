@@ -71,7 +71,7 @@ public final class Initializer {
     private PlaytestHandler playtestHandler;
     private GoalHandler goalHandler;
     private CoinbombHandler coinbombHandler;
-    private LuckyFishingHandler luckyFishingHandler;
+    private PvPDropHandler pvPDropHandler;
 
     private PlotAPI plotAPI;
 
@@ -101,6 +101,7 @@ public final class Initializer {
         final NpcCommand npcCommand = new NpcCommand(messageUtil, npcHandler);
         final ClanCommand clanCommand = new ClanCommand(messageUtil, clanHandler, userHandler);
         final StatTrackCommand statTrackCommand = new StatTrackCommand(messageUtil, statTrackHandler);
+        final PvPDropItemsCommand pvPDropItemsCommand = new PvPDropItemsCommand(pvPDropHandler);
 
         crownMain.getCommand("whitelist").setExecutor(new WhitelistCommand(serverConfig, messageUtil));
         crownMain.getCommand("stop").setExecutor(new StopCommand(this));
@@ -241,6 +242,7 @@ public final class Initializer {
         crownMain.getCommand("stattrack").setExecutor(statTrackCommand);
         crownMain.getCommand("rangcheck").setExecutor(new RangCheckCommand(messageUtil, rangHandler));
         crownMain.getCommand("goal").setExecutor(new GoalCommand(messageUtil, userHandler, goalHandler));
+        crownMain.getCommand("pvpdrops").setExecutor(pvPDropItemsCommand);
 
         final PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -257,7 +259,7 @@ public final class Initializer {
         pluginManager.registerEvents(new EnderchestListener(userHandler), crownMain);
         pluginManager.registerEvents(new MotdCommand(messageUtil, serverConfig), crownMain);
         pluginManager.registerEvents(new SettingsCommand(this), crownMain);
-        pluginManager.registerEvents(new DeathListener(messageUtil, userHandler, killFarmHandler, combatHandler, serverConfig, locationHandler, pvPAltarHandler, statTrackHandler), crownMain);
+        pluginManager.registerEvents(new DeathListener(messageUtil, userHandler, killFarmHandler, combatHandler, serverConfig, locationHandler, pvPAltarHandler, statTrackHandler, pvPDropHandler), crownMain);
         pluginManager.registerEvents(new BodySeeCommand(messageUtil), crownMain);
         pluginManager.registerEvents(new GutscheinCommand(messageUtil, userHandler), crownMain);
         pluginManager.registerEvents(new RankingCommand(messageUtil, rankingHandler), crownMain);
@@ -305,7 +307,7 @@ public final class Initializer {
         pluginManager.registerEvents(clanCommand, crownMain);
         pluginManager.registerEvents(new RangInfoCommand(), crownMain);
         pluginManager.registerEvents(new RandomTeleportListener(messageUtil, combatHandler, locationHandler), crownMain);
-        pluginManager.registerEvents(new FishingListener(messageUtil, luckyFishingHandler), crownMain);
+        pluginManager.registerEvents(pvPDropItemsCommand, crownMain);
     }
 
     private void loadTabCompleter() {
@@ -410,7 +412,7 @@ public final class Initializer {
                     goalHandler = new GoalHandler(messageUtil, userHandler);
                     playtestHandler = new PlaytestHandler(serverConfig);
                     coinbombHandler = new CoinbombHandler(messageUtil);
-                    luckyFishingHandler = new LuckyFishingHandler(messageUtil);
+                    pvPDropHandler = new PvPDropHandler(messageUtil);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();

@@ -37,6 +37,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -51,6 +52,7 @@ public final class DeathListener implements Listener {
     private final LocationHandler locationHandler;
     private final PvPAltarHandler pvPAltarHandler;
     private final StatTrackHandler statTrackHandler;
+    private final PvPDropHandler pvPDropHandler;
 
     private final DecimalFormat format = new DecimalFormat("0.0",  new DecimalFormatSymbols(Locale.ENGLISH));
 
@@ -160,14 +162,18 @@ public final class DeathListener implements Listener {
         }
 
         // Item Drops
+        if(killerUser.is(DataType.GETKILLITEMS)) {
             final List<ItemStack> temp = event.getDrops();
 
-            if(!temp.isEmpty()) {
+            if (!temp.isEmpty()) {
                 for (final ItemStack drop : temp)
                     InventoryUtil.addItem(killer, drop);
             }
 
             event.getDrops().clear();
+        }
+
+        pvPDropHandler.drop(killer);
         // Reward stuff end
 
         // Bounty stuff start

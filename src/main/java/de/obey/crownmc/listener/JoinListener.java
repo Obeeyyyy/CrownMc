@@ -96,9 +96,8 @@ public final class JoinListener implements Listener {
             final YamlConfiguration serverCfg = serverConfig.getCfg();
             final ArrayList<ItemStack> contents = serverCfg.contains("firstjoin") ? (ArrayList<ItemStack>) serverCfg.getList("firstjoin") : new ArrayList<>();
 
-            if (contents.size() > 0) {
+            if (contents.size() > 0)
                 contents.forEach(item -> player.getInventory().addItem(item));
-            }
 
             locationHandler.teleportToLocationNameInstant(player, "spawn");
         }

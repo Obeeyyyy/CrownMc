@@ -58,6 +58,7 @@ public enum DataType {
     RESPAWNKIT("respawnkitstate", StoreType.CONFIG, true),
     REGISTERED("registered", StoreType.CONFIG, true),
     RAINBOWTAB("rainbowtab", StoreType.CONFIG, false),
+    GETKILLITEMS("getkillitems", StoreType.CONFIG, true),
     LASTLUCKYSPIN("lastluckyspin", StoreType.CONFIG, 0L),
     LASTVOTE("lastvote", StoreType.CONFIG, 0L),
     CLANNAME("clan", StoreType.CONFIG, "-");

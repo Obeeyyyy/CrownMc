@@ -62,7 +62,7 @@ public final class StatTrackHandler {
         final List<String> lore = meta.getLore();
 
         for (int i = 0; i < lore.size(); i++) {
-            if(lore.get(i).startsWith("§8➥ §7") || lore.get(i).startsWith("§6§l    ☼ §e§oStattrack")) {
+            if(lore.get(i).startsWith("§8➥ §7")) {
                 lore.remove(i);
                 i--;
                 break;

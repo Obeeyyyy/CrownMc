@@ -50,8 +50,8 @@ public final class RandomTeleportListener implements Listener {
             return;
         }
 
-        locationHandler.teleportToLocation(player, getRandomLocation());
         InventoryUtil.removeItemInHand(player, 1);
+        locationHandler.teleportToLocation(player, getRandomLocation());
     }
 
     private Location getRandomLocation() {

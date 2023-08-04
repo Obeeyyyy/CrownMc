@@ -28,9 +28,10 @@ public class Goal {
     final UserHandler userHandler = CrownMain.getInstance().getInitializer().getUserHandler();
     final GoalHandler goalHandler = CrownMain.getInstance().getInitializer().getGoalHandler();
 
-    Player creator;
-    long goal;
+    final Player creator;
     final Map<Player, Long> participants = Maps.newConcurrentMap(); //pro prozent, 1 item;
+
+    final long goal;
     final long startTime;
 
     BukkitTask runnable;
@@ -38,6 +39,7 @@ public class Goal {
     public long getCurrentAmount() {
         long amount = 0L;
         for (long amounts : participants.values()) amount += amounts;
+
         return amount;
     }
 
@@ -65,7 +67,7 @@ public class Goal {
             Map<Player, Integer> sortedMap = Maps.newConcurrentMap();
             int i = 0;
             for (Player player : temp.keySet()) sortedMap.put(player, ++i);
-            messageUtil.broadcast("§7Das §a§lGoal§7 wurde geknackt§8! (§a" + goal + "§2§o$§8)");
+            messageUtil.broadcast("§7Das §a§lGoal§7 wurde erfolgreich geknackt§8! (§a" + messageUtil.formatLong(goal) + "§2§o$§8)");
             messageUtil.broadcast("§7Jeder§8,§7 der eingezahlt hat§8, §7bekommt eine Kleinigkeit§8!");
             messageUtil.broadcast("§7Es hat §2§o" + MathUtil.getMinutesAndSecondsFromSeconds(tookMillis / 1000) + "§7 gedauert§8.");
             i = 0;
@@ -102,13 +104,13 @@ public class Goal {
         participants.put(player.getPlayer(), participants.getOrDefault(player.getPlayer(), 0L) + einsatz);
         player.removeLong(DataType.MONEY, einsatz);
 
-        if (remaining <= 0) {
+        if (getCurrentAmount() >= goal) {
             endGoal();
             return true;
         }
 
         if (einsatz >= 250) {
-            messageUtil.broadcast(player.getPlayer() + "§7 hat in das §a§lGoal§7 gezahlt§8! (§a" + messageUtil.formatLong(getCurrentAmount()) + "§8/§a" + messageUtil.formatLong(goal) + "§2§o$§8)");
+            messageUtil.broadcast(player.getPlayer().getName() + "§7 hat in das §a§lGoal§7 gezahlt§8! (§a" + messageUtil.formatLong(getCurrentAmount()) + "§8/§a" + messageUtil.formatLong(goal) + "§2§o$§8)");
             return true;
         }
 

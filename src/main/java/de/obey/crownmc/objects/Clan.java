@@ -86,7 +86,6 @@ public class Clan {
         clanShop = Bukkit.createInventory(null, 9*6, "§7ClanShop");
 
         InventoryUtil.fillSideRows(clanInfo, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
-        InventoryUtil.fillSideRows(clanShop, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
 
         loadChestContents();
         updateClanChest();
@@ -118,6 +117,9 @@ public class Clan {
 
     public void updateClanChest() {
         for (int i = 0; i < clanChest.getSize(); i++) {
+            if(clanChest.getItem(i) != null && clanChest.getItem(i).getType() == Material.BARRIER)
+                clanChest.remove(Material.BARRIER);
+
             if(i + 1 > chestSlots) {
                 clanChest.setItem(i, new ItemBuilder(Material.BARRIER)
                                 .setDisplayname("§c§onicht freigeschaltet")
@@ -244,6 +246,9 @@ public class Clan {
     }
 
     public void updateClanShop() {
+        clanShop.clear();
+        InventoryUtil.fillSideRows(clanShop, new ItemBuilder(Material.IRON_FENCE).setDisplayname("§7-§8/§7-").build());
+
         clanShop.setItem(1, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setDisplayname("§7Member Slot")
                         .setTextur("M2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=", UUID.randomUUID())
@@ -286,7 +291,6 @@ public class Clan {
     public void buyChestSlot(final Player player, final long amount) {
         chestSlots++;
 
-        updateClanInfo();
         updateClanShop();
         updateClanChest();
 

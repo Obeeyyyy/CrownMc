@@ -38,7 +38,6 @@ public final class VoteListener implements Listener {
 
         initializer.getMessageUtil().broadcast("§e§o" + target.getName() + "§7 hat für uns gevotet §8!§7 Vote auch du für eine Belohnung§8.");
         initializer.getMessageUtil().broadcast("§a+§e§o500§6§l$ §7in den §9§lDailyPot§8.");
-        initializer.getMessageUtil().broadcast("§7Voteparty§8: §a" + initializer.getServerConfig().getVotes()+ "§8/§2" + initializer.getServerConfig().getVoteparty());
 
         initializer.getUserHandler().getUser(target.getUniqueId()).thenAcceptAsync(user -> {
             user.addLong(DataType.VOTES, 1);
@@ -51,6 +50,7 @@ public final class VoteListener implements Listener {
 
             if(target.isOnline()) {
                 initializer.getServerConfig().vote(target.getPlayer());
+                initializer.getMessageUtil().broadcast("§7Voteparty§8: §a" + initializer.getServerConfig().getVotes()+ "§8/§2" + initializer.getServerConfig().getVoteparty());
                 initializer.getMessageUtil().sendMessage(target.getPlayer(), "Votestreak§8: §a§o" + user.getLong(DataType.VOTESTREAK) + "§7 Votes§8.");
                 target.getPlayer().playSound(target.getPlayer().getLocation(), Sound.LEVEL_UP, 0.5f, 1);
             }

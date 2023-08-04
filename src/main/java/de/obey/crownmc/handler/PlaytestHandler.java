@@ -10,8 +10,10 @@ package de.obey.crownmc.handler;
 
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.backend.user.User;
+import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -28,6 +30,7 @@ public final class PlaytestHandler {
     public void reward(final User user) {
         user.getPrefix().addPrefix("§6§lTester");
         user.getBadges().addBadge("tester");
+
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rang " + user.getOfflinePlayer().getName() + " warrior");
     }
 

@@ -102,6 +102,9 @@ public final class SettingsCommand implements CommandExecutor, Listener {
             user.setBoolean(DataType.PEACEREQUESTS, !user.is(DataType.PEACEREQUESTS));
 
         } else if (event.getSlot() == 24) {
+            user.setBoolean(DataType.GETKILLITEMS, !user.is(DataType.GETKILLITEMS));
+
+        } else if (event.getSlot() == 33) {
             if (!PermissionUtil.hasPermission(player, "chatlines", true))
                 return;
 
@@ -256,15 +259,29 @@ public final class SettingsCommand implements CommandExecutor, Listener {
                     .build());
         }
 
+        if (user.is(DataType.GETKILLITEMS)) {
+            inventory.setItem(24, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setTextur("ODc1ZTc5NDg4ODQ3YmEwMmQ1ZTEyZTcwNDJkNzYyZTg3Y2UwOGZhODRmYjg5YzM1ZDZiNWNjY2I4YjlmNGJlZCJ9fX0=", UUID.randomUUID())
+                    .setDisplayname("§8» §7Kill Items §8× §a§oAktiviert")
+                    .setLore("", "§7  Klicke um Kill Items zu §c§odeaktivieren§7.", "§7  Das bedeutet, Items von getöteten Spielern", "§7  werden nicht mehr in dein Inv gepackt§8.")
+                    .build());
+        } else {
+            inventory.setItem(24, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setTextur("ODc1ZTc5NDg4ODQ3YmEwMmQ1ZTEyZTcwNDJkNzYyZTg3Y2UwOGZhODRmYjg5YzM1ZDZiNWNjY2I4YjlmNGJlZCJ9fX0=", UUID.randomUUID())
+                    .setDisplayname("§8» §7Kill Items §8× §c§oDeaktiviert")
+                    .setLore("", "§7  Klicke um Kill Items zu §a§oaktivieren§7.")
+                    .build());
+        }
+
         if (PermissionUtil.hasPermission(user.getPlayer(), "chatlines", false)) {
             if (user.is(DataType.CHATLINESSTATE)) {
-                inventory.setItem(24, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                inventory.setItem(33, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setTextur("MzE5ZjUwYjQzMmQ4NjhhZTM1OGUxNmY2MmVjMjZmMzU0MzdhZWI5NDkyYmNlMTM1NmM5YWE2YmIxOWEzODYifX19", UUID.randomUUID())
                         .setDisplayname("§8» §7ChatLines §8× §a§oAktiviert")
                         .setLore("", "§7  Klicke um ChatLines zu §c§odeaktivieren§7.")
                         .build());
             } else {
-                inventory.setItem(24, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                inventory.setItem(33, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                         .setTextur("Mzk5MzY2YTNmMjMzNTZkNDRjYjNhNzIyZjgxODdjN2QwN2JhOTc1MDFmNzZkMTVmMmIzMTFlN2ZmZTVhNGRhYyJ9fX0=", UUID.randomUUID())
                         .setDisplayname("§8» §7ChatLines §8× §c§oDeaktiviert")
                         .setLore("", "§7  Klicke um ChatLines zu §a§oaktivieren§7.")

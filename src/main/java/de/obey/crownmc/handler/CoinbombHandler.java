@@ -48,7 +48,7 @@ public final class CoinbombHandler {
     }
 
     public ItemStack giveCoinbomb() {
-        return new ItemBuilder(Material.getMaterial(175)).setDisplayname("§6§lCoinbombe").addLore(
+        return new ItemBuilder(Material.getMaterial(175)).setDisplayname("§6§lCoinbombe").setLore(
                 "§r",
                 "§6§lDrop",
                 "§r §7Droppe das Item um die Bombe zu aktivieren§8.",
