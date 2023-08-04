@@ -331,6 +331,18 @@ public class ClanCommand implements CommandExecutor, Listener {
             if(!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "§7ClanShop"))
                 return;
 
+            final Clan clan = userHandler.getUserInstant(player.getUniqueId()).getClan();
+
+            if(clan == null)
+                return;
+
+            if(event.getSlot() == 52) {
+                player.closeInventory();
+                player.openInventory(clan.getClanInfo());
+                player.updateInventory();
+                return;
+            }
+
             if(event.isLeftClick() && !event.isShiftClick()) {
                 if(event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR ||
                 !event.getCurrentItem().hasItemMeta() || !event.getCurrentItem().getItemMeta().hasLore())
@@ -345,8 +357,21 @@ public class ClanCommand implements CommandExecutor, Listener {
                             return;
 
                         user.removeLong(DataType.MONEY, price);
-                        user.getClan().buyMemberSlot(player, price);
+                        clan.buyMemberSlot(player, price);
 
+                    });
+                }
+
+                // Clanchest slot
+                if(event.getSlot() == 2) {
+                    final long price = Long.parseLong(event.getCurrentItem().getItemMeta().getLore().get(2).split(" ")[2].replace("§6§l$", "").replace(",", ""));
+
+                    userHandler.getUser(player.getUniqueId()).thenAcceptAsync(user -> {
+                        if(!messageUtil.hasEnougthMoney(user, price))
+                            return;
+
+                        user.removeLong(DataType.MONEY, price);
+                        clan.buyChestSlot(player, price);
                     });
                 }
             }
@@ -367,7 +392,6 @@ public class ClanCommand implements CommandExecutor, Listener {
                 player.closeInventory();
                 player.openInventory(clan.getClanInfo());
                 player.updateInventory();
-                player.playSound(player.getLocation(), Sound.CHEST_OPEN, 0.25f, 1);
                 return;
             }
 

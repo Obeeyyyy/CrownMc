@@ -150,7 +150,7 @@ public class Clan {
                 .build());
 
         clanInfo.setItem(30, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
-                        .setTextur("N2UyZWI0NzUxZTNjNTBkNTBmZjE2MzUyNTc2NjYzZDhmZWRmZTNlMDRiMmYwYjhhMmFhODAzYjQxOTM2M2NhMSJ9fX0=", UUID.randomUUID())
+                        .setTextur("ZTIyM2I3YjhjZjI4NTg0ZDEzYTBlMTVmMjgzODE1YTRjMGQyNmY4NzBiMTdhZWMxMjQ5MDM5ZWEwM2Y3YzNlOCJ9fX0=", UUID.randomUUID())
                 .setDisplayname("§7Clan Truhe")
                 .setLore("",
                         "§7§lLinksklick",
@@ -255,6 +255,22 @@ public class Clan {
                                 "§8 -§7 Kauf einen member Slot für den Clan§8.",
                                 "")
                 .build());
+
+        if(chestSlots < 53) {
+            clanShop.setItem(2, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                    .setDisplayname("§7Clantruhe Slot")
+                    .setTextur("M2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=", UUID.randomUUID())
+                    .setLore("",
+                            "§7§lInformation",
+                            "§8- §7Preis§8:§e§o " + messageUtil.formatLong(chestSlots * 200L) + "§6§l$",
+                            "",
+                            "§7§lLinksklick",
+                            "§8 -§7 Kauf einen Slot für die Clantruhe§8.",
+                            "")
+                    .build());
+        }
+
+        clanShop.setItem(52, new ItemBuilder(Material.BARRIER).setDisplayname("§c§oZurück").build());
     }
 
     public void buyMemberSlot(final Player player, final long amount) {
@@ -265,6 +281,16 @@ public class Clan {
         updateClanShop();
 
         sendMessageToAllClanMembers(player.getName() + " hat einen member Slot für " + messageUtil.formatLong(amount) + "§6§l$§7 gekauft§8.");
+    }
+
+    public void buyChestSlot(final Player player, final long amount) {
+        chestSlots++;
+
+        updateClanInfo();
+        updateClanShop();
+        updateClanChest();
+
+        sendMessageToAllClanMembers(player.getName() + " hat einen clantruhen Slot für " + messageUtil.formatLong(amount) + "§6§l$§7 gekauft§8.");
     }
 
     public void newMemberJoin(final Player player) {

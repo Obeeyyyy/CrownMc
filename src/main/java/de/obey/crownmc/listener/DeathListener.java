@@ -28,11 +28,14 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -155,6 +158,16 @@ public final class DeathListener implements Listener {
                         .build());
             }
         }
+
+        // Item Drops
+            final List<ItemStack> temp = event.getDrops();
+
+            if(!temp.isEmpty()) {
+                for (final ItemStack drop : temp)
+                    InventoryUtil.addItem(killer, drop);
+            }
+
+            event.getDrops().clear();
         // Reward stuff end
 
         // Bounty stuff start

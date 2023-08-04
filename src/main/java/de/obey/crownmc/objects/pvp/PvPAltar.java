@@ -128,7 +128,7 @@ public final class PvPAltar {
             @Override
             public void run() {
 
-                if(player.getLocation().distance(base.getLocation()) > 20) {
+                if(player.getWorld() != location.getWorld() || player.getLocation().distance(base.getLocation()) > 20) {
                     wentTooFar();
                     cancel();
                     return;

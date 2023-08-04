@@ -39,6 +39,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -156,9 +157,8 @@ public final class BlockStuffListener implements Listener {
         }
 
         if (pvp != null) {
-            if (player.getLocation().getWorld() == pvp.getWorld() && player.getLocation().getY() <= (pvp.getY() - 150)) {
+            if (player.getLocation().getWorld() == pvp.getWorld() && player.getLocation().getY() <= (pvp.getY() - 150))
                 player.damage(200);
-            }
         }
 
         if (event.getTo().getY() > 300) {

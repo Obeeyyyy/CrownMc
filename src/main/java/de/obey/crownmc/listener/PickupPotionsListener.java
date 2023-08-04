@@ -26,7 +26,8 @@ public final class PickupPotionsListener implements Listener {
     public void on(final PlayerPickupItemEvent event) {
         final Player player = event.getPlayer();
 
-        if(event.getItem().getItemStack().getType() == Material.POTION){
+        if(event.getItem().getItemStack().getType() == Material.POTION ||
+                event.getItem().getItemStack().getType() == Material.ENDER_PEARL){
 
             if(stacking.contains(player)) {
                 event.setCancelled(true);
@@ -64,29 +65,7 @@ public final class PickupPotionsListener implements Listener {
             if (slotItem != null && slotItem.getType() != Material.AIR &&
                     slotItem.getAmount() > 0 && slotItem.getAmount() < 64) {
 
-                if(slotItem.getType() == Material.POTION) {
-                    int needed = 64 - slotItem.getAmount();
-
-                    if (newItem.getType() != Material.AIR &&
-                            newItem.getAmount() > 0 && newItem.getAmount() < 64 &&
-                            slotItem.getType() == newItem.getType() &&
-                            slotItem.getDurability() == newItem.getDurability() &&
-                            (slotItem.getItemMeta() == null && newItem.getItemMeta() == null ||
-                                    slotItem.getItemMeta() != null && slotItem.getItemMeta().equals(newItem.getItemMeta()))) {
-
-                        if (newItem.getAmount() > needed) {
-                            slotItem.setAmount(64);
-                            newItem.setAmount(newItem.getAmount() - needed);
-                            changed++;
-                            break;
-                        }
-
-                        slotItem.setAmount(slotItem.getAmount() + newItem.getAmount());
-                        newItem.setAmount(0);
-                        changed++;
-                        break;
-                    }
-                } else if(slotItem.getType() == Material.ENDER_PEARL) {
+                if(slotItem.getType() == Material.POTION || slotItem.getType() == Material.ENDER_PEARL) {
                     int needed = 64 - slotItem.getAmount();
 
                     if (newItem.getType() != Material.AIR &&
