@@ -102,7 +102,7 @@ public final class UserEnderchest {
             enderchestInformation.put(i + ".locked.trusted", cfg.getInt("enderchest." + i + ".locked.trusted"));
         }
 
-        enderchestTrusted = (ArrayList<String>) cfg.getList("enderchest.trusted");
+        enderchestTrusted = (ArrayList<String>) cfg.getStringList("enderchest.trusted");
 
         enderchestSites.clear();
 
