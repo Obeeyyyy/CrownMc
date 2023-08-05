@@ -48,18 +48,19 @@ public final class VoteListener implements Listener {
             user.addLong(DataType.VOTESTREAK, 1);
             user.setLong(DataType.LASTVOTE, System.currentTimeMillis());
 
+
             if(target.isOnline()) {
                 initializer.getServerConfig().vote(target.getPlayer());
                 initializer.getMessageUtil().broadcast("§7Voteparty§8: §a" + initializer.getServerConfig().getVotes()+ "§8/§2" + initializer.getServerConfig().getVoteparty());
                 initializer.getMessageUtil().sendMessage(target.getPlayer(), "Votestreak§8: §a§o" + user.getLong(DataType.VOTESTREAK) + "§7 Votes§8.");
                 target.getPlayer().playSound(target.getPlayer().getLocation(), Sound.LEVEL_UP, 0.5f, 1);
             }
-        });
 
-        if(initializer.getServerConfig().getVotes() >= initializer.getServerConfig().getVoteparty()) {
-            initializer.getServerConfig().setVotes(0);
-            initializer.getVotePartyHandler().startVoteParty();
-        }
+            if(initializer.getServerConfig().getVotes() >= initializer.getServerConfig().getVoteparty()) {
+                initializer.getServerConfig().setVotes(0);
+                initializer.getVotePartyHandler().startVoteParty();
+            }
+        });
     }
 
 }

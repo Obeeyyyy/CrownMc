@@ -590,6 +590,9 @@ public class ClanCommand implements CommandExecutor, Listener {
                 if (clan.isMod(target.getUniqueId()))
                     clan.getModeratorList().remove(target.getUniqueId().toString());
 
+                if (clan.isTrusted(target.getUniqueId()))
+                    clan.getTrustedList().remove(target.getUniqueId().toString());
+
                 final User targetUser = userHandler.getUserInstant(target.getUniqueId());
                 if (targetUser != null) {
                     targetUser.setClan(null);

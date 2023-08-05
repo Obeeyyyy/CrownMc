@@ -8,6 +8,7 @@ package de.obey.crownmc.handler;
  without permission from me, obey, the creator of this code.
 */
 
+import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.backend.user.User;
 import de.obey.crownmc.util.PermissionUtil;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import net.luckperms.api.node.types.PermissionNode;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -28,10 +30,15 @@ public final class PlaytestHandler {
     private ArrayList<UUID> uuids = new ArrayList<>();
 
     public void reward(final User user) {
-        user.getPrefix().addPrefix("§6§lTester");
-        user.getBadges().addBadge("tester");
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                user.getPrefix().addPrefix("§6§lTester");
+                user.getBadges().addBadge("tester");
 
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rang " + user.getOfflinePlayer().getName() + " warrior");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rang " + user.getOfflinePlayer().getName() + " warrior");
+            }
+        }.runTask(CrownMain.getInstance());
     }
 
     public void loadTesters() {

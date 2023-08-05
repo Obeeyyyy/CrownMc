@@ -103,6 +103,8 @@ public final class LoreCommand implements CommandExecutor {
                         }
                     }
 
+                    text = text.replaceAll("'", "§r ");
+
                     lore.add(ChatColor.translateAlternateColorCodes('&', text));
                     meta.setLore(lore);
                     item.setItemMeta(meta);
