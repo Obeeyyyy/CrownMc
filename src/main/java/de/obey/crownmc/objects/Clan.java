@@ -261,7 +261,7 @@ public class Clan {
                                 "")
                 .build());
 
-        if(chestSlots < 53) {
+        if(chestSlots < 54) {
             clanShop.setItem(2, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                     .setDisplayname("§7Clantruhe Slot")
                     .setTextur("M2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=", UUID.randomUUID())
