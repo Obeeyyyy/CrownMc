@@ -321,6 +321,7 @@ public final class BlockStuffListener implements Listener {
                 || cmd.contains("/luckperms")
                 || (cmd.contains("/we") && !cmd.toLowerCase().startsWith("/werbung"))
                 || cmd.contains("/worldedit")
+                || cmd.startsWith("/mvhelp")
                 || cmd.contains("/icanhasbukkit")
                 || cmd.startsWith("/about")
                 || cmd.startsWith("//calc")

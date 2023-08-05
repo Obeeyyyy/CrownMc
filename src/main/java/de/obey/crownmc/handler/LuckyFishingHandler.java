@@ -29,11 +29,12 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class LuckyFishingHandler {
 
-    MessageUtil messageUtil;
-    Map<RewardLevel, List<ItemStack>> rewards;
-    Config config;
+    private final MessageUtil messageUtil;
+    private final Config config;
 
-    public LuckyFishingHandler(MessageUtil messageUtil) {
+    Map<RewardLevel, List<ItemStack>> rewards;
+
+    public LuckyFishingHandler(final MessageUtil messageUtil) {
         this.config = new Config("plugins/CrownMc/", "luckyFishing.yml");
         this.messageUtil = messageUtil;
         this.rewards = Maps.newConcurrentMap();
@@ -72,7 +73,7 @@ public class LuckyFishingHandler {
     }
 
     public void editFishingRewards(Player player, RewardLevel rewardLevel) {
-        Inventory inventory = Bukkit.createInventory(null, 9*6, "Fishing-Rewards Edit: " + rewardLevel.name().toUpperCase());
+        final Inventory inventory = Bukkit.createInventory(null, 9*6, "Fishing-Rewards Edit: " + rewardLevel.name().toUpperCase());
 
         inventory.setContents(this.rewards.get(rewardLevel).toArray(new ItemStack[0]));
 
@@ -80,11 +81,11 @@ public class LuckyFishingHandler {
     }
 
     public void saveFishingRewards(InventoryView inventoryView) {
-        Player player = (Player) inventoryView.getPlayer();
+        final Player player = (Player) inventoryView.getPlayer();
 
         if (inventoryView.getTitle().startsWith("Fishing-Rewards Edit: ")) {
-            RewardLevel rewardLevel = RewardLevel.getOrDefault(inventoryView.getTitle().replace("Fishing-Rewards Edit: ", ""), RewardLevel.COMMON);
-            List<ItemStack> contents = Arrays.stream(inventoryView.getTopInventory().getContents()).collect(Collectors.toList());
+            final RewardLevel rewardLevel = RewardLevel.getOrDefault(inventoryView.getTitle().replace("Fishing-Rewards Edit: ", ""), RewardLevel.COMMON);
+            final List<ItemStack> contents = Arrays.stream(inventoryView.getTopInventory().getContents()).collect(Collectors.toList());
             this.rewards.put(rewardLevel, contents);
             this.config.getConfig().set("rewards." + rewardLevel.name().toLowerCase(), contents);
             this.config.saveConfig();

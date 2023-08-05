@@ -327,8 +327,6 @@ public final class ClanHandler {
             if(!exists(clanName))
                 return null;
 
-            messageUtil.log("NEW CLAN OBJ");
-
             final Clan clan = new Clan(clanName);
             final ResultSet results = backend.getResultSet("SELECT * FROM clans WHERE name='" + clanName + "'");
 

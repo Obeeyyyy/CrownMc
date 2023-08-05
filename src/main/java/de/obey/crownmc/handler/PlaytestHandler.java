@@ -37,6 +37,8 @@ public final class PlaytestHandler {
                 user.getBadges().addBadge("tester");
 
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "rang " + user.getOfflinePlayer().getName() + " warrior");
+
+                uuids.remove(user.getOfflinePlayer().getUniqueId());
             }
         }.runTask(CrownMain.getInstance());
     }
