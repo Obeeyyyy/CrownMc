@@ -138,7 +138,7 @@ public final class DeathListener implements Listener {
 
             if (killerUser.getLong(DataType.KILLSTREAKRECORD) < killerUserKillstreak) {
                 killerUser.setLong(DataType.KILLSTREAKRECORD, killerUserKillstreak);
-                messageUtil.sendMessage(killer, "Du hast einen neuen persönlichen §6§lKillstreakrekord§7 aufgestellt§8. §e§o" + killerUserKillstreak + "§7 " + (killerUserKillstreak > 1 ? "Kills" : "Kill") + " in Folge §8!");
+                messageUtil.sendActionBar(killer, "§a§lKillstreak §7Rekord §8- §f§o" + killerUserKillstreak);
             }
 
             killerUser.addLong(DataType.ELOPOINTS, eloReward);
@@ -228,10 +228,10 @@ public final class DeathListener implements Listener {
                 Combat combat = combatHandler.isInCombat(died);
                 if (combat != null) {
                     final long playerUserKillstreak = user.getLong(DataType.KILLSTREAK);
-                    messageUtil.sendMessage(died, "Du wurdest von " + killer.getName() + " §8(§f§o" +
-                            "" + format.format((killer.getHealth() / 2)) + "§4§l❤§8)§7 getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (playerUserKillstreak > 0 ? " §7Du hattest eine §e§o" + playerUserKillstreak + "§7er Killstreak§8." : ""));
-                    messageUtil.sendMessage(died, "§c§o-" + messageUtil.formatLong(serverConfig.getDeathMoneyLose()) + "§4§l$");
-                    messageUtil.sendMessage(died, "§c§o-" + messageUtil.formatLong(serverConfig.getDeathEloLose()) + "§4 Elo");
+                    if(playerUserKillstreak > 1)
+                        messageUtil.sendActionBar(died, "§a§lKillstreak §f§o§m" + playerUserKillstreak + "er Streak");
+
+                    messageUtil.sendMessage(died, "§8(§4§l✘§8) §c§o" + killer.getName() + "§8 (§f§o" + format.format((killer.getHealth() / 2)) + "§4§l❤§8) §8- §f§o" + combat.getDurationString() + "§8- §c§o-" + messageUtil.formatLong(serverConfig.getDeathMoneyLose()) + "§4§l$ §8- §c§o-" + messageUtil.formatLong(serverConfig.getDeathEloLose()) + "§4 Elo");
                     combat.end();
                 }
 
@@ -239,7 +239,7 @@ public final class DeathListener implements Listener {
 
                 combat = combatHandler.isInCombat(killer);
                 if (combat != null) {
-                    messageUtil.sendMessage(killer, "Du hast " + died.getName() + " getötet§8.§7 Der Kampf hat " + combat.getDurationString() + " gedauert§8." + (killerUser.getLong(DataType.KILLSTREAK) > 0 ? " §7Deine Killstreak§8: §6§o" + killerUser.getLong(DataType.KILLSTREAK) + "§7 Kills§8." : ""));
+                    messageUtil.sendMessage(killer, "§8(§4§l⚔§8) §a§o" + died.getName() + " §8- §f§o" + combat.getDurationString() + "§8 - §7Streak§8: §f§o" + killerUser.getLong(DataType.KILLSTREAK));
                     killer.playSound(died.getLocation(), Sound.SILVERFISH_KILL, 0.5f, 100);
                     combat.end();
                 }

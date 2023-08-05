@@ -69,6 +69,12 @@ public final class PvPDropHandler {
 
     private final Random random = new Random();
     public void drop(final Player player) {
+        if(items.isEmpty())
+            return;
+
+        if(chanceList.isEmpty())
+            return;
+
         if(random.nextInt(2) == 0)
             return;
 

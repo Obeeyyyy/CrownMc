@@ -32,6 +32,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RequiredArgsConstructor @NonNull
 public final class PvPDropItemsCommand implements CommandExecutor, Listener {
@@ -49,33 +50,68 @@ public final class PvPDropItemsCommand implements CommandExecutor, Listener {
         if(!PermissionUtil.hasPermission(sender, "admin", true))
             return false;
 
-        final Inventory inv = Bukkit.createInventory(null, 9*6, "PvPDrops");
+        if(args.length == 1) {
+            if (args[0].equalsIgnoreCase("cc")) {
 
-        int slot = 0;
-        for (ItemStack pvpDropItem : pvPDropHandler.getItems()) {
-            inv.setItem(slot, pvpDropItem);
-            slot++;
+                final double[] currentSum = {0};
+
+                pvPDropHandler.getItems().forEach(item -> currentSum[0] += pvPDropHandler.getChanceFromItem(item));
+
+                final DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.ENGLISH));
+
+                sender.sendMessage("Alle Chancen ergeben §8:");
+                sender.sendMessage(format.format(currentSum[0]) + "%");
+
+                return false;
+            }
+
+            if (args[0].equalsIgnoreCase("items")) {
+
+                final Inventory inventory = Bukkit.createInventory(null, 9*7, "PvpDrops");
+
+                if(pvPDropHandler.getItems().size() > 0) {
+                    final AtomicInteger slot = new AtomicInteger();
+                    pvPDropHandler.getItems().forEach(item -> inventory.setItem(slot.getAndIncrement(), item));
+                }
+
+                player.openInventory(inventory);
+
+                return false;
+            }
+
+            if (args[0].equalsIgnoreCase("chance")) {
+
+                final Inventory inventory = Bukkit.createInventory(null, 9*7, "PvpDropsChance");
+
+                if(pvPDropHandler.getItems().size() > 0) {
+                    final AtomicInteger slot = new AtomicInteger();
+                    pvPDropHandler.getItems().forEach(item -> inventory.setItem(slot.getAndIncrement(), item));
+                }
+
+                player.openInventory(inventory);
+
+                return false;
+            }
         }
-
-        player.openInventory(inv);
 
         return false;
     }
 
     @EventHandler
     public void on(final InventoryCloseEvent event) {
-        if(!InventoryUtil.isInventoryTitle(event.getInventory(), "PvPDrops"))
-            return;
-
-        pvPDropHandler.setItems(event.getInventory());
+        if(InventoryUtil.isInventoryTitle(event.getInventory(), "PvPDrops") ||
+        InventoryUtil.isInventoryTitle(event.getInventory(), "PvPDropsChance")) {
+            pvPDropHandler.setItems(event.getInventory());
+            event.getPlayer().sendMessage("§a§oItems gesetzt§8.");
+        }
     }
 
     @EventHandler
     public void on(final InventoryClickEvent event) {
-        if (InventoryUtil.isInventoryTitle(event.getInventory(), "PvPDrops")) {
+        if (InventoryUtil.isInventoryTitle(event.getInventory(), "PvpDropsChance")) {
             event.setCancelled(true);
 
-            if (!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "PvPDrops"))
+            if (!InventoryUtil.isInventoryTitle(event.getClickedInventory(), "PvpDropsChance"))
                 return;
 
             final ItemStack item = event.getCurrentItem();

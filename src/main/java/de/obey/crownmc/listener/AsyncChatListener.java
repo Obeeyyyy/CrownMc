@@ -196,10 +196,7 @@ public final class AsyncChatListener implements Listener {
 
         if (supportChat != null) {
             if (supportChat.getState() == 1) {
-                //supportChat.sendMessageToMemebers(textComponent.getText());
-                for (final Player player1 : supportChat.getMember()) {
-                    messageBuilder.send(player1);
-                }
+                supportChat.sendMessageToMemebers(messageBuilder.getText());
                 return;
             }
         }

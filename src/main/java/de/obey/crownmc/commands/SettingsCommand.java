@@ -267,7 +267,7 @@ public final class SettingsCommand implements CommandExecutor, Listener {
                     .build());
         } else {
             inventory.setItem(24, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
-                    .setTextur("ODc1ZTc5NDg4ODQ3YmEwMmQ1ZTEyZTcwNDJkNzYyZTg3Y2UwOGZhODRmYjg5YzM1ZDZiNWNjY2I4YjlmNGJlZCJ9fX0=", UUID.randomUUID())
+                    .setTextur("Mzk5MzY2YTNmMjMzNTZkNDRjYjNhNzIyZjgxODdjN2QwN2JhOTc1MDFmNzZkMTVmMmIzMTFlN2ZmZTVhNGRhYyJ9fX0=", UUID.randomUUID())
                     .setDisplayname("§8» §7Kill Items §8× §c§oDeaktiviert")
                     .setLore("", "§7  Klicke um Kill Items zu §a§oaktivieren§7.")
                     .build());

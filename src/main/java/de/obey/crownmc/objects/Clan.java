@@ -137,7 +137,7 @@ public class Clan {
                                 "",
                                 "§8  - §7Leader§8: §f§o" + Bukkit.getOfflinePlayer(ownerUUID).getName(),
                                 "§8  - §7Mitglieder§8: §f" + memberList.size() + "§8/§f" + memberCap,
-                                "§8  - §7Level§8: §f" + level + " §8(§f" + messageUtil.formatLong(xp) + "XP§8)",
+                                "§8  - §7Level§8: §f" + level + " §8(§f" + messageUtil.formatLong(xp) + "§8/§f§l" + messageUtil.formatLong(ClanLevelUtil.getXPForNextLevel(level))+ "§8)",
                                 "§8  - §7Kills§8: §a" + messageUtil.formatLong(kills),
                                 "§8  - §7Tode§8: §c" + messageUtil.formatLong(deaths),
                                 "")

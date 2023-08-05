@@ -43,6 +43,14 @@ public final class MessageBuilder {
         return this;
     }
 
+    public String getText() {
+        String line = "";
+        for (TextComponent component : components) {
+            line = line + " " + component.getText();
+        }
+        return line;
+    }
+
     public void broadcast() {
 
         if(components.isEmpty())
