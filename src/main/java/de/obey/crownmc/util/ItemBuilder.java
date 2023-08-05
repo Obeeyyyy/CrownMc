@@ -35,6 +35,20 @@ public final class ItemBuilder {
     private LeatherArmorMeta leatherMeta;
     private final ItemMeta meta;
 
+    public ItemBuilder(final ItemStack itemStack) {
+        this.itemStack = itemStack;
+        meta = itemStack.getItemMeta();
+
+        if (itemStack.getType() == Material.FIREWORK_CHARGE)
+            fireworkMeta = (FireworkEffectMeta) itemStack.getItemMeta();
+
+        if (itemStack.getType() == Material.SKULL_ITEM)
+            skullMeta = (SkullMeta) itemStack.getItemMeta();
+
+        if(itemStack.getType().name().contains("LEATHER"))
+            leatherMeta = (LeatherArmorMeta) itemStack.getItemMeta();
+    }
+
     public ItemBuilder(final Material material) {
         itemStack = new ItemStack(material);
         meta = itemStack.getItemMeta();
@@ -89,6 +103,11 @@ public final class ItemBuilder {
         if (leatherMeta != null)
             leatherMeta.setDisplayName(name);
 
+        return this;
+    }
+
+    public ItemBuilder amount(int amount) {
+        itemStack.setAmount(amount);
         return this;
     }
 
