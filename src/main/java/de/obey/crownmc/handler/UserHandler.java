@@ -114,8 +114,6 @@ public final class UserHandler {
 
             executorService.submit(() -> {
                 for (DataType value : DataType.values()) {
-                    System.out.println(value.getSavedAs());
-
                     if (value.getDefaultValue() != null)
                         user.getData().put(value, value.getDefaultValue());
                 }

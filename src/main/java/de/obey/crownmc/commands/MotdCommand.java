@@ -99,7 +99,7 @@ public final class MotdCommand implements CommandExecutor, Listener {
             newLine1 = newLine1 + " ";
         }
 
-        for (int i = 0; i < (75 - line2.length()) / 2; i++) {
+        for (int i = 0; i < (70 - line2.length()) / 2; i++) {
             newLine2 = newLine2 + " ";
         }
 

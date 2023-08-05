@@ -6,6 +6,7 @@ package de.obey.crownmc.commands;
 
 */
 
+import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.enums.DataType;
 import de.obey.crownmc.handler.ShopHandler;
 import de.obey.crownmc.handler.UserHandler;
@@ -27,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 @RequiredArgsConstructor
 @NonNull
@@ -468,8 +470,13 @@ public final class ShopCommand implements CommandExecutor, Listener {
                                 shopItem.getItemStack().getType().name()) +
                         "§7 für §c§o-" + messageUtil.formatLong(shopItem.getPrice() * finalAmount) + (kategory.getName().equalsIgnoreCase("crowns") ? "§7 Crowns" : "§6§l$") + "§7 gekauft§8.");
 
-                for (int i = 0; i < finalAmount; i++)
-                    InventoryUtil.addItem(player, shopItem.getItemStack().clone());
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < finalAmount; i++)
+                            InventoryUtil.addItem(player, shopItem.getItemStack().clone());
+                    }
+                }.runTask(CrownMain.getInstance());
 
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 10);
             });
