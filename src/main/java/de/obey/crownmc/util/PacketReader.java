@@ -88,7 +88,7 @@ public final class PacketReader {
             final String cmd = packet.a().toLowerCase();
 
             if (cmd.equalsIgnoreCase("/ ") ||
-                    cmd.length() == 1 ||
+                    (cmd.length() == 1 && cmd.contains("/")) ||
                     cmd.startsWith("/?") ||
                     cmd.startsWith("/ver") ||
                     cmd.startsWith("/icanhas") ||

@@ -71,7 +71,7 @@ public final class BankTabComplete implements TabCompleter {
                 }
 
                 if (args.length > 2) {
-                    final String looking = args[2];
+                    final String looking = args[1];
                     final List<String> sorted = new ArrayList<>();
 
                     for (String s : name) {

@@ -112,6 +112,11 @@ public final class PvPAltarHandler {
     }
 
     public void startPvPAltar(final int id, final Player player) {
+        if(Bukkit.getOnlinePlayers().size() < 5) {
+            messageUtil.sendMessage(player, "Es sind nicht genug Spieler online§8.");
+            return;
+        }
+
         final PvPAltar altar = pvpAltarMap.get(id);
 
         if(altar == null) {

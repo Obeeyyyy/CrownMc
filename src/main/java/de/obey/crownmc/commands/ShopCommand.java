@@ -230,6 +230,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                         }
 
                         category.getItems().remove(shopItem.removeItem());
+                        shopHandler.save();
                         messageUtil.sendMessage(player, "Du hast das item " + ID + " entfernt§8.");
                     } catch (final NumberFormatException exception) {
                         messageUtil.sendMessage(player, "Bitte gebe eine ID an§8.");

@@ -196,6 +196,8 @@ public final class Category {
         if(skull != null)
             cfg.set(path + "skull", skull);
 
+        cfg.set(path + ".items", null);
+
         if (!items.isEmpty()) {
             for (ShopItem item : items) {
                 cfg.set(path + "items." + item.getID() + ".item", item.getItemStack());
