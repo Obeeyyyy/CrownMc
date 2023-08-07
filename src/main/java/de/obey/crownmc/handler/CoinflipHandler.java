@@ -120,7 +120,7 @@ public final class CoinflipHandler {
         if (creatingServerCoinflip.contains(player)) {
 
             if (text.equalsIgnoreCase("cancel")) {
-                creatingCoinflip.remove(player);
+                creatingServerCoinflip.remove(player);
                 messageUtil.sendMessage(player, "Vorgang wurde abgebrochen§8.");
                 return true;
             }

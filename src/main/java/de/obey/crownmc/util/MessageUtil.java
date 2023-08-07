@@ -137,12 +137,12 @@ public final class MessageUtil {
 
     public void log(final String message) {
         //Bukkit.getConsoleSender().sendMessage("§8§o(§a§oLOG§8§o)§f§o " + ChatColor.translateAlternateColorCodes('&', message));
-        Bukkit.getLogger().log(Level.INFO, ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
+        Bukkit.getLogger().log(Level.INFO, "(LOG) - " + ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
     }
 
     public void warn(final String message) {
         //Bukkit.getConsoleSender().sendMessage("§8§o(§4§oWARN§8§o)§f§o " + ChatColor.translateAlternateColorCodes('&', message));
-        Bukkit.getLogger().log(Level.WARNING, ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
+        Bukkit.getLogger().log(Level.WARNING, "(WARN) - " + ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', message)));
     }
 
     public void sendHoverTextCommandToTeamMembers(final String message, final String command) {

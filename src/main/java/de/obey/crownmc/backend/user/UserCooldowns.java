@@ -28,12 +28,12 @@ public final class UserCooldowns {
         if (!cfg.contains("cooldowns"))
             return;
 
-        final Set<String> cooldowns = cfg.getConfigurationSection("cooldowns").getKeys(false);
+        final Set<String> temp = cfg.getConfigurationSection("cooldowns").getKeys(false);
 
-        if (cooldowns.isEmpty())
+        if (temp.isEmpty())
             return;
 
-        cooldowns.forEach(cd -> this.cooldowns.put(cd, cfg.getLong(cd)));
+        temp.forEach(cd -> cooldowns.put(cd, cfg.getLong("cooldowns." + cd)));
     }
 
     public void save() {

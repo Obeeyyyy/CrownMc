@@ -450,7 +450,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                     for (int i = 0; i < finalAmount; i++)
                         InventoryUtil.addItem(player, shopItem.getItemStack().clone());
 
-                    messageUtil.log("BUY " + player.getName() + " -> " + shopItem.getItemStack().getType().name() + " / " + (shopItem.getPrice() * finalAmount));
+                    messageUtil.log("BUY " + player.getName() + " -> x" + + finalAmount + " " + shopItem.getItemStack().getType().name() + " / " + (shopItem.getPrice() * finalAmount) + "$");
                     player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 10);
 
                     return;
@@ -488,17 +488,17 @@ public final class ShopCommand implements CommandExecutor, Listener {
 
         } else {
 
-            final int amount = event.isLeftClick() ? (event.isShiftClick() ? 64 : 1) : -1;
-            final int soldItems = amount > 0 ? InventoryUtil.removeItem(player, shopItem.getItemStack(), amount) : InventoryUtil.removeItem(player, shopItem.getItemStack());
+            final int amount = event.isLeftClick() ? 1 : -1;
+            int soldItems = amount > 0 ? InventoryUtil.removeItem(player, shopItem.getItemStack(), amount) : InventoryUtil.removeItem(player, shopItem.getItemStack());
 
             if (soldItems == 0) {
-                messageUtil.sendMessage(player, "Du hast das Item §e§o" +
+                messageUtil.sendMessage(player, "Du hast nicht genug §e§o" +
                         (shopItem.getItemStack().hasItemMeta() ?
                                 (shopItem.getItemStack().getItemMeta().hasDisplayName() ?
                                         shopItem.getItemStack().getItemMeta().getDisplayName() :
                                         shopItem.getItemStack().getType().name()) :
                                 shopItem.getItemStack().getType().name()) +
-                        "§7 nicht in deinem Inventar§8.");
+                        "§7 in deinem Inventar§8.");
 
                 player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
                 return;
@@ -510,7 +510,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                 kategory.updateInventory(event.getInventory());
                 user.addLong(DataType.MONEY, shopItem.getPrice() * soldItems);
 
-                messageUtil.sendMessage(player, "Du hast §8x§f" + soldItems + "§e§o " +
+                messageUtil.sendMessage(player, "Du hast §8x§f" + (soldItems * shopItem.getItemStack().getAmount()) + "§e§o " +
                         (shopItem.getItemStack().hasItemMeta() ?
                                 (shopItem.getItemStack().getItemMeta().hasDisplayName() ?
                                         shopItem.getItemStack().getItemMeta().getDisplayName() :
@@ -518,7 +518,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                                 shopItem.getItemStack().getType().name()) +
                         "§7 für §a§o+" + messageUtil.formatLong(shopItem.getPrice() * soldItems) + "§6§l$§7 verkauft§8.");
 
-                messageUtil.log("SOLD " + player.getName() + " -> " + shopItem.getItemStack().getType().name() + " / " + (shopItem.getPrice() * soldItems));
+                messageUtil.log("SOLD " + player.getName() + " -> x" + (soldItems * shopItem.getItemStack().getAmount()) + " " + shopItem.getItemStack().getType().name() + " / " + (shopItem.getPrice() * soldItems) + "$");
 
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 10);
             });

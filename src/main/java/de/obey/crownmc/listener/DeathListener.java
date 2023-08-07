@@ -62,7 +62,7 @@ public final class DeathListener implements Listener {
         final Player died = event.getEntity();
         final User user = userHandler.getUserInstant(died.getUniqueId());
 
-        messageUtil.log("#> " + died.getName() + " DIED / ITEMS:" + died.getInventory().getContents().length);
+        messageUtil.log("#> " + died.getName() + " DIED");
 
         Player tempKiller = died.getKiller();
 

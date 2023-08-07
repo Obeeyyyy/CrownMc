@@ -121,7 +121,7 @@ public final class InventoryUtil {
         final ItemStack[] items = player.getInventory().getContents().clone();
         for (ItemStack content : items) {
             if (content != null && content.getType() == item.getType()) {
-                amount += content.getAmount() / item.getAmount();
+                amount += content.getAmount() / (double)item.getAmount();
                 content.setType(Material.AIR);
             }
         }
@@ -141,14 +141,14 @@ public final class InventoryUtil {
             if (amount >= removeAmount)
                 return amount;
 
-            if (content != null && content.getType() != Material.AIR && content.getType() == item.getType() && content.getAmount() == item.getAmount()) {
-                if (amount + content.getAmount() / item.getAmount() > removeAmount) {
-                    content.setAmount(content.getAmount() - (removeAmount - amount));
+            if (content != null && content.getType() != Material.AIR && content.getType() == item.getType() && content.getAmount() >= item.getAmount()) {
+                if (amount + (content.getAmount() / (double)item.getAmount()) > (double) removeAmount) {
+                    content.setAmount(content.getAmount() - ((removeAmount - amount) * item.getAmount()));
                     player.getInventory().setItem(i, content);
                     return removeAmount;
                 }
 
-                amount += content.getAmount() / item.getAmount();
+                amount++;
                 content.setType(Material.AIR);
                 player.getInventory().setItem(i, content);
             }
