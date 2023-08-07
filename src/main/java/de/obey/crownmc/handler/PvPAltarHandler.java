@@ -8,6 +8,7 @@ package de.obey.crownmc.handler;
  without permission from me, obey, the creator of this code.
 */
 
+import de.obey.crownmc.commands.AfkCommand;
 import de.obey.crownmc.objects.pvp.PvPAltar;
 import de.obey.crownmc.util.FileUtil;
 import de.obey.crownmc.util.MathUtil;
@@ -112,7 +113,7 @@ public final class PvPAltarHandler {
     }
 
     public void startPvPAltar(final int id, final Player player) {
-        if(Bukkit.getOnlinePlayers().size() < 5) {
+        if(Bukkit.getOnlinePlayers().size() - AfkCommand.afkList.size() < 5) {
             messageUtil.sendMessage(player, "Es sind nicht genug Spieler online§8.");
             return;
         }

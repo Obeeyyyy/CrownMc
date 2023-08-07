@@ -9,12 +9,12 @@ package de.obey.crownmc.listener;
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.backend.ServerConfig;
 import de.obey.crownmc.backend.enums.DataType;
+import de.obey.crownmc.backend.user.UserPunishment;
 import de.obey.crownmc.commands.FreezeCommand;
 import de.obey.crownmc.commands.VanishCommand;
-import de.obey.crownmc.handler.CombatHandler;
-import de.obey.crownmc.handler.LocationHandler;
-import de.obey.crownmc.handler.ScoreboardHandler;
-import de.obey.crownmc.handler.UserHandler;
+import de.obey.crownmc.handler.*;
+import de.obey.crownmc.objects.punishment.Ban;
+import de.obey.crownmc.objects.punishment.BanReason;
 import de.obey.crownmc.util.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -44,6 +45,7 @@ public final class JoinListener implements Listener {
     private final UserHandler userHandler;
     private final ServerConfig serverConfig;
     private final CombatHandler combatHandler;
+    private final BanHandler banHandler;
 
     @EventHandler
     public void on(final PlayerSpawnLocationEvent event) {
@@ -105,6 +107,21 @@ public final class JoinListener implements Listener {
         if (!userHandler.getRegistering().contains(player)) {
 
             userHandler.getUser(event.getPlayer().getUniqueId()).thenAcceptAsync(user -> {
+
+                final UserPunishment punishment = user.getPunishment();
+
+                if(user.getPunishment().isBanned()) {
+                    final Ban ban = punishment.getBans().get(punishment.getBans().size() - 1);
+                    final BanReason reason = ban.getBanReason();
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            player.kickPlayer(banHandler.getKickMessage(reason.getId(), punishment.getRemainingBanMillis(), ban.getAuthor(), false));
+                        }
+                    }.runTask(CrownMain.getInstance());
+                    return;
+                }
+
                 user.setPlayer(player);
                 user.setOfflinePlayer(player);
                 user.setLong(DataType.JOINED, System.currentTimeMillis());

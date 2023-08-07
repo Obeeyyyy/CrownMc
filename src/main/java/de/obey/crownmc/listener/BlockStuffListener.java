@@ -353,7 +353,7 @@ public final class BlockStuffListener implements Listener {
     }
 
     @EventHandler
-    public void onEnchant(final EnchantItemEvent event) {
+    public void on(final EnchantItemEvent event) {
         final Player player = event.getEnchanter();
         final ItemStack item = event.getItem();
 
@@ -365,7 +365,7 @@ public final class BlockStuffListener implements Listener {
     }
 
     @EventHandler
-    public void onHunger(final FoodLevelChangeEvent event) {
+    public void on(final FoodLevelChangeEvent event) {
         final Player player = (Player) event.getEntity();
 
         final Location casino = locationHandler.getLocation("casino");
@@ -378,7 +378,7 @@ public final class BlockStuffListener implements Listener {
     }
 
     @EventHandler
-    public void onAnvil(final InventoryClickEvent event) {
+    public void on(final InventoryClickEvent event) {
         final Player player = (Player) event.getWhoClicked();
         final Inventory inv = event.getInventory();
 
@@ -413,7 +413,7 @@ public final class BlockStuffListener implements Listener {
     }
 
     @EventHandler
-    public void onRedstone(final BlockPlaceEvent event) {
+    public void on(final BlockPlaceEvent event) {
         if (event.getBlock().getType() == Material.REDSTONE ||
                 event.getBlock().getType() == Material.REDSTONE_BLOCK ||
                 event.getBlock().getType() == Material.REDSTONE_COMPARATOR ||
@@ -423,13 +423,16 @@ public final class BlockStuffListener implements Listener {
     }
 
     @EventHandler
-    public void onChatTabComplete(final PlayerChatTabCompleteEvent event) {
-        for (Player player : VanishCommand.vanished)
-            event.getTabCompletions().remove(player.getName());
+    public void on(final PlayerChatTabCompleteEvent event) {
+        if(!PermissionUtil.hasPermission(event.getPlayer(), "team", false)) {
+            for (final Player player : VanishCommand.vanished) {
+                event.getTabCompletions().remove(player.getName());
+            }
+        }
     }
 
     @EventHandler
-    public void onKick(final PlayerKickEvent event) {
+    public void on(final PlayerKickEvent event) {
         if (event.getReason().toLowerCase().contains("disconnect.spam"))
             event.setCancelled(true);
     }

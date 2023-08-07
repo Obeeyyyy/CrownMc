@@ -29,7 +29,7 @@ public final class MoneyCommand implements CommandExecutor {
     private final UserHandler userHandler;
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
 
         if (args.length == 0) {
 
@@ -44,12 +44,10 @@ public final class MoneyCommand implements CommandExecutor {
             return false;
         }
 
-        final Player player = (Player) sender;
-
         if (args.length == 1) {
 
             if (args[0].equalsIgnoreCase("help")) {
-                if (!PermissionUtil.hasPermission(player, "money.edit", true))
+                if (!PermissionUtil.hasPermission(sender, "money.edit", true))
                     return false;
 
                 messageUtil.sendSyntax(sender,

@@ -450,6 +450,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                     for (int i = 0; i < finalAmount; i++)
                         InventoryUtil.addItem(player, shopItem.getItemStack().clone());
 
+                    messageUtil.log("BUY " + player.getName() + " -> " + shopItem.getItemStack().getType().name() + " / " + (shopItem.getPrice() * finalAmount));
                     player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 10);
 
                     return;
@@ -479,6 +480,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                     }
                 }.runTask(CrownMain.getInstance());
 
+                messageUtil.log("CROWN BUY " + player.getName() + " -> " + shopItem.getItemStack().getType().name() + " / " + (shopItem.getPrice() * finalAmount));
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 10);
             });
 
@@ -515,6 +517,8 @@ public final class ShopCommand implements CommandExecutor, Listener {
                                         shopItem.getItemStack().getType().name()) :
                                 shopItem.getItemStack().getType().name()) +
                         "§7 für §a§o+" + messageUtil.formatLong(shopItem.getPrice() * soldItems) + "§6§l$§7 verkauft§8.");
+
+                messageUtil.log("SOLD " + player.getName() + " -> " + shopItem.getItemStack().getType().name() + " / " + (shopItem.getPrice() * soldItems));
 
                 player.playSound(player.getLocation(), Sound.LEVEL_UP, 0.5f, 10);
             });

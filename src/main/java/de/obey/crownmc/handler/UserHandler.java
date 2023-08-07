@@ -178,12 +178,6 @@ public final class UserHandler {
                     locationHandler.teleportToLocationNameInstant(player, "spawn");
 
                     registering.remove(player);
-
-                    if (player.getName().equalsIgnoreCase("Gewichtiger") ||
-                            player.getName().equalsIgnoreCase("Hattingen")) {
-
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ban " + player.getName() + " 1");
-                    }
                 }
             }.runTaskLater(CrownMain.getInstance(), 15);
 

@@ -72,22 +72,24 @@ public final class UserPunishment {
 
     public void registerNewMute(final String authorName, final MuteReason muteReason) {
         mutedTimes++;
-        muted = true;
 
         final Mute mute = new Mute(mutedTimes, muteReason, cfg);
 
         mute.setAuthor(authorName);
         mutes.add(mute);
+
+        muted = true;
     }
 
     public void registerNewBan(final String authorName, final BanReason banReason) {
         banTimes++;
-        banned = true;
 
         final Ban ban = new Ban(banTimes, banReason, cfg);
 
         ban.setAuthor(authorName);
         bans.add(ban);
+
+        banned = true;
     }
 
     public boolean registerUnmute() {
@@ -112,6 +114,9 @@ public final class UserPunishment {
 
     public boolean isMuted() {
         if(muted) {
+            if(mutes.get(mutedTimes-1).getMutedUntil() <= 0)
+                return true;
+
             if(System.currentTimeMillis() >= mutes.get(mutedTimes-1).getMutedUntil()) {
                 muted = false;
                 return false;
@@ -125,8 +130,11 @@ public final class UserPunishment {
 
     public boolean isBanned() {
         if(banned) {
+            if(bans.get(banTimes-1).getBannedUntil() <= 0)
+                return true;
+
             if(System.currentTimeMillis() >= bans.get(banTimes-1).getBannedUntil()) {
-                muted = false;
+                banned = false;
                 return false;
             }
 
