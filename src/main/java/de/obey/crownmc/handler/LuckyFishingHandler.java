@@ -26,7 +26,7 @@ public class LuckyFishingHandler {
     private final MessageUtil messageUtil;
     private final Config config;
 
-    Map<RewardLevel, List<ItemStack>> rewards;
+    private Map<RewardLevel, List<ItemStack>> rewards;
 
     public LuckyFishingHandler(final MessageUtil messageUtil) {
         this.config = new Config("plugins/CrownMc/", "luckyFishing.yml");

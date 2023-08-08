@@ -9,6 +9,7 @@ import de.obey.crownmc.util.MessageUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
@@ -33,13 +34,12 @@ public class LuckyFishListener implements Listener {
     private final Map<Player, Long> fishBiteTimes = new HashMap<>();
 
     @EventHandler
-    public void handlePlayerFishEvent(final PlayerFishEvent event) {
+    public void on(final PlayerFishEvent event) {
         final Player player = event.getPlayer();
 
         if (!player.getWorld().getName().equalsIgnoreCase("islands")) return;
 
-        final long currentTime = System.currentTimeMillis();
-        long timeToWait = 30000;
+        long timeToWait = MathUtil.getRandom(20000, 30000);
 
         final ItemStack itemStack = player.getItemInHand();
 
@@ -50,64 +50,86 @@ public class LuckyFishListener implements Listener {
             }
         }
 
+        if(fishBiteTimes.containsKey(player))
+            return;
+
         if (event.getState() == PlayerFishEvent.State.FISHING) {
-            final long biteTime = currentTime + timeToWait;
-            final long seconds = Long.parseLong(MathUtil.getSecondsFromMillis((biteTime - currentTime)));
+            final long biteTime = System.currentTimeMillis() + timeToWait;
             fishBiteTimes.put(player, biteTime);
 
             event.getHook().setCustomNameVisible(true);
-            event.getHook().setCustomName("§7Beißt an in§8: §e§o" + seconds + "s");
+            event.getHook().setCustomName("§7Noch§8: §e§o" + MathUtil.getSecondsFromMillis((biteTime - System.currentTimeMillis())));
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    final long seconds = Long.parseLong(MathUtil.getSecondsFromMillis((biteTime - currentTime)));
+                    if(event.getHook() == null) {
+                        fishBiteTimes.remove(player);
+                        cancel();
+                        return;
+                    }
 
-                    event.getHook().setCustomName("§7Beißt an in§8: §e§o" + seconds + "s");
+                    event.getHook().setCustomName("§7Noch§8: §e§o" + MathUtil.getSecondsFromMillis((biteTime - System.currentTimeMillis())));
 
-                    if (fishBiteTimes.containsKey(player) && fishBiteTimes.get(player) == biteTime) {
+                    if (fishBiteTimes.containsKey(player) && System.currentTimeMillis() >= fishBiteTimes.get(player)) {
                         event.getHook().setCustomName("§a§lEtwas hat angebissen!");
+                        player.playSound(player.getLocation(), Sound.SPLASH, 1, 1);
                         handleFishBiting(player, event.getHook());
-                        this.cancel();
+                        cancel();
                     }
                 }
-            }.runTaskTimer(CrownMain.getInstance(), 0L, 20L);
+            }.runTaskTimer(CrownMain.getInstance(), 0L, 5L);
         }
     }
 
     @EventHandler
-    public void handleInventoryCloseEvent(final InventoryCloseEvent event) {
+    public void on(final InventoryCloseEvent event) {
         luckyFishingHandler.saveFishingRewards(event.getView());
     }
 
     @EventHandler
-    public void handlePlayerInteractEvent(final PlayerInteractEvent event) {
+    public void on(final PlayerInteractEvent event) {
         final Player player = event.getPlayer();
         if (!player.getWorld().getName().equalsIgnoreCase("islands")) return;
 
-        final ItemStack itemStack = player.getItemInHand();
-        int level = 1;
-        if (itemStack.hasItemMeta()) {
-            if (itemStack.getItemMeta().hasEnchant(Enchantment.LURE))
-                level = itemStack.getItemMeta().getEnchantLevel(Enchantment.LURE) + 1;
-        }
+        if (fishBiteTimes.containsKey(player) && System.currentTimeMillis() >= fishBiteTimes.get(player)) {
 
-        if (fishBiteTimes.containsKey(player)) {
+            final ItemStack itemStack = player.getItemInHand();
+            int level = 1;
+            if (itemStack.hasItemMeta()) {
+                if (itemStack.getItemMeta().hasEnchant(Enchantment.LURE))
+                    level = itemStack.getItemMeta().getEnchantLevel(Enchantment.LURE) + 1;
+            }
+
             task.cancel();
             fishBiteTimes.remove(player);
             messageUtil.sendMessage(player, "§7Du hast durch das Fischen folgendes erhalten§8:");
-            int chance = Math.toIntExact(MathUtil.getRandom(1, 100));
+
             for (int i = 0; i < level; i++) {
-                RewardLevel rewardLevel = RewardLevel.getByChance(chance);
-                ItemStack reward = luckyFishingHandler.getRewards().get(rewardLevel).stream().findAny().orElse(null);
-                if (reward == null) continue;
-                String name = reward.hasItemMeta() && reward.getItemMeta().hasDisplayName() ? reward.getItemMeta().getDisplayName() : reward.getType().name().toUpperCase();
-                messageUtil.sendMessage(player, "§8- '§f" + name + "§8' §f" + reward.getAmount() + "§8x");
+                final RewardLevel rewardLevel = RewardLevel.getByChance(Math.toIntExact(MathUtil.getRandom(0, 100)));
+
+                if(luckyFishingHandler.getRewards().isEmpty())
+                    return;
+
+                if (luckyFishingHandler.getRewards().get(rewardLevel).isEmpty())
+                    continue;
+
+                final ItemStack reward = luckyFishingHandler.getRewards().get(rewardLevel).stream().findAny().orElse(null);
+                if (reward == null)
+                    continue;
+
+                final String name = reward.hasItemMeta() && reward.getItemMeta().hasDisplayName() ? reward.getItemMeta().getDisplayName() : reward.getType().name().toUpperCase();
+
+                if (name.toLowerCase().contains("niete"))
+                    continue;
+
+                messageUtil.sendMessage(player, "§8- '§f" + name + "§8' §fx" + reward.getAmount());
                 player.getInventory().addItem(reward);
             }
         }
     }
 
     private BukkitTask task;
+
     private void handleFishBiting(final Player player, final FishHook hook) {
         task = new BukkitRunnable() {
             @Override
@@ -118,7 +140,7 @@ public class LuckyFishListener implements Listener {
                 hook.setCustomName(null);
                 hook.remove();
             }
-        }.runTaskLater(CrownMain.getInstance(), 20*3L);
+        }.runTaskLater(CrownMain.getInstance(), 20 * 3L);
     }
 
 }

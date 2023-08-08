@@ -42,7 +42,7 @@ public final class VerlosungCommand implements CommandExecutor {
         if (!InventoryUtil.hasItemInHand(player))
             return false;
 
-        new Giveaway(player.getDisplayName(), player.getItemInHand(), Giveaway.AnimationType.NAME_ANIMATION, Giveaway.ShowSlot.ALL, Giveaway.Target.ALL).scheduleRun();
+        new Giveaway(player.getDisplayName(), player.getItemInHand(), Giveaway.AnimationType.NAME_ANIMATION, Giveaway.ShowSlot.ALL, Giveaway.Target.ONLY_USER).scheduleRun();
 
         return false;
     }

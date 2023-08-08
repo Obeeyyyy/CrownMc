@@ -38,9 +38,4 @@ public enum RewardLevel {
         return LEGENDARY;
     }
 
-    public static RewardLevel getRandomRewardLevel() {
-        Random random = ThreadLocalRandom.current();
-        return getOrDefault(values()[random.nextInt(values().length)].name(), COMMON);
-    }
-
 }

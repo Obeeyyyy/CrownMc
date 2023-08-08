@@ -142,6 +142,9 @@ public final class CrashCommand implements CommandExecutor, Listener {
     @EventHandler
     public void on(final PlayerToggleSneakEvent event) {
         if(event.isSneaking()) {
+            if(crashHandler.getCrash() == null)
+                return;
+
             if(crashHandler.getCrash().getBets().containsKey(event.getPlayer().getUniqueId())) {
                 crashHandler.getCrash().leaveCrash(event.getPlayer());
             }
