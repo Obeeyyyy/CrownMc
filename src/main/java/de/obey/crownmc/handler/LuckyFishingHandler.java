@@ -1,19 +1,13 @@
 package de.obey.crownmc.handler;
 
 import com.google.common.collect.Maps;
-import com.google.common.primitives.Ints;
 import de.obey.crownmc.objects.luckyfishing.RewardLevel;
-import de.obey.crownmc.objects.luckyfishing.RodLevel;
 import de.obey.crownmc.util.Config;
-import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import lombok.val;
-import lombok.var;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -39,6 +33,7 @@ public class LuckyFishingHandler {
         this.messageUtil = messageUtil;
         this.rewards = Maps.newConcurrentMap();
         if (this.config.getConfig().getConfigurationSection("rewards") == null) return;
+
         for (String rewardLevelName : this.config.getConfig().getConfigurationSection("rewards").getKeys(false)) {
             RewardLevel rewardLevel = RewardLevel.getOrDefault(rewardLevelName, RewardLevel.COMMON);
             final List<ItemStack> rewards = (List<ItemStack>) this.config.getConfig().getList("rewards." + rewardLevelName, new ArrayList<ItemStack>());
@@ -47,29 +42,6 @@ public class LuckyFishingHandler {
             }
             this.rewards.put(rewardLevel, rewards);
         }
-    }
-
-    public boolean isFishingRod(ItemStack itemStack) {
-        if (!itemStack.getItemMeta().hasDisplayName()) return false;
-        if (itemStack.getItemMeta().getDisplayName().startsWith("§7Fischerangel §8(§f§oLevel §a§o")) return false;
-        if (!itemStack.getItemMeta().hasLore()) return false;
-        if (itemStack.getItemMeta().getLore().size() != 3) return false;
-        return itemStack.getItemMeta().getLore().get(1).startsWith("§7Level §a§o");
-    }
-
-    public RodLevel getRodLevel(ItemStack itemStack) {
-        if (!isFishingRod(itemStack)) return null;
-        int level = Ints.tryParse(itemStack.getItemMeta().getLore().get(1).replace("§7Level §a§o", "").replace("§8/§2§l§o" + RodLevel.getMaxLevel().getDisplayName() + "§8)", ""));
-        return Arrays.stream(RodLevel.values()).filter(rodLevel -> rodLevel.getDisplayName().equalsIgnoreCase(String.valueOf(level))).findFirst().orElse(RodLevel.ZERO);
-    }
-
-    public ItemStack getRod(RodLevel rodLevel) {
-        return new ItemBuilder(Material.FISHING_ROD).setDisplayname("§7Fischerangel §8(§f§oLevel §a§o" + rodLevel.getDisplayName() + "§8)")
-                .addLore(
-                        "§r",
-                        "§7Level §a§o" + rodLevel.getDisplayName() + "§8/§2§l§o" + RodLevel.getMaxLevel().getDisplayName(),
-                        "§r"
-                ).build();
     }
 
     public void editFishingRewards(Player player, RewardLevel rewardLevel) {

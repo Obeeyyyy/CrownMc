@@ -579,6 +579,7 @@ public class ClanCommand implements CommandExecutor, Listener {
             final User user = userHandler.getUserInstant(player.getUniqueId());
             final Clan clan = user.getClan();
 
+            // grün
             if(event.getCurrentItem().getData().getData() == 5) {
                 final String targetName = event.getInventory().getTitle().split(" ")[1];
                 final OfflinePlayer target = Bukkit.getOfflinePlayer(targetName);

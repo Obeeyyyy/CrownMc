@@ -13,16 +13,16 @@ public enum RewardLevel {
     COMMON("§7§lCOMMON§r"),
     UNCOMMON("§a§lUNCOMMON§r"),
     RARE("§3§lRARE§r"),
-    VERY_RARE("§9§lVERY RARE§r"),
-    LEGENDARY("§6§k;§e §lLEGENDARY§6 §k;§r");
+    VERY_RARE("§5§lEPIC§r"),
+    LEGENDARY("§4§lLEGENDARY§r");
 
-    String displayName;
+    final String displayName;
 
-    RewardLevel(String displayName) {
+    RewardLevel(final String displayName) {
         this.displayName = displayName;
     }
 
-    public static RewardLevel getOrDefault(String name, RewardLevel def) {
+    public static RewardLevel getOrDefault(final String name, final RewardLevel def) {
         return Arrays.stream(values()).filter(rewardLevel -> rewardLevel.name().equalsIgnoreCase(name)).findFirst().orElse(def);
     }
 

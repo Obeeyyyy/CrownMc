@@ -304,10 +304,51 @@ public final class KitCommand implements CommandExecutor, Listener {
             if (!messageUtil.hasEnougthMoney(user, price))
                 return;
 
-            user.removeLong(DataType.MONEY, price);
-            messageUtil.sendMessage(player, "Du hast §e§o" + messageUtil.formatLong(price) + "§6§l$ §7für das §8'§e§l" + kit.getPrefix() + "§8' §7Kit bezahlt§8.");
-            kitHandler.equipKit(user, kit);
+            player.openInventory(InventoryUtil.getConfirmation("Kit " + kit.getName()));
+            confirming.put(player, kit);
+            prices.put(player, price);
+        }
+    }
+
+    private final HashMap<Player, Kit> confirming = new HashMap<>();
+    private final HashMap<Player, Long> prices = new HashMap<>();
+    @EventHandler
+    public void onConfirm(final InventoryClickEvent event) {
+        if(!InventoryUtil.startsWithInventoryTitle(event.getInventory(), "Kit "))
+            return;
+
+        event.setCancelled(true);
+
+        if(!InventoryUtil.startsWithInventoryTitle(event.getClickedInventory(), "Kit "))
+            return;
+
+        final Player player = (Player) event.getWhoClicked();
+        final User user = userHandler.getUserInstant(player.getUniqueId());
+
+        // grün
+        if(event.getCurrentItem().getData().getData() == 5) {
+
+            user.removeLong(DataType.MONEY, prices.get(player));
+            messageUtil.sendMessage(player, "Du hast §e§o" + messageUtil.formatLong(prices.get(player)) + "§6§l$ §7für das §8'§e§l" + confirming.get(player).getName() + "§8' §7Kit bezahlt§8.");
+            kitHandler.equipKit(user, confirming.get(player));
             buyCooldown.put(player.getUniqueId(), System.currentTimeMillis() + (1000 * 10));
+
+            confirming.remove(player);
+            prices.remove(player);
+
+            player.closeInventory();
+            return;
+        }
+
+        // rot
+        if(event.getCurrentItem().getData().getData() == 14) {
+            confirming.remove(player);
+            prices.remove(player);
+
+            player.playSound(player.getLocation(), Sound.EXPLODE, 0.3f,  1f);
+            player.closeInventory();
+            messageUtil.sendMessage(player, "§c§oVorgang abgebrochen§8.");
+            return;
         }
     }
 }

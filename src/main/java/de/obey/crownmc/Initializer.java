@@ -310,7 +310,7 @@ public final class Initializer {
         pluginManager.registerEvents(new RangInfoCommand(), crownMain);
         pluginManager.registerEvents(new RandomTeleportListener(messageUtil, combatHandler, locationHandler), crownMain);
         pluginManager.registerEvents(pvPDropItemsCommand, crownMain);
-        pluginManager.registerEvents(new FishingListener(messageUtil, luckyFishingHandler), crownMain);
+        pluginManager.registerEvents(new LuckyFishListener(messageUtil, luckyFishingHandler), crownMain);
     }
 
     private void loadTabCompleter() {

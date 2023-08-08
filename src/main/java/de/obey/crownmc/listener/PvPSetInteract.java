@@ -42,27 +42,27 @@ public final class PvPSetInteract implements Listener {
             player.playSound(player.getLocation(), Sound.HORSE_ARMOR, 1, 1);
             InventoryUtil.removeItemInHand(player, 1);
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.WOOD_SWORD)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.STONE_SWORD)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7I")
                     .addEnchantment(Enchantment.DURABILITY, 1)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_HELMET)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_HELMET)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7I")
                     .addEnchantment(Enchantment.DURABILITY, 1)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_CHESTPLATE)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_CHESTPLATE)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7I")
                     .addEnchantment(Enchantment.DURABILITY, 1)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_LEGGINGS)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_LEGGINGS)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7I")
                     .addEnchantment(Enchantment.DURABILITY, 1)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_BOOTS)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_BOOTS)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7I")
                     .addEnchantment(Enchantment.DURABILITY, 1)
                     .build());
@@ -79,36 +79,37 @@ public final class PvPSetInteract implements Listener {
             player.playSound(player.getLocation(), Sound.HORSE_ARMOR, 1, 1);
             InventoryUtil.removeItemInHand(player, 1);
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.WOOD_SWORD)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.STONE_SWORD)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7II")
                     .addEnchantment(Enchantment.DURABILITY, 2)
+                    .addEnchantment(Enchantment.DAMAGE_ALL, 1)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_HELMET)
-                    .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7II")
-                    .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
-                    .addEnchantment(Enchantment.DURABILITY, 2)
-                    .build());
-
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_CHESTPLATE)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_HELMET)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7II")
                     .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
                     .addEnchantment(Enchantment.DURABILITY, 2)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_LEGGINGS)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_CHESTPLATE)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7II")
                     .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
                     .addEnchantment(Enchantment.DURABILITY, 2)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_BOOTS)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_LEGGINGS)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7II")
                     .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
                     .addEnchantment(Enchantment.DURABILITY, 2)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.GOLDEN_APPLE, 1).build());
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_BOOTS)
+                    .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7II")
+                    .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1)
+                    .addEnchantment(Enchantment.DURABILITY, 2)
+                    .build());
+
+            InventoryUtil.addItem(player, new ItemBuilder(Material.GOLDEN_APPLE, 2).build());
             InventoryUtil.addItem(player, new ItemBuilder(Material.ENDER_PEARL, 5).build());
             InventoryUtil.addItem(player, new ItemBuilder(Material.BREAD, 16).build());
 
@@ -120,7 +121,7 @@ public final class PvPSetInteract implements Listener {
             player.playSound(player.getLocation(), Sound.HORSE_ARMOR, 1, 1);
             InventoryUtil.removeItemInHand(player, 1);
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.WOOD_SWORD)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.STONE_SWORD)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7III")
                     .addEnchantment(Enchantment.DAMAGE_ALL, 2)
                     .addEnchantment(Enchantment.DURABILITY, 3)
@@ -134,25 +135,25 @@ public final class PvPSetInteract implements Listener {
 
             InventoryUtil.addItem(player, new ItemStack(Material.ARROW, 32));
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_HELMET)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_HELMET)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7III")
                     .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                     .addEnchantment(Enchantment.DURABILITY, 3)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_CHESTPLATE)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_CHESTPLATE)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7III")
                     .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                     .addEnchantment(Enchantment.DURABILITY, 3)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_LEGGINGS)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_LEGGINGS)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7III")
                     .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                     .addEnchantment(Enchantment.DURABILITY, 3)
                     .build());
 
-            InventoryUtil.addItem(player, new ItemBuilder(Material.IRON_BOOTS)
+            InventoryUtil.addItem(player, new ItemBuilder(Material.DIAMOND_BOOTS)
                     .setDisplayname("§b§lPvP§8-§b§lSET§7 Stufe§8.§7III")
                     .addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                     .addEnchantment(Enchantment.DURABILITY, 3)

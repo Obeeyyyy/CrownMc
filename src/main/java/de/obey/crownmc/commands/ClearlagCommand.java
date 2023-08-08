@@ -15,10 +15,7 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 
 @RequiredArgsConstructor
 @NonNull
@@ -34,8 +31,15 @@ public final class ClearlagCommand implements CommandExecutor {
 
         for (World world : Bukkit.getWorlds()) {
             for (Entity entity : world.getEntities()) {
-                if (entity instanceof Item || entity instanceof Creature)
+                if (entity instanceof Item || entity instanceof Creature) {
+                    if(entity instanceof Villager || entity instanceof ArmorStand)
+                        continue;
+
+                    if(entity.isCustomNameVisible())
+                        continue;
+
                     entity.remove();
+                }
             }
         }
 
