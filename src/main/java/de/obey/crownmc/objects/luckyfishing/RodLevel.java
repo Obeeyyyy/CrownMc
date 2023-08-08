@@ -13,7 +13,7 @@ public enum RodLevel {
     TWO("2", 70.0D, 1.0D),
     THREE("3", 75.0D, 2.0D),
     FOUR("4", 85.0D, 2.0D),
-    FIVE("5", 100.0D, 3.5D);
+    FIVE("5", 100.0D, 2.5D);
 
     String displayName;
     double fishRate;

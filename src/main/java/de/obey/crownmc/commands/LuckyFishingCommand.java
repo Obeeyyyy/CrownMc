@@ -6,7 +6,10 @@ package de.obey.crownmc.commands;
 
 */
 
+import de.obey.crownmc.handler.LuckyFishingHandler;
 import de.obey.crownmc.handler.WorldProtectionHandler;
+import de.obey.crownmc.objects.luckyfishing.RewardLevel;
+import de.obey.crownmc.objects.luckyfishing.RodLevel;
 import de.obey.crownmc.util.MessageUtil;
 import de.obey.crownmc.util.PermissionUtil;
 import lombok.NonNull;
@@ -22,7 +25,7 @@ import org.bukkit.entity.Player;
 public final class LuckyFishingCommand implements CommandExecutor {
 
     private final MessageUtil messageUtil;
-    private final WorldProtectionHandler worldProtectionHandler;
+    private final LuckyFishingHandler luckyFishingHandler;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -36,52 +39,53 @@ public final class LuckyFishingCommand implements CommandExecutor {
             return false;
 
         if (args.length == 0) {
-
-            if (!PermissionUtil.hasPermission(player, "team", false)) {
-                if (worldProtectionHandler.getWorldProtection(player.getWorld()) != null && !worldProtectionHandler.getWorldProtection(player.getWorld()).isFly()) {
-                    messageUtil.sendMessage(player, "In dieser Welt darfst du nicht fliegen§8.");
+            messageUtil.sendSyntax(sender, "/lf setrewards <rewardlevel>", "/lf getrod <rodlevel>", "/lf rewardlevels", "/lf rodlevels");
+            return false;
+        }
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("rewardlevels")) {
+                messageUtil.sendMessage(player, "§7Liste der RewardLevel§8:");
+                for (RewardLevel rewardLevel : RewardLevel.values()) {
+                    messageUtil.sendMessage(player, "§8- " + rewardLevel.getDisplayName() + "§8 (§f" + rewardLevel.name().toLowerCase() + "§8)");
+                }
+                return true;
+            }
+            if (args[0].equalsIgnoreCase("rodlevels")) {
+                messageUtil.sendMessage(player, "§7Liste der RodLevel§8:");
+                for (RodLevel rewardLevel : RodLevel.values()) {
+                    messageUtil.sendMessage(player, "§8- " + rewardLevel.getDisplayName() + "§8 (§f" + rewardLevel.name().toLowerCase() + "§8)");
+                }
+                return true;
+            }
+            messageUtil.sendSyntax(sender, "/lf setrewards <rewardlevel>", "/lf getrod <rodlevel>", "/lf rewardlevels", "/lf rodlevels");
+            return false;
+        }
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("getrod")) {
+                try {
+                    RodLevel rodLevel = RodLevel.valueOf(args[1]);
+                    player.getInventory().addItem(luckyFishingHandler.getRod(rodLevel));
+                    messageUtil.sendMessage(player, "§7Du hast die Rod mit Level §f" + rodLevel.getDisplayName() + "§7 erhalten§8.");
+                    return true;
+                } catch (IllegalArgumentException e) {
+                    messageUtil.sendMessage(player, "Gebe ein richtiges RodLevel an§8.");
                     return false;
                 }
             }
-
-            if (player.getAllowFlight()) {
-                player.setAllowFlight(false);
-                messageUtil.sendMessage(sender, "Du kannst jetzt nicht mehr fliegen.");
-                return false;
+            if (args[0].equalsIgnoreCase("setrewards")) {
+                try {
+                    RewardLevel rewardLevel = RewardLevel.valueOf(args[1]);
+                    luckyFishingHandler.editFishingRewards(player, rewardLevel);
+                    return true;
+                } catch (IllegalArgumentException e) {
+                    messageUtil.sendMessage(player, "Gebe ein richtiges RodLevel an§8.");
+                    return false;
+                }
             }
-
-            player.setAllowFlight(true);
-            messageUtil.sendMessage(sender, "Du kannst jetzt fliegen.");
-
+            messageUtil.sendSyntax(sender, "/lf setrewards <rewardlevel>", "/lf getrod <rodlevel>", "/lf rewardlevels", "/lf rodlevels");
             return false;
         }
-
-        if (!PermissionUtil.hasPermission(player, "fly.others", true))
-            return false;
-
-        if (args.length == 1) {
-
-            if (!messageUtil.isOnline(sender, args[0]))
-                return false;
-
-            final Player target = Bukkit.getPlayer(args[0]);
-
-            if (target.getAllowFlight()) {
-                target.setAllowFlight(false);
-                messageUtil.sendMessage(target, "Du kannst jetzt nicht mehr fliegen.");
-                messageUtil.sendMessage(sender, target.getName() + " kann jetzt nicht mehr fliegen.");
-                return false;
-            }
-
-            target.setAllowFlight(true);
-            messageUtil.sendMessage(target, "Du kannst jetzt fliegen.");
-            messageUtil.sendMessage(sender, target.getName() + " kann jetzt fliegen.");
-
-            return false;
-        }
-
-        messageUtil.sendSyntax(sender, "/fly", "/fly <spieler>");
-
+        messageUtil.sendSyntax(sender, "/lf setrewards <rewardlevel>", "/lf getrod <rodlevel>", "/lf rewardlevels", "/lf rodlevels");
         return false;
     }
 }

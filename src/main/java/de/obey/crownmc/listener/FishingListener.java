@@ -14,6 +14,7 @@ import org.bukkit.entity.FishHook;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +38,6 @@ public class FishingListener implements Listener {
         if (!player.getWorld().getName().equalsIgnoreCase("islands")) return;
         ItemStack itemStack = player.getItemInHand();
         if (itemStack == null || luckyFishingHandler.isFishingRod(itemStack)) return;
-        RodLevel level = luckyFishingHandler.getRodLevel(itemStack);
         if (event.getState() == PlayerFishEvent.State.FISHING) {
             long currentTime = System.currentTimeMillis();
             long biteTime = currentTime + MathUtil.getRandom(3000, 30000);
@@ -60,6 +60,12 @@ public class FishingListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void handleInventoryCloseEvent(final InventoryCloseEvent event) {
+        Player player = (Player) event.getPlayer();
+        luckyFishingHandler.saveFishingRewards(event.getView());
+    }
+
     public static final ItemStack FISH_LEVEL_ONE = new ItemBuilder(Material.RAW_FISH, 1, (byte) 0).setDisplayname("§7Roher Fisch").build();
     public static final ItemStack FISH_LEVEL_TWO = new ItemBuilder(Material.RAW_FISH, 1, (byte) 1).setDisplayname("§eRoher Lachs").build();
     public static final ItemStack FISH_LEVEL_THREE = new ItemBuilder(Material.RAW_FISH, 1, (byte) 2).setDisplayname("§cNemo").build();
@@ -71,7 +77,7 @@ public class FishingListener implements Listener {
         Player player = event.getPlayer();
         if (!player.getWorld().getName().equalsIgnoreCase("islands")) return;
         ItemStack itemStack = player.getItemInHand();
-        if (itemStack == null || luckyFishingHandler.isFishingRod(itemStack)) return;
+        if (itemStack == null || !luckyFishingHandler.isFishingRod(itemStack)) return;
         RodLevel level = luckyFishingHandler.getRodLevel(itemStack);
         if (fishBiteTimes.containsKey(player)) {
             task.cancel();
