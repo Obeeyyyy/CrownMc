@@ -34,8 +34,10 @@ public class Ban {
         if(banReason.getDuration() <= 0) {
             bannedUntil = -1;
         } else {
-            bannedUntil = System.currentTimeMillis() + banReason.getDuration();
+            bannedUntil = cfg.getLong("bans." + id + ".bannedUntil");
         }
+
+        author = cfg.getString("bans." + id + ".author");
     }
 
     public Ban(final int id, final BanReason banReason, final YamlConfiguration cfg) {
@@ -48,6 +50,8 @@ public class Ban {
         } else {
             bannedUntil = System.currentTimeMillis() + banReason.getDuration();
         }
+
+        save();
     }
 
     public void save() {

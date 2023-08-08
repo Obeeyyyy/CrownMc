@@ -259,6 +259,9 @@ public final class ProtectionListener implements Listener {
 
     @EventHandler
     public void on(final EntityDamageEvent event) {
+        if(!(event.getEntity() instanceof Player))
+            return;
+
         if(GodCommand.godmode.contains(event.getEntity().getUniqueId())) {
             event.setCancelled(true);
             return;

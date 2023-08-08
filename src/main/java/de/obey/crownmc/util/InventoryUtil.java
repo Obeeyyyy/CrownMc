@@ -121,7 +121,7 @@ public final class InventoryUtil {
         final ItemStack[] items = player.getInventory().getContents().clone();
         for (ItemStack content : items) {
             if (content != null && content.getType() == item.getType()) {
-                amount += content.getAmount() / item.getAmount();
+                amount += content.getAmount() / (double)item.getAmount();
                 content.setType(Material.AIR);
             }
         }
@@ -132,23 +132,23 @@ public final class InventoryUtil {
     }
 
     // hier ist was falsch
-    public int removeItem(final Player player, final ItemStack item, final int max) {
+    public int removeItem(final Player player, final ItemStack item, final int removeAmount) {
         int amount = 0;
 
         for(int i = 0; i < player.getInventory().getSize(); i++) {
             final ItemStack content = player.getInventory().getItem(i);
 
-            if (amount >= max)
+            if (amount >= removeAmount)
                 return amount;
 
-            if (content != null && content.getType() != Material.AIR && content.getType() == item.getType()) {
-                if (amount + content.getAmount() / item.getAmount() > max) {
-                    content.setAmount(content.getAmount() - (max - amount));
+            if (content != null && content.getType() != Material.AIR && content.getType() == item.getType() && content.getAmount() >= item.getAmount()) {
+                if (amount + (content.getAmount() / (double)item.getAmount()) > (double) removeAmount) {
+                    content.setAmount(content.getAmount() - ((removeAmount - amount) * item.getAmount()));
                     player.getInventory().setItem(i, content);
-                    return max;
+                    return removeAmount;
                 }
 
-                amount += content.getAmount() / item.getAmount();
+                amount++;
                 content.setType(Material.AIR);
                 player.getInventory().setItem(i, content);
             }

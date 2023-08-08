@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -101,51 +102,53 @@ public final class Category {
     }
 
     public void updateInventory(final Inventory inventory) {
-        inventory.clear();
-        if (!items.isEmpty()) {
-            CrownMain.getInstance().getInitializer().getExecutorService().submit(() -> {
-                for (ShopItem shopItem : items) {
-                    final ItemStack item = shopItem.getItemStack().clone();
-                    final ItemMeta meta = item.getItemMeta();
-                    final List<String> lore = (item.hasItemMeta() ? (item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>()) : new ArrayList<>());
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                inventory.clear();
+                if (!items.isEmpty()) {
+                    CrownMain.getInstance().getInitializer().getExecutorService().submit(() -> {
+                        for (ShopItem shopItem : items) {
+                            final ItemStack item = shopItem.getItemStack().clone();
+                            final ItemMeta meta = item.getItemMeta();
+                            final List<String> lore = (item.hasItemMeta() ? (item.getItemMeta().hasLore() ? item.getItemMeta().getLore() : new ArrayList<>()) : new ArrayList<>());
 
-                    lore.add("");
-                    lore.add("§8▰§7▱ §6§lInformationen");
-                    lore.add("§8 - §7ID§8: §7" + shopItem.getID());
-                    lore.add("§8 - §7Preis§8: §fx" + shopItem.getItemStack().getAmount() + " §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice()) + currency + (item.getMaxStackSize() > 1 ? "§fx" + (shopItem.getItemStack().getAmount() * 64) + " §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice() * 64) + currency : ""));
-                    lore.add("§8 - §7" + (categoryType == CategoryType.BUY ? "Gekauft§8: §fx§e§o" : "§7Verkauft§8: §fx§e§o") + shopItem.getCount());
-                    lore.add("");
+                            lore.add("");
+                            lore.add("§8▰§7▱ §6§lInformationen");
+                            lore.add("§8 - §7ID§8: §7" + shopItem.getID());
+                            lore.add("§8 - §7Preis§8: §fx" + shopItem.getItemStack().getAmount() + " §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice()) + currency + (item.getMaxStackSize() > 1 ? "§fx" + (shopItem.getItemStack().getAmount() * 64) + " §8-> §e§o" + NumberFormat.getInstance().format(shopItem.getPrice() * 64) + currency : ""));
+                            lore.add("§8 - §7" + (categoryType == CategoryType.BUY ? "Gekauft§8: §fx§e§o" : "§7Verkauft§8: §fx§e§o") + shopItem.getCount());
+                            lore.add("");
 
-                    if (categoryType == CategoryType.BUY) {
-                        lore.add("§8▰§7▱ §6§lLinksklick");
-                        lore.add("§8 - §7Kaufen§8: §f§ox" + shopItem.getItemStack().getAmount());
-                        if (item.getMaxStackSize() > 1) {
-                            lore.add("");
-                            lore.add("§8▰§7▱ §6§lShift + Linksklick");
-                            lore.add("§8 - §7Kaufen§8: §f§ox" + (shopItem.getItemStack().getAmount() * 64));
-                            lore.add("");
+                            if (categoryType == CategoryType.BUY) {
+                                lore.add("§8▰§7▱ §6§lLinksklick");
+                                lore.add("§8 - §7Kaufen§8: §f§ox" + shopItem.getItemStack().getAmount());
+                                if (item.getMaxStackSize() > 1) {
+                                    lore.add("");
+                                    lore.add("§8▰§7▱ §6§lShift + Linksklick");
+                                    lore.add("§8 - §7Kaufen§8: §f§ox" + (shopItem.getItemStack().getAmount() * 64));
+                                    lore.add("");
+                                }
+                            } else {
+                                lore.add("§8▰§7▱ §6§lLinksklick");
+                                lore.add("§8 - §7Verkaufen§8: §f§ox" + (item.getAmount()));
+                                lore.add("");
+                                lore.add("§8▰§7▱ §6§lRechtsklick");
+                                lore.add("§8 - §7Verkaufen§8: §f§oalles");
+                                lore.add("");
+                            }
+
+                            meta.setLore(lore);
+                            item.setItemMeta(meta);
+
+                            inventory.setItem(shopItem.getSlot(), item.clone());
                         }
-                    } else {
-                        lore.add("§8▰§7▱ §6§lLinksklick");
-                        lore.add("§8 - §7Verkaufen§8: §f§ox1");
-                        lore.add("");
-                        lore.add("§8▰§7▱ §6§lShift + Linksklick");
-                        lore.add("§8 - §7Verkaufen§8: §f§ox64");
-                        lore.add("");
-                        lore.add("§8▰§7▱ §6§lRechtsklick");
-                        lore.add("§8 - §7Verkaufen§8: §f§oalles");
-                        lore.add("");
-                    }
-
-                    meta.setLore(lore);
-                    item.setItemMeta(meta);
-
-                    inventory.setItem(shopItem.getSlot(), item.clone());
+                    });
                 }
-            });
-        }
 
-        inventory.setItem(53, new ItemBuilder(Material.BARRIER).setDisplayname("§c§oZurück§8.").build());
+                inventory.setItem(53, new ItemBuilder(Material.BARRIER).setDisplayname("§c§oZurück§8.").build());
+            }
+        }.runTask(CrownMain.getInstance());
     }
 
     public void openInventory(final Player player) {
@@ -195,6 +198,8 @@ public final class Category {
 
         if(skull != null)
             cfg.set(path + "skull", skull);
+
+        cfg.set(path + ".items", null);
 
         if (!items.isEmpty()) {
             for (ShopItem item : items) {

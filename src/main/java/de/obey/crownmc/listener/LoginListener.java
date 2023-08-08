@@ -74,18 +74,6 @@ public final class LoginListener implements Listener {
             initializer.getUserHandler().register(player);
             return;
         }
-
-        // Check if banned
-        initializer.getUserHandler().getUser(event.getPlayer().getUniqueId()).thenAccept(user -> {
-            final UserPunishment punishment = user.getPunishment();
-
-            if(user.getPunishment().isBanned()) {
-                final Ban ban = punishment.getBans().get(punishment.getBans().size() - 1);
-                final BanReason reason = ban.getBanReason();
-                event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, initializer.getBanHandler().getKickMessage(reason.getId(), punishment.getRemainingBanMillis(), ban.getAuthor(), false));
-            }
-        });
     }
 
 }

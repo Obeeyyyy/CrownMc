@@ -250,7 +250,7 @@ public final class Initializer {
 
         pluginManager.registerEvents(new AsyncPlayerPreLoginListener(this), crownMain);
         pluginManager.registerEvents(new LoginListener(this), crownMain);
-        pluginManager.registerEvents(new JoinListener(messageUtil, locationHandler, scoreboardHandler, userHandler, serverConfig, combatHandler), crownMain);
+        pluginManager.registerEvents(new JoinListener(messageUtil, locationHandler, scoreboardHandler, userHandler, serverConfig, combatHandler, banHandler), crownMain);
         pluginManager.registerEvents(new QuitListener(this), crownMain);
         pluginManager.registerEvents(new PickupPotionsListener(), crownMain);
         pluginManager.registerEvents(new PortalMeisterListener(messageUtil, serverConfig, userHandler, locationHandler), crownMain);

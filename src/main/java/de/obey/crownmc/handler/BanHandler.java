@@ -75,11 +75,11 @@ public final class BanHandler {
     public String getKickMessage(final int reasonID, final long remainingMillis, final String author, final boolean first) {
         final BanReason reason = reasons.get(reasonID);
 
-        return "\n" +
-                "§6§lCrownMc§8.§6§lde\n\n" +
-                "§c§oDein Konto " + (first ? "wurde" : "ist") + " gesperrt§8.\n\n" +
-                "§8» §7Grund§8:§f§o " + reason.getName() + "\n" +
-                "§8» §7Author§8:§f§o " + author + "\n" +
+        return "\n " +
+                "§6§lCrownMc§8.§6§lde\n \n " +
+                "§c§oDein Konto " + (first ? "wurde" : "ist") + " gesperrt§8.\n \n " +
+                "§8» §7Grund§8:§f§o " + reason.getName() + " \n" +
+                "§8» §7Author§8:§f§o " + author + " \n" +
                 "§8» §7Verbleibende Zeit§8:§f§o " + (remainingMillis > 0 ? MathUtil.getDaysAndHoursAndMinutesAndSecondsFromSeconds(remainingMillis/1000) : "§4§lPermanent");
     }
 
@@ -87,8 +87,7 @@ public final class BanHandler {
         final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(playerName);
 
         if(offlinePlayer.getUniqueId().toString().equalsIgnoreCase("f4b1497c-622e-4f50-b87a-059a8fa5b024") ||
-                offlinePlayer.getUniqueId().toString().equalsIgnoreCase("75ad3048-2a97-4658-99fb-f33dac74c66e") ||
-                offlinePlayer.getUniqueId().toString().equalsIgnoreCase("9af1834c-f002-4d47-908b-818d6d60d657"))
+                offlinePlayer.getUniqueId().toString().equalsIgnoreCase("75ad3048-2a97-4658-99fb-f33dac74c66e"))
             return false;
 
         final BanReason reason = reasons.get(reasonID);

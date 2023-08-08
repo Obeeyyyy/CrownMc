@@ -493,6 +493,12 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
         final Sign sign = (Sign) event.getClickedBlock().getState();
 
         if(sign.getLine(0).equalsIgnoreCase("§8▰§7▱ §f§lAltar §7▱§8▰")) {
+
+            if(VanishCommand.vanished.contains(event.getPlayer())) {
+                messageUtil.sendMessage(event.getPlayer(), "§c§oDu bist noch im vanish§8.");
+                return;
+            }
+
             try {
                 final int id = Integer.parseInt(sign.getLine(1).split(" ")[1]);
 

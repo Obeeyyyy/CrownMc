@@ -32,6 +32,14 @@ public class Mute {
         this.muteReason = CrownMain.getInstance().getInitializer().getMuteHandler().getReadsonFromID(cfg.getInt("mutes." + id + ".reason"));
 
         mutedUntil = cfg.getLong("mutes." + id + ".mutedUntil");
+
+        if(muteReason.getDuration() <= 0) {
+            mutedUntil = -1;
+        } else {
+            mutedUntil = cfg.getLong("mutes." + id + ".mutedUntil");
+        }
+
+        author = cfg.getString("mutes." + id + ".author");
     }
 
     public Mute(final int id, final MuteReason muteReason, final YamlConfiguration cfg) {

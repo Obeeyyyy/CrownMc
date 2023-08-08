@@ -213,8 +213,10 @@ public final class AsyncChatListener implements Listener {
 
 
         /* ChatFilter check */
-        if (!chatFilterHandler.runChatFilterCheck(player, message))
+        if (!chatFilterHandler.runChatFilterCheck(player, message)) {
+            messageBuilder.send(player);
             return;
+        }
 
         messageUtil.log("(CHAT) " + player.getName() + " -> " + ChatColor.stripColor(message));
 

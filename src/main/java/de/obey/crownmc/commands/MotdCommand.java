@@ -95,11 +95,11 @@ public final class MotdCommand implements CommandExecutor, Listener {
 
         String newLine1 = "", newLine2 = "";
 
-        for (int i = 0; i < (70 - line1.length()) / 2; i++) {
+        for (int i = 0; i < (75 - line1.length()) / 2; i++) {
             newLine1 = newLine1 + " ";
         }
 
-        for (int i = 0; i < (70 - line2.length()) / 2; i++) {
+        for (int i = 0; i < (75 - line2.length()) / 2; i++) {
             newLine2 = newLine2 + " ";
         }
 
