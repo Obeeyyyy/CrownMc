@@ -55,9 +55,9 @@ public final class RandomTeleportListener implements Listener {
     }
 
     private Location getRandomLocation() {
-        final World world = CrownMain.getInstance().getServer().getWorld("farmwelt");
+        final World world = CrownMain.getInstance().getServer().getWorld("hardcore");
         if (world == null) {
-            messageUtil.warn("§c§oFarmwelt existiert nicht.");
+            messageUtil.warn("§c§oDie Hardcore Welt existiert nicht§8.");
             return null;
         }
 

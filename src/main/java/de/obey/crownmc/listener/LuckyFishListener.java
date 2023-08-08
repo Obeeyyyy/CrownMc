@@ -94,8 +94,6 @@ public class LuckyFishListener implements Listener {
             task.cancel();
             fishBiteTimes.remove(player);
             messageUtil.sendMessage(player, "§7Du hast durch das Fischen folgendes erhalten§8:");
-
-
         }
     }
 
