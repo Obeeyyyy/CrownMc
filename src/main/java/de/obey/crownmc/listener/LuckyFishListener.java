@@ -2,6 +2,7 @@ package de.obey.crownmc.listener;
 
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.handler.LuckyFishingHandler;
+import de.obey.crownmc.objects.luckyfishing.RewardLevel;
 import de.obey.crownmc.util.ItemBuilder;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
@@ -94,6 +95,15 @@ public class LuckyFishListener implements Listener {
             task.cancel();
             fishBiteTimes.remove(player);
             messageUtil.sendMessage(player, "§7Du hast durch das Fischen folgendes erhalten§8:");
+            int chance = Math.toIntExact(MathUtil.getRandom(1, 100));
+            for (int i = 0; i < level; i++) {
+                RewardLevel rewardLevel = RewardLevel.getByChance(chance);
+                ItemStack reward = luckyFishingHandler.getRewards().get(rewardLevel).stream().findAny().orElse(null);
+                if (reward == null) continue;
+                String name = reward.hasItemMeta() && reward.getItemMeta().hasDisplayName() ? reward.getItemMeta().getDisplayName() : reward.getType().name().toUpperCase();
+                messageUtil.sendMessage(player, "§8- '§f" + name + "§8' §f" + reward.getAmount() + "§8x");
+                player.getInventory().addItem(reward);
+            }
         }
     }
 
