@@ -1,0 +1,38 @@
+package de.obey.crownmc.objects.gambling.blackjack;
+/*
+
+    Author - Obey -> CrownMc
+       10.08.2023 / 06:07
+
+    You are NOT allowed to use this code in any form 
+ without permission from me, obey, the creator of this code.
+*/
+
+import lombok.Getter;
+
+@Getter
+public enum Card {
+
+    ACE("YTY3ZDgxM2FlN2ZmZTViZTk1MWE0ZjQxZjJhYTYxOWE1ZTM4OTRlODVlYTVkNDk4NmY4NDk0OWM2M2Q3NjcyZSJ9fX0=", 0),
+    TWO("NGNkOWVlZWU4ODM0Njg4ODFkODM4NDhhNDZiZjMwMTI0ODVjMjNmNzU3NTNiOGZiZTg0ODczNDE0MTk4NDcifX19", 2),
+    THREE("MWQ0ZWFlMTM5MzM4NjBhNmRmNWU4ZTk1NTY5M2I5NWE4YzNiMTVjMzZiOGI1ODc1MzJhYzA5OTZiYzM3ZTUifX19", 3),
+    FOUR("ZDJlNzhmYjIyNDI0MjMyZGMyN2I4MWZiY2I0N2ZkMjRjMWFjZjc2MDk4NzUzZjJkOWMyODU5ODI4N2RiNSJ9fX0=", 4),
+    FIVE("NmQ1N2UzYmM4OGE2NTczMGUzMWExNGUzZjQxZTAzOGE1ZWNmMDg5MWE2YzI0MzY0M2I4ZTU0NzZhZTIifX19", 5),
+    SIX("MzM0YjM2ZGU3ZDY3OWI4YmJjNzI1NDk5YWRhZWYyNGRjNTE4ZjVhZTIzZTcxNjk4MWUxZGNjNmIyNzIwYWIifX19", 6),
+    SEVEN("NmRiNmViMjVkMWZhYWJlMzBjZjQ0NGRjNjMzYjU4MzI0NzVlMzgwOTZiN2UyNDAyYTNlYzQ3NmRkN2I5In19fQ==", 7),
+    EIGHT("NTkxOTQ5NzNhM2YxN2JkYTk5NzhlZDYyNzMzODM5OTcyMjI3NzRiNDU0Mzg2YzgzMTljMDRmMWY0Zjc0YzJiNSJ9fX0=", 8),
+    NINE("ZTY3Y2FmNzU5MWIzOGUxMjVhODAxN2Q1OGNmYzY0MzNiZmFmODRjZDQ5OWQ3OTRmNDFkMTBiZmYyZTViODQwIn19fQ==", 9),
+    TEN("NDlkZDM2NzU5MzA3ZGI4ZTJkOWY0YjBjMmFlZDI1NTZkYjFkZGNmM2Y2N2ZhMTljYzgyNmFjYmQ5NjVmZSJ9fX0=", 10),
+    J("M2E3OWRiOTkyMzg2N2U2OWMxZGJmMTcxNTFlNmY0YWQ5MmNlNjgxYmNlZGQzOTc3ZWViYmM0NGMyMDZmNDkifX19", 10),
+    Q("NDM2MDlmMWZhZjgxZWQ0OWM1ODk0YWMxNGM5NGJhNTI5ODlmZGE0ZTFkMmE1MmZkOTQ1YTU1ZWQ3MTllZDQifX19", 10),
+    K("OTQ2MWIzOGM4ZTQ1NzgyYWRhNTlkMTYxMzJhNDIyMmMxOTM3NzhlN2Q3MGM0NTQyYzk1MzYzNzZmMzdiZTQyIn19fQ==", 10);
+
+    private String textur;
+    private int count;
+
+    Card(final String textur, final int count) {
+        this.textur = textur;
+        this.count = count;
+    }
+
+}

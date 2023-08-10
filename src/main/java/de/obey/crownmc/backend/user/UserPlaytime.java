@@ -18,6 +18,7 @@ public final class UserPlaytime {
 
     public void onJoin() {
         user.setLong(DataType.PLAYTIMESAVED, System.currentTimeMillis());
+        updatePlaytime();
     }
 
     private boolean isAFK = false;

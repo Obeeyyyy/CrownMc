@@ -22,6 +22,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import java.util.Random;
 
@@ -50,22 +54,43 @@ public final class RandomTeleportListener implements Listener {
             return;
         }
 
+        final Location loc = getRandomLocation(player);
+
+        if(loc == null)
+            return;
+
+        loc.getChunk().load();
+
         InventoryUtil.removeItemInHand(player, 1);
-        locationHandler.teleportToLocation(player, getRandomLocation());
+
+        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1));
+        player.setVelocity(new Vector(0, 10, 0));
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                locationHandler.teleportToLocation(player, loc);
+
+                for (PotionEffect activePotionEffect : player.getActivePotionEffects()) {
+                    player.removePotionEffect(activePotionEffect.getType());
+                }
+
+            }
+        }.runTaskLater(CrownMain.getInstance(), 40);
     }
 
-    private Location getRandomLocation() {
-        final World world = CrownMain.getInstance().getServer().getWorld("farmwelt");
-        if (world == null) {
-            messageUtil.warn("§c§oDie Hardcore Welt existiert nicht§8.");
+    private Location getRandomLocation(final Player player) {
+        if(!player.getWorld().getName().equalsIgnoreCase("hardcore") &&
+          !player.getWorld().getName().equalsIgnoreCase("farmwelt")) {
+            messageUtil.sendMessage(player, "Bitte betrete die Farm oder Hardcore Welt§8.");
             return null;
         }
 
         final Random random = new Random();
-        final int x = random.nextInt(20001) - 10000;
-        final int z = random.nextInt(20001) - 10000;
-        final int y = world.getHighestBlockYAt(x, z) + 2;
+        final int x = random.nextInt(100001) - 50000;
+        final int z = random.nextInt(100001) - 50000;
+        final int y = player.getWorld().getHighestBlockYAt(x, z) + 2;
 
-        return new Location(world, x, y, z);
+        return new Location(player.getWorld(), x, y, z);
     }
 }

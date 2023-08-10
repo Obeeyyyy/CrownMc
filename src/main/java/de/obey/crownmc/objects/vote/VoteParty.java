@@ -42,13 +42,51 @@ public final class VoteParty {
 
     private final String prefix = "&a&lV&6&lo&d&lt&3&le&2&lP&5&la&b&lr&c&lt&e&ly";
 
+    public VoteParty(final VotePartyHandler votePartyHandler, final boolean instaBoss) {
+        this.votePartyHandler = votePartyHandler;
+
+        if(instaBoss) {
+            spawnBossMob();
+            return;
+        }
+
+        messageUtil.broadcast("In 60 Sekunden startet eine " + prefix + " §8!");
+
+        runnable = new BukkitRunnable() {
+            int ticks = 60, state = 0;
+            @Override
+            public void run() {
+                if(state != 2) {
+                    ticks--;
+
+                    if (ticks == 5) {
+                        state = 1;
+                    }
+
+                    if (state == 1) {
+                        messageUtil.broadcast("§8(" + prefix + "§8) §7Noch §f" + ticks + " §7Sekunde" + (ticks > 1 ? "n" : "") + "§8.");
+                    }
+
+                    if(ticks == 1) {
+                        state = 2;
+                        ticks = 0;
+                    }
+
+                    return;
+                }
+
+                startDropRunnable();
+            }
+        }.runTaskTimer(CrownMain.getInstance(), 20, 20);
+    }
+
     public VoteParty(final VotePartyHandler votePartyHandler) {
         this.votePartyHandler = votePartyHandler;
 
-        messageUtil.broadcast("In 20 Sekunden startet eine " + prefix + " §8!");
+        messageUtil.broadcast("In 60 Sekunden startet eine " + prefix + " §8!");
 
         runnable = new BukkitRunnable() {
-            int ticks = 20, state = 0;
+            int ticks = 60, state = 0;
             @Override
             public void run() {
                 if(state != 2) {
@@ -115,7 +153,7 @@ public final class VoteParty {
         }.runTaskTimer(CrownMain.getInstance(), 5, 5);
     }
 
-    private void spawnBossMob() {
+    public void spawnBossMob() {
         messageUtil.broadcast("§8(" + prefix + "§8) §7Gleich erscheint ein Boss Mob§9.");
 
         runnable = new BukkitRunnable() {

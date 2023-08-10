@@ -71,6 +71,12 @@ public final class AsyncChatListener implements Listener {
 
         String message = event.getMessage();
 
+        /* ChatFilter check */
+        if (!chatFilterHandler.runChatFilterCheck(player, message)) {
+            messageUtil.sendMessage(player, "§c§oDeine Nachricht wurde nicht abgesendet§8.");
+            return;
+        }
+
         /*
         Word Scramlbe check
          */
@@ -210,13 +216,6 @@ public final class AsyncChatListener implements Listener {
             }
         }
         //GlobalMute End
-
-
-        /* ChatFilter check */
-        if (!chatFilterHandler.runChatFilterCheck(player, message)) {
-            messageBuilder.send(player);
-            return;
-        }
 
         messageUtil.log("(CHAT) " + player.getName() + " -> " + ChatColor.stripColor(message));
 

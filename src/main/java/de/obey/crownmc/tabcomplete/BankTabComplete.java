@@ -30,7 +30,7 @@ public final class BankTabComplete implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 
-        if(args.length == 1) {
+        if(args.length <= 1) {
             List<String> args1 = new ArrayList<>();
 
             args1.add("info");
@@ -55,81 +55,79 @@ public final class BankTabComplete implements TabCompleter {
             return args1;
         }
 
-        if(args.length >= 2) {
-            if (args[0].equalsIgnoreCase("add") ||
-                    args[0].equalsIgnoreCase("info") ||
-                    args[0].equalsIgnoreCase("trust")) {
-                final List<String> name = new ArrayList<>();
+        if (args[0].equalsIgnoreCase("add") ||
+                args[0].equalsIgnoreCase("info") ||
+                args[0].equalsIgnoreCase("trust")) {
+            final List<String> name = new ArrayList<>();
 
-                for (Player all : Bukkit.getOnlinePlayers()) {
-                    if (sender instanceof Player && !PermissionUtil.hasPermission(((Player) sender).getPlayer(), "team", false)) {
-                        if (!VanishCommand.vanished.contains(all))
-                            name.add(all.getName());
-                    } else {
+            for (Player all : Bukkit.getOnlinePlayers()) {
+                if (sender instanceof Player && !PermissionUtil.hasPermission(((Player) sender).getPlayer(), "team", false)) {
+                    if (!VanishCommand.vanished.contains(all))
                         name.add(all.getName());
-                    }
+                } else {
+                    name.add(all.getName());
                 }
-
-                if (args.length > 2) {
-                    final String looking = args[1];
-                    final List<String> sorted = new ArrayList<>();
-
-                    for (String s : name) {
-                        if (s.toLowerCase().startsWith(looking.toLowerCase()))
-                            sorted.add(s);
-                    }
-
-                    return sorted;
-                }
-
-                return name;
             }
 
-            if (args[0].equalsIgnoreCase("remove")) {
-                final User user = userHandler.getUserInstant(((Player) sender).getUniqueId());
+            if (args.length > 2) {
+                final String looking = args[1];
+                final List<String> sorted = new ArrayList<>();
 
-                final List<String> name = new ArrayList<>();
-                for (UUID uuid : user.getBank().getMembers()) {
-                    name.add(Bukkit.getOfflinePlayer(uuid).getName());
+                for (String s : name) {
+                    if (s.toLowerCase().startsWith(looking.toLowerCase()))
+                        sorted.add(s);
                 }
 
-                if(args.length > 2) {
-                    final String looking = args[2];
-                    final List<String> sorted = new ArrayList<>();
-
-                    for (String s : name) {
-                        if (s.toLowerCase().startsWith(looking.toLowerCase()))
-                            sorted.add(s);
-                    }
-
-                    return sorted;
-                }
-
-                return name;
+                return sorted;
             }
 
-            if (args[0].equalsIgnoreCase("untrust")) {
-                final User user = userHandler.getUserInstant(((Player) sender).getUniqueId());
+            return name;
+        }
 
-                final List<String> name = new ArrayList<>();
-                for (UUID uuid : user.getBank().getTrusted()) {
-                    name.add(Bukkit.getOfflinePlayer(uuid).getName());
-                }
+        if (args[0].equalsIgnoreCase("remove")) {
+            final User user = userHandler.getUserInstant(((Player) sender).getUniqueId());
 
-                if(args.length > 2) {
-                    final String looking = args[2];
-                    final List<String> sorted = new ArrayList<>();
-
-                    for (String s : name) {
-                        if (s.toLowerCase().startsWith(looking.toLowerCase()))
-                            sorted.add(s);
-                    }
-
-                    return sorted;
-                }
-
-                return name;
+            final List<String> name = new ArrayList<>();
+            for (UUID uuid : user.getBank().getMembers()) {
+                name.add(Bukkit.getOfflinePlayer(uuid).getName());
             }
+
+            if(args.length > 2) {
+                final String looking = args[2];
+                final List<String> sorted = new ArrayList<>();
+
+                for (String s : name) {
+                    if (s.toLowerCase().startsWith(looking.toLowerCase()))
+                        sorted.add(s);
+                }
+
+                return sorted;
+            }
+
+            return name;
+        }
+
+        if (args[0].equalsIgnoreCase("untrust")) {
+            final User user = userHandler.getUserInstant(((Player) sender).getUniqueId());
+
+            final List<String> name = new ArrayList<>();
+            for (UUID uuid : user.getBank().getTrusted()) {
+                name.add(Bukkit.getOfflinePlayer(uuid).getName());
+            }
+
+            if(args.length > 2) {
+                final String looking = args[2];
+                final List<String> sorted = new ArrayList<>();
+
+                for (String s : name) {
+                    if (s.toLowerCase().startsWith(looking.toLowerCase()))
+                        sorted.add(s);
+                }
+
+                return sorted;
+            }
+
+            return name;
         }
 
         return null;

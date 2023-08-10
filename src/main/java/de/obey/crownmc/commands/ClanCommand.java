@@ -298,6 +298,34 @@ public class ClanCommand implements CommandExecutor, Listener {
                 return;
             }
 
+            // leave clan
+            if(event.getSlot() == 32) {
+                player.closeInventory();
+
+                if(clan.isLeader(player.getUniqueId())) {
+                    messageUtil.sendMessage(player, "Du kannst den Clan nicht verlassen§8.");
+                    player.playSound(player.getLocation(), Sound.EXPLODE, 0.5f, 1);
+                    return;
+                }
+
+                clan.sendMessageToAllClanMembers(player.getName() + " hat den Clan §c§overlassen§8.");
+
+                clan.getMemberList().remove(player.getUniqueId().toString());
+                clan.getTrustedList().remove(player.getUniqueId().toString());
+                clan.getModeratorList().remove(player.getUniqueId().toString());
+
+                final User user = userHandler.getUserInstant(player.getUniqueId());
+                if (user != null) {
+                    user.setClan(null);
+                    user.setString(DataType.CLANNAME, "-");
+                    user.addXP(0);
+                }
+
+                clan.updateClanInfo();
+                clan.updateMemberInventory();
+                return;
+            }
+
             // delete clan
             if(event.getSlot() == 33) {
 

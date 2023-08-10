@@ -267,6 +267,9 @@ public final class ProtectionListener implements Listener {
             return;
         }
 
+        if(event.getEntity().getWorld().getName().equalsIgnoreCase("hardcore"))
+            return;
+
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL)
             event.setCancelled(true);
 

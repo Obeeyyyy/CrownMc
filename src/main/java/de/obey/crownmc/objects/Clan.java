@@ -168,6 +168,15 @@ public class Clan {
                         "")
                 .build());
 
+        clanInfo.setItem(32, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
+                        .setDisplayname("§c§lClan Verlassen")
+                        .setTextur("NWE2Nzg3YmEzMjU2NGU3YzJmM2EwY2U2NDQ5OGVjYmIyM2I4OTg0NWU1YTY2YjVjZWM3NzM2ZjcyOWVkMzcifX19", UUID.randomUUID())
+                .setLore("",
+                        "§7§lLinksklick",
+                        "§8  - §7Verlasse den Clan§8.",
+                        "")
+                .build());
+
         clanInfo.setItem(33, new ItemBuilder(Material.SKULL_ITEM, 1, (byte) 3)
                 .setDisplayname("§c§lClan Löschen")
                         .setTextur("M2VkMWFiYTczZjYzOWY0YmM0MmJkNDgxOTZjNzE1MTk3YmUyNzEyYzNiOTYyYzk3ZWJmOWU5ZWQ4ZWZhMDI1In19fQ==", UUID.randomUUID())

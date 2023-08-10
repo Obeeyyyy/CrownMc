@@ -62,7 +62,11 @@ public final class DeathListener implements Listener {
         final Player died = event.getEntity();
         final User user = userHandler.getUserInstant(died.getUniqueId());
 
-        messageUtil.log("#> " + died.getName() + " DIED");
+        messageUtil.log("#> " + died.getName() + " DIED IN " + died.getLocation().getWorld().getName());
+
+        if(died.getLocation().getWorld().getName().equalsIgnoreCase("hardcore")) {
+            user.getCooldowns().setCooldown("hardcore", System.currentTimeMillis() + 9000000);
+        }
 
         Player tempKiller = died.getKiller();
 

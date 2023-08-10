@@ -34,9 +34,11 @@ public final class ConfigTabComplete implements TabCompleter {
             name.add("levelUpMoney");
             name.add("netherPrice");
             name.add("endPrice");
+            name.add("hardcorePrice");
             name.add("soulReward");
             name.add("netherLevel");
             name.add("endLevel");
+            name.add("hardcoreLevel");
             name.add("epCooldown");
             name.add("clanPrice");
             final String looking = args[args.length - 1];
@@ -50,10 +52,9 @@ public final class ConfigTabComplete implements TabCompleter {
 
             name = sorted;
 
-        } else if(args.length < 1) {
+        } else if(args.length <= 1) {
             name.add("info");
             name.add("reload");
-            name.add("set");
             name.add("set");
             name.add("add");
             name.add("remove");

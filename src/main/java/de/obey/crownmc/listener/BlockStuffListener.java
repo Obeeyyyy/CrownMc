@@ -62,6 +62,15 @@ public final class BlockStuffListener implements Listener {
     private final Map<UUID, Long> enderpearlCooldown = Maps.newConcurrentMap();
 
     @EventHandler
+    public void on(final BlockGrowEvent event) {
+
+        if (event.getBlock().getWorld().getName().equalsIgnoreCase("plots") ||
+                event.getBlock().getWorld().getName().equalsIgnoreCase("farmwelt") ||
+                event.getBlock().getWorld().getName().equalsIgnoreCase("world"))
+            event.setCancelled(true);
+    }
+
+    @EventHandler
     public void on(final LeavesDecayEvent event) {
 
         if (event.getBlock().getWorld().getName().equalsIgnoreCase("plots") ||
@@ -76,6 +85,7 @@ public final class BlockStuffListener implements Listener {
     public void on(final BlockFromToEvent event) {
         if (event.getBlock().getWorld().getName().equalsIgnoreCase("plots") ||
                 event.getBlock().getWorld().getName().equalsIgnoreCase("farmwelt") ||
+                event.getBlock().getWorld().getName().equalsIgnoreCase("hardcore") ||
                 event.getBlock().getWorld().getName().equalsIgnoreCase("world"))
             return;
 
@@ -95,7 +105,7 @@ public final class BlockStuffListener implements Listener {
         }
     }
 
-    // INSTAND RESPAWN
+    // INSTANT RESPAWN
     @EventHandler
     public void on(final PlayerDeathEvent event) {
         final Player player = event.getEntity();

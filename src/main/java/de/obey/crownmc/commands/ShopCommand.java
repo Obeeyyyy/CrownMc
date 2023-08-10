@@ -127,7 +127,7 @@ public final class ShopCommand implements CommandExecutor, Listener {
                         return false;
                     }
 
-                    shopHandler.getCategories().get(args[2]).setMaterial(player.getItemInHand());
+                    shopHandler.getCategories().get(args[2]).setMaterial(player.getItemInHand().clone());
                     messageUtil.sendMessage(player, "Du hast das ShowItem für " + args[2] + " auf " + player.getItemInHand().getType().name() + " gesetzt§8.");
                     shopHandler.updateShopInventory();
 

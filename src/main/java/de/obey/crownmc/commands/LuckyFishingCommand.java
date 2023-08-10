@@ -36,7 +36,7 @@ public final class LuckyFishingCommand implements CommandExecutor {
             return false;
 
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("rewardlevels")) {
+            if (args[0].equalsIgnoreCase("list")) {
                 messageUtil.sendMessage(player, "§7Liste der RewardLevel§8:");
                 for (RewardLevel rewardLevel : RewardLevel.values()) {
                     messageUtil.sendMessage(player, "§8- " + rewardLevel.getDisplayName() + "§8 (§f" + rewardLevel.name().toLowerCase() + "§8)");
@@ -46,20 +46,20 @@ public final class LuckyFishingCommand implements CommandExecutor {
         }
 
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("setrewards")) {
+            if (args[0].equalsIgnoreCase("set")) {
                 try {
-                    RewardLevel rewardLevel = RewardLevel.valueOf(args[1]);
+                    final RewardLevel rewardLevel = RewardLevel.getOrDefault(args[1], RewardLevel.COMMON);
                     luckyFishingHandler.editFishingRewards(player, rewardLevel);
                     return false;
                 } catch (IllegalArgumentException e) {
-                    messageUtil.sendMessage(player, "Gebe ein richtiges RodLevel an§8.");
+                    messageUtil.sendMessage(player, "Gebe ein richtiges Reward Level an§8.");
                     return false;
                 }
             }
         }
         messageUtil.sendSyntax(sender,
-                "/lf setrewards <rewardlevel>",
-                "/lf rewardlevels");
+                "/lf set <rewardlevel>",
+                "/lf list");
         return false;
     }
 }

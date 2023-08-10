@@ -11,17 +11,21 @@ package de.obey.crownmc.handler;
 import de.obey.crownmc.CrownMain;
 import de.obey.crownmc.objects.vote.VoteParty;
 import de.obey.crownmc.util.FileUtil;
+import de.obey.crownmc.util.MessageUtil;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Giant;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.io.File;
@@ -42,7 +46,6 @@ public final class VotePartyHandler {
     private ArrayList<ItemStack> chanceList = new ArrayList<>();
 
     public VotePartyHandler() {
-
         boolean isNew = false;
         if(!file.exists()) {
             try {
@@ -105,6 +108,10 @@ public final class VotePartyHandler {
 
     public void startVoteParty() {
         parties.add(new VoteParty(this));
+    }
+
+    public void spawnBoss() {
+        parties.add(new VoteParty(this, true));
     }
 
     public void loadLocations() {

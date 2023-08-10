@@ -115,6 +115,11 @@ public final class VotePartyCommand implements CommandExecutor, Listener {
                 votePartyHandler.startVoteParty();
                 return false;
             }
+
+            if (args[0].equalsIgnoreCase("boss")) {
+                votePartyHandler.spawnBoss();
+                return false;
+            }
         }
 
         if(args.length == 2) {
@@ -165,6 +170,7 @@ public final class VotePartyCommand implements CommandExecutor, Listener {
                 "/voteparty items",
                 "/voteparty reloadloc",
                 "/voteparty start",
+                "/voteparty boss",
                 "/voteparty drop <zahl>"
         );
 

@@ -44,8 +44,8 @@ public final class ServerConfig {
             votes = 0, voteparty = 0,
             dailycount = 0,
             baseXPkillstreak = 0, baseMoneyKillstreak = 0, baseEloKillstreak = 0, levelUpMoney = 0,
-            netherPrice = 1000000, endPrice = 1000000, soulReward = 0, epCooldown = 3,
-            netherLevel = 1, endLevel = 1,
+            netherPrice = 1000000, endPrice = 1000000, hardcorePrice = 1000000, soulReward = 0, epCooldown = 3,
+            netherLevel = 1, endLevel = 1, hardcoreLevel = 1,
             clanPrice = 20000;
     @Setter
     private long dailyMillisCount = 0;
@@ -193,20 +193,14 @@ public final class ServerConfig {
         if (cfg.contains("endprice"))
             endPrice = cfg.getInt("endprice");
 
-        if (cfg.contains("soulReward"))
-            soulReward = cfg.getInt("soulReward");
 
-        if (cfg.contains("epCooldown"))
-            epCooldown = cfg.getInt("epCooldown");
-
-        if (cfg.contains("endLevel"))
-            endLevel = cfg.getInt("endLevel");
-
-        if (cfg.contains("netherLevel"))
-            netherLevel = cfg.getInt("netherLevel");
-
+        hardcorePrice = cfg.getInt("hardcoreprice", 10000);
+        soulReward = cfg.getInt("soulReward", 0);
+        epCooldown = cfg.getInt("epCooldown", 3);
+        endLevel = cfg.getInt("endLevel", 100000);
+        netherLevel = cfg.getInt("netherLevel", 100000);
+        hardcoreLevel = cfg.getInt("hardcoreLevel", 100000);
         clanPrice = cfg.getInt("clanPrice", 20000);
-
         playtest = cfg.getBoolean("playtest", false);
 
         loadRespawnKitItems();
@@ -243,10 +237,12 @@ public final class ServerConfig {
         cfg.set("levelUpMoney", levelUpMoney);
         cfg.set("netherprice", netherPrice);
         cfg.set("endprice", endPrice);
+        cfg.set("hardcoreprice", hardcorePrice);
         cfg.set("soulReward", soulReward);
         cfg.set("epCooldown", epCooldown);
         cfg.set("netherLevel", netherLevel);
         cfg.set("endLevel", endLevel);
+        cfg.set("hardcoreLevel", hardcoreLevel);
         cfg.set("clanPrice", clanPrice);
 
         if (domainJoins.size() > 0) {

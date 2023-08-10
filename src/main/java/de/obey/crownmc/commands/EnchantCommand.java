@@ -161,6 +161,20 @@ public final class EnchantCommand implements CommandExecutor {
                     player.playSound(player.getLocation(), Sound.ANVIL_USE, 5, 5);
 
                     return false;
+                } else if (args[0].equalsIgnoreCase("lure")) {
+                    itemMeta.addEnchant(Enchantment.LURE, level, true);
+                    item.setItemMeta(itemMeta);
+                    player.setItemInHand(item);
+                    player.playSound(player.getLocation(), Sound.ANVIL_USE, 5, 5);
+
+                    return false;
+                }else if (args[0].equalsIgnoreCase("luckofsea")) {
+                    itemMeta.addEnchant(Enchantment.LUCK, level, true);
+                    item.setItemMeta(itemMeta);
+                    player.setItemInHand(item);
+                    player.playSound(player.getLocation(), Sound.ANVIL_USE, 5, 5);
+
+                    return false;
                 }
 
             }catch (final NumberFormatException exception) {
@@ -170,7 +184,7 @@ public final class EnchantCommand implements CommandExecutor {
 
         }
 
-        messageUtil.sendMessage(player, "/enchant §8<§7schärfe§c,§7haltbarkeit§c,§7verbrennung§c,§7unendlichkeit§c,§7rückstoß§c,§7effi§c,§7schutz§c,§7feuerschutz§c,§7plünderung§c,§7dornen§c,§7schlag§c,§7stärke§c,§7flamme§c,§7glow§8> <§7l§cv§7l§8>");
+        messageUtil.sendMessage(player, "/enchant §8<§7schärfe§c,§7haltbarkeit§c,§7verbrennung§c,§7unendlichkeit§c,§7rückstoß§c,§7effi§c,§7schutz§c,§7feuerschutz§c,§7plünderung§c,§7dornen§c,§7schlag§c,§7stärke§c,§7flamme§c,§7glow§c,§7lure§c,§7luckofsea§8> <§7l§cv§7l§8>");
 
         return false;
     }

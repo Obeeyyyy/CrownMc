@@ -120,7 +120,17 @@ public final class InventoryUtil {
         int amount = 0;
         final ItemStack[] items = player.getInventory().getContents().clone();
         for (ItemStack content : items) {
-            if (content != null && content.getType() == item.getType()) {
+            if (content != null && content.getType() == item.getType() &&
+                    content.getDurability() == item.getDurability()) {
+
+                if(content.hasItemMeta() && content.getItemMeta().hasDisplayName()) {
+                    if(!item.hasItemMeta() || !item.getItemMeta().hasDisplayName())
+                        continue;
+
+                    if(!item.getItemMeta().getDisplayName().equalsIgnoreCase(content.getItemMeta().getDisplayName()))
+                        continue;
+                }
+
                 amount += content.getAmount() / (double)item.getAmount();
                 content.setType(Material.AIR);
             }
@@ -141,7 +151,17 @@ public final class InventoryUtil {
             if (amount >= removeAmount)
                 return amount;
 
-            if (content != null && content.getType() != Material.AIR && content.getType() == item.getType() && content.getAmount() >= item.getAmount()) {
+            if (content != null && content.getType() != Material.AIR && content.getType() == item.getType() && content.getAmount() >= item.getAmount()
+                    && content.getDurability() == item.getDurability()) {
+
+                if(content.hasItemMeta() && content.getItemMeta().hasDisplayName()) {
+                    if(!item.hasItemMeta() || !item.getItemMeta().hasDisplayName())
+                        continue;
+
+                    if(!item.getItemMeta().getDisplayName().equalsIgnoreCase(content.getItemMeta().getDisplayName()))
+                        continue;
+                }
+
                 if (amount + (content.getAmount() / (double)item.getAmount()) > (double) removeAmount) {
                     content.setAmount(content.getAmount() - ((removeAmount - amount) * item.getAmount()));
                     player.getInventory().setItem(i, content);

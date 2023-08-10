@@ -13,15 +13,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public enum RewardLevel {
 
     COMMON("§7§lCOMMON§r", 50),
-    UNCOMMON("§a§lUNCOMMON§r", 30),
-    RARE("§3§lRARE§r", 10),
-    EPIC("§5§lEPIC§r", 8),
-    LEGENDARY("§4§lLEGENDARY§r", 2);
+    UNCOMMON("§e§lUNCOMMON§r", 40),
+    RARE("§3§lRARE§r", 14),
+    EPIC("§5§lEPIC§r", 5),
+    LEGENDARY("§6§lLEGENDARY§r", 1);
 
     final String displayName;
     final int chance;
 
-    RewardLevel(final String displayName, int chance) {
+    RewardLevel(final String displayName, final int chance) {
         this.displayName = displayName;
         this.chance = chance;
     }
@@ -31,10 +31,10 @@ public enum RewardLevel {
     }
 
     public static RewardLevel getByChance(int chance) {
-        if (chance >= 50) return COMMON;
-        if (chance >= 30) return UNCOMMON;
-        if (chance >= 10) return RARE;
-        if (chance >= 8) return EPIC;
+        if (chance >= COMMON.chance) return COMMON;
+        if (chance >= UNCOMMON.chance) return UNCOMMON;
+        if (chance >= RARE.chance) return RARE;
+        if (chance >= EPIC.chance) return EPIC;
         return LEGENDARY;
     }
 

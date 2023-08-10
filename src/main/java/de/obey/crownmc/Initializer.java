@@ -73,6 +73,7 @@ public final class Initializer {
     private CoinbombHandler coinbombHandler;
     private PvPDropHandler pvPDropHandler;
     private LuckyFishingHandler luckyFishingHandler;
+    private BlackJackHander blackJackHander;
 
     private PlotAPI plotAPI;
 
@@ -310,7 +311,7 @@ public final class Initializer {
         pluginManager.registerEvents(new RangInfoCommand(), crownMain);
         pluginManager.registerEvents(new RandomTeleportListener(messageUtil, combatHandler, locationHandler), crownMain);
         pluginManager.registerEvents(pvPDropItemsCommand, crownMain);
-        pluginManager.registerEvents(new LuckyFishListener(messageUtil, luckyFishingHandler), crownMain);
+        pluginManager.registerEvents(new LuckyFishListener(messageUtil, luckyFishingHandler, userHandler), crownMain);
     }
 
     private void loadTabCompleter() {
@@ -417,6 +418,7 @@ public final class Initializer {
                     coinbombHandler = new CoinbombHandler(messageUtil);
                     pvPDropHandler = new PvPDropHandler(messageUtil);
                     luckyFishingHandler = new LuckyFishingHandler(messageUtil);
+                    blackJackHander = new BlackJackHander(locationHandler, messageUtil, userHandler);
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();
@@ -440,6 +442,7 @@ public final class Initializer {
                     pvPAltarHandler.loadAllPvPAltars();
                     npcHandler.loadStands();
                     playtestHandler.loadTesters();
+                    blackJackHander.loadTables();
 
                     rankingHandler.startUpdater();
                 }
@@ -487,6 +490,7 @@ public final class Initializer {
         votePartyHandler.shutdown();
         jackPotHandler.shutdown();
         rouletteHandler.shutdown();
+        blackJackHander.shutdown();
         pvPAltarHandler.shutdown();
         banHandler.save();
         muteHandler.save();

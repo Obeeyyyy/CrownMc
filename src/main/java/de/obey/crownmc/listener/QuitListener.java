@@ -8,6 +8,7 @@ package de.obey.crownmc.listener;
 
 import de.obey.crownmc.Initializer;
 import de.obey.crownmc.backend.enums.DataType;
+import de.obey.crownmc.commands.AfkCommand;
 import de.obey.crownmc.commands.FreezeCommand;
 import de.obey.crownmc.commands.VanishCommand;
 import de.obey.crownmc.objects.gambling.CoinFlip;
@@ -48,6 +49,8 @@ public final class QuitListener implements Listener {
                 initializer.getCoinflipHandler().removeCoinflip(coinFlip);
             }
         }
+
+        AfkCommand.afkList.remove(player);
 
         // Save data
         initializer.getUserHandler().getUser(event.getPlayer().getUniqueId()).thenAcceptAsync(user -> {

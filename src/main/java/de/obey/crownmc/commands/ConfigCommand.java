@@ -58,8 +58,10 @@ public final class ConfigCommand implements CommandExecutor {
                 messageUtil.sendMessage(sender, " - levelUpMoney: " + serverConfig.getLevelUpMoney());
                 messageUtil.sendMessage(sender, " - netherPrice: " + serverConfig.getNetherPrice());
                 messageUtil.sendMessage(sender, " - endPrice: " + serverConfig.getEndPrice());
+                messageUtil.sendMessage(sender, " - hardcorePrice: " + serverConfig.getHardcorePrice());
                 messageUtil.sendMessage(sender, " - netherLevel: " + serverConfig.getNetherLevel());
                 messageUtil.sendMessage(sender, " - endLevel: " + serverConfig.getEndLevel());
+                messageUtil.sendMessage(sender, " - hardcoreLevel: " + serverConfig.getHardcoreLevel());
                 messageUtil.sendMessage(sender, " - soulReward: " + serverConfig.getSoulReward());
                 messageUtil.sendMessage(sender, " - epCooldown: " + serverConfig.getEpCooldown() +  "s");
                 sender.sendMessage("");
@@ -151,6 +153,12 @@ public final class ConfigCommand implements CommandExecutor {
 
                     if (args[1].equalsIgnoreCase("clanPrice"))
                         serverConfig.setClanPrice(amount);
+
+                    if (args[1].equalsIgnoreCase("hardcoreLevel"))
+                        serverConfig.setHardcoreLevel(amount);
+
+                    if (args[1].equalsIgnoreCase("hardcorePrice"))
+                        serverConfig.setHardcorePrice(amount);
 
                     scoreboardHandler.updateEverythingForEveryone();
 

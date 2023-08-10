@@ -479,19 +479,31 @@ public final class EssentialCommands implements CommandExecutor {
 
                     final Location nether = initializer.getLocationHandler().getLocation("nether");
                     final Location end = initializer.getLocationHandler().getLocation("end");
+                    final Location hardcore = initializer.getLocationHandler().getLocation("hardcore");
 
-                    if(nether != null && player.getLocation().getWorld() == nether.getWorld()) {
-                        initializer.getMessageUtil().sendMessage(player, "Du befindest in der §c§lNether§7 Dimension§8, §7teleport Anfragen können hier nicht angenommen werden§8.");
-                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
-                        return false;
+                    if(nether != null) {
+                        if(player.getWorld() == nether.getWorld() && player.getWorld() != target.getWorld()) {
+                            initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich nicht in der Nether Dimension§8.");
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                            return false;
+                        }
                     }
 
-                    if(end != null && player.getLocation().getWorld() == end.getWorld()) {
-                        initializer.getMessageUtil().sendMessage(player, "Du befindest in der §f§lEnd§7 Dimension§8, §7teleport Anfragen können hier nicht angenommen werden§8.");
-                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
-                        return false;
+                    if(end != null) {
+                        if(player.getWorld() == end.getWorld() && player.getWorld() != target.getWorld()) {
+                            initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich nicht in der End Dimension§8.");
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                            return false;
+                        }
                     }
 
+                    if(hardcore != null) {
+                        if(player.getWorld() == hardcore.getWorld() && player.getWorld() != target.getWorld()) {
+                            initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich nicht in der Hardcore Welt§8.");
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                            return false;
+                        }
+                    }
 
                     tpas.remove(target);
 
@@ -572,17 +584,30 @@ public final class EssentialCommands implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("accept")) {
                     final Location nether = initializer.getLocationHandler().getLocation("nether");
                     final Location end = initializer.getLocationHandler().getLocation("end");
+                    final Location hardcore = initializer.getLocationHandler().getLocation("hardcore");
 
-                    if(nether != null && target.getLocation().getWorld() == nether.getWorld()) {
-                        initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich in der §c§lNether§7 Dimension§8, §7du kannst nicht zu ihm teleportiert werden§8.");
-                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
-                        return false;
+                    if(nether != null) {
+                        if(player.getWorld() == nether.getWorld() && player.getWorld() != target.getWorld()) {
+                            initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich nicht in der Nether Dimension§8.");
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                            return false;
+                        }
                     }
 
-                    if(end != null && target.getLocation().getWorld() == end.getWorld()) {
-                        initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich in der §f§lEnd§7 Dimension§8, §7du kannst nicht zu ihm teleportiert werden§8.");
-                        player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
-                        return false;
+                    if(end != null) {
+                        if(player.getWorld() == end.getWorld() && player.getWorld() != target.getWorld()) {
+                            initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich nicht in der End Dimension§8.");
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                            return false;
+                        }
+                    }
+
+                    if(hardcore != null) {
+                        if(player.getWorld() == hardcore.getWorld() && player.getWorld() != target.getWorld()) {
+                            initializer.getMessageUtil().sendMessage(player, target.getName() + " befindet sich nicht in der Hardcore Welt§8.");
+                            player.playSound(player.getLocation(), Sound.EXPLODE, 0.2f, 1);
+                            return false;
+                        }
                     }
 
                     tpaHeres.remove(target);

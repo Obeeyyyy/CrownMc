@@ -83,7 +83,7 @@ public final class RangGutscheinInteractListener implements Listener {
             }
 
             InventoryUtil.removeItemInHand(player, 1);
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " group addtemp crown 1m");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " group addtemp crown 1mo");
             CrownMain.getInstance().getInitializer().getScoreboardHandler().updateScoreboard(player);
 
             messageUtil.sendMessage(player, "Du hast den Crown Rang für einen Monat erhalten§8.");
