@@ -128,6 +128,11 @@ public final class JackPot {
         if(teilnehmer.size() <= 1) {
             message("Der Jackpot wurde abgebrochen§8, §7nicht genug Teilnehmer§8.");
             jackPotHandler.shutdown();
+
+            // Pay back
+            for (Player player : teilnehmer)
+                userHandler.getUserInstant(player.getUniqueId()).addLong(DataType.MONEY, einsatz);
+
             return;
         }
 

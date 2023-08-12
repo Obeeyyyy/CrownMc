@@ -1,4 +1,4 @@
-package de.obey.crownmc.objects;
+package de.obey.crownmc.objects.events;
 
 import lombok.Getter;
 import lombok.Setter;

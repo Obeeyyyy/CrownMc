@@ -81,7 +81,7 @@ public final class PermissionBuchCommand implements CommandExecutor, Listener {
 
         event.setCancelled(true);
 
-        final String permission = player.getItemInHand().getItemMeta().getLore().get(5).split(" ")[3];
+        final String permission = player.getItemInHand().getItemMeta().getLore().get(5).split(" ")[3].split(".")[1];
 
         if (PermissionUtil.hasPermission(player, permission, false)) {
             messageUtil.sendMessage(player, "Du hast diese Permission bereits§8.");

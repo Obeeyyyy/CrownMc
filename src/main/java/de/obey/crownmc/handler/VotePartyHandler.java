@@ -110,8 +110,8 @@ public final class VotePartyHandler {
         parties.add(new VoteParty(this));
     }
 
-    public void spawnBoss() {
-        parties.add(new VoteParty(this, true));
+    public void spawnBoss(final Location location) {
+        parties.add(new VoteParty(this, true, location));
     }
 
     public void loadLocations() {

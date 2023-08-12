@@ -371,7 +371,9 @@ public final class ClanHandler {
             backend.execute("UPDATE clans SET " +
                     "kills='" + clan.getKills() + "', " +
                     "deaths='" + clan.getDeaths() + "', " +
-                    "trophies='" + clan.getTrophies() + "' " +
+                    "trophies='" + clan.getTrophies() + "', " +
+                    "xp='" + clan.getXp() + "', " +
+                    "level='" + clan.getLevel() + "' " +
                     "WHERE name='" + clan.getClanName() + "';");
         });
     }

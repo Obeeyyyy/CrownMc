@@ -74,6 +74,7 @@ public final class Initializer {
     private PvPDropHandler pvPDropHandler;
     private LuckyFishingHandler luckyFishingHandler;
     private BlackJackHander blackJackHander;
+    private SpleefHandler spleefHandler;
 
     private PlotAPI plotAPI;
 
@@ -104,6 +105,7 @@ public final class Initializer {
         final ClanCommand clanCommand = new ClanCommand(messageUtil, clanHandler, userHandler);
         final StatTrackCommand statTrackCommand = new StatTrackCommand(messageUtil, statTrackHandler);
         final PvPDropItemsCommand pvPDropItemsCommand = new PvPDropItemsCommand(pvPDropHandler);
+        final SpleefCommand spleefCommand = new SpleefCommand(messageUtil, spleefHandler);
 
         crownMain.getCommand("whitelist").setExecutor(new WhitelistCommand(serverConfig, messageUtil));
         crownMain.getCommand("stop").setExecutor(new StopCommand(this));
@@ -246,6 +248,7 @@ public final class Initializer {
         crownMain.getCommand("goal").setExecutor(new GoalCommand(messageUtil, userHandler, goalHandler));
         crownMain.getCommand("pvpdrops").setExecutor(pvPDropItemsCommand);
         crownMain.getCommand("lf").setExecutor(new LuckyFishingCommand(messageUtil, luckyFishingHandler));
+        crownMain.getCommand("spleef").setExecutor(spleefCommand);
 
         final PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -312,6 +315,7 @@ public final class Initializer {
         pluginManager.registerEvents(new RandomTeleportListener(messageUtil, combatHandler, locationHandler), crownMain);
         pluginManager.registerEvents(pvPDropItemsCommand, crownMain);
         pluginManager.registerEvents(new LuckyFishListener(messageUtil, luckyFishingHandler, userHandler), crownMain);
+        pluginManager.registerEvents(spleefCommand, crownMain);
     }
 
     private void loadTabCompleter() {
@@ -363,6 +367,7 @@ public final class Initializer {
         crownMain.getCommand("warp").setTabCompleter(new WarpsTabComplete(warpHandler));
         crownMain.getCommand("bank").setTabCompleter(new BankTabComplete(userHandler));
         crownMain.getCommand("config").setTabCompleter(new ConfigTabComplete());
+        crownMain.getCommand("protection").setTabCompleter(new ProtectionTabComplete());
     }
 
     public void initializeSystem() {
@@ -419,6 +424,7 @@ public final class Initializer {
                     pvPDropHandler = new PvPDropHandler(messageUtil);
                     luckyFishingHandler = new LuckyFishingHandler(messageUtil);
                     blackJackHander = new BlackJackHander(locationHandler, messageUtil, userHandler);
+                    spleefHandler = new SpleefHandler();
 
                     if (Bukkit.getPluginManager().getPlugin("PlotSquared") != null)
                         plotAPI = new PlotAPI();

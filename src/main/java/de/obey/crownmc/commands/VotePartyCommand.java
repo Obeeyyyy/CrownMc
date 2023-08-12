@@ -117,7 +117,7 @@ public final class VotePartyCommand implements CommandExecutor, Listener {
             }
 
             if (args[0].equalsIgnoreCase("boss")) {
-                votePartyHandler.spawnBoss();
+                votePartyHandler.spawnBoss(player.getLocation());
                 return false;
             }
         }

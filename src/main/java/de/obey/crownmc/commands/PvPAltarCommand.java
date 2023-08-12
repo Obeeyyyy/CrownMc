@@ -47,6 +47,9 @@ public final class PvPAltarCommand implements CommandExecutor, Listener {
         if(!(sender instanceof Player))
             return false;
 
+        if(!PermissionUtil.hasPermission(sender, "admin", true))
+            return false;
+
         final Player player = (Player) sender;
 
         if(args.length == 1) {

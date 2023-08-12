@@ -337,6 +337,16 @@ public class Clan {
         ClanLevelUtil.checkForLevelUp(this);
     }
 
+    public void addKill(final int amount) {
+        kills += amount;
+        updateClanInfo();
+    }
+
+    public void addDeath(final int amount) {
+        deaths += amount;
+        updateClanInfo();
+    }
+
     public boolean isTrusted(final UUID uuid) {
         return trustedList.contains(uuid.toString());
     }

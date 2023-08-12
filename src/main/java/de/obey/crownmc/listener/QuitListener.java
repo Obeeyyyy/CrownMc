@@ -87,6 +87,10 @@ public final class QuitListener implements Listener {
         //Freezed stuff
         if (FreezeCommand.getFreezed().contains(player.getUniqueId()))
             initializer.getMessageUtil().sendMessageToTeamMembers("§3§lFREEZE§8 > §f§o" + player.getName() + "§7 hat den Server verlassen§8.");
+
+        // Spleef event leave
+        if(initializer.getSpleefHandler().getSpleefRound() != null)
+            initializer.getSpleefHandler().getSpleefRound().quit(player);
     }
 
 }

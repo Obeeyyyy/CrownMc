@@ -40,7 +40,7 @@ public final class UserPlaytime {
             return;
 
         if (user.getOfflinePlayer().isOnline()) {
-            if (user.getLong(DataType.PLAYTIMESAVED) == 0) {
+            if (user.getLong(DataType.PLAYTIMESAVED) <= 0) {
                 user.setLong(DataType.PLAYTIMESAVED, System.currentTimeMillis());
                 return;
             }

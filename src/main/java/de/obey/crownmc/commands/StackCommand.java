@@ -65,6 +65,7 @@ public final class StackCommand implements CommandExecutor {
 
                     if (itemSearch != null && itemSearch.getType() != Material.AIR && itemSearch.getAmount() < maxStack
                             && itemSearch.getType() == item.getType()
+                            && itemSearch.getDurability() == item.getDurability()
                             && (itemSearch.getItemMeta() == null && item.getItemMeta() == null || itemSearch.getItemMeta() != null && itemSearch.getItemMeta().equals(item.getItemMeta())
                     )) {
 

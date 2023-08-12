@@ -1,7 +1,7 @@
 package de.obey.crownmc.handler;
 
 import de.obey.crownmc.backend.enums.DataType;
-import de.obey.crownmc.objects.WordScramble;
+import de.obey.crownmc.objects.events.WordScramble;
 import de.obey.crownmc.util.MathUtil;
 import de.obey.crownmc.util.MessageUtil;
 import lombok.Getter;

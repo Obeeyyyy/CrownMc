@@ -64,6 +64,7 @@ public final class ConfigCommand implements CommandExecutor {
                 messageUtil.sendMessage(sender, " - hardcoreLevel: " + serverConfig.getHardcoreLevel());
                 messageUtil.sendMessage(sender, " - soulReward: " + serverConfig.getSoulReward());
                 messageUtil.sendMessage(sender, " - epCooldown: " + serverConfig.getEpCooldown() +  "s");
+                messageUtil.sendMessage(sender, " - clanPrice: " + serverConfig.getClanPrice() +  "s");
                 sender.sendMessage("");
 
                 messageUtil.sendMessage(sender, "Blocked Commands:");

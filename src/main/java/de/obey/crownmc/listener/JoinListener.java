@@ -133,7 +133,7 @@ public final class JoinListener implements Listener {
                     LOGIN STREAK CHECK
                  */
                     if (System.currentTimeMillis() - user.getLong(DataType.LOGINSTREAKUPDATED) >= 86400000) {
-                        if (System.currentTimeMillis() - user.getLong(DataType.LASTSEEN) >= 172798000) {
+                        if (System.currentTimeMillis() - user.getLong(DataType.LASTSEEN) >= 86400000) {
                             // BREAK STREAK
                             user.setLong(DataType.LOGINSTREAK, 1);
                         } else {

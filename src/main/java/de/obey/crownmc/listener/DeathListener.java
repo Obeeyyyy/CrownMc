@@ -100,6 +100,10 @@ public final class DeathListener implements Listener {
         user.addLong(DataType.DEATHS, 1);
         user.removeLong(DataType.MONEY, serverConfig.getDeathMoneyLose());
         user.removeLong(DataType.ELOPOINTS, serverConfig.getDeathEloLose());
+
+        if(user.getClan() != null) {
+            user.getClan().addDeath(1);
+        }
         // Punishment end
 
         statTrackHandler.addCount(killer);
@@ -148,6 +152,10 @@ public final class DeathListener implements Listener {
             killerUser.addLong(DataType.ELOPOINTS, eloReward);
             killerUser.addLong(DataType.MONEY, moneyReward);
             killerUser.addXP(xpReward);
+
+            if(killerUser.getClan() != null) {
+                killerUser.getClan().addKill(1);
+            }
 
             // End Drop
             final Location location = locationHandler.getLocation("end");

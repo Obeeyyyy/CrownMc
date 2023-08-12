@@ -66,8 +66,12 @@ public final class BlockStuffListener implements Listener {
 
         if (event.getBlock().getWorld().getName().equalsIgnoreCase("plots") ||
                 event.getBlock().getWorld().getName().equalsIgnoreCase("farmwelt") ||
-                event.getBlock().getWorld().getName().equalsIgnoreCase("world"))
-            event.setCancelled(true);
+                event.getBlock().getWorld().getName().equalsIgnoreCase("world")) {
+
+            if(event.getBlock().getType() == Material.CACTUS ||
+                event.getBlock().getType() == Material.SUGAR_CANE_BLOCK)
+                event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -105,7 +109,7 @@ public final class BlockStuffListener implements Listener {
         }
     }
 
-    // INSTANT RESPAWN
+    //  INSTANT RESPAWN
     @EventHandler
     public void on(final PlayerDeathEvent event) {
         final Player player = event.getEntity();
@@ -353,6 +357,9 @@ public final class BlockStuffListener implements Listener {
 
             return;
         }
+
+        if(player.getName().equalsIgnoreCase("Obeeyyyy"))
+            return;
 
         for (final Player teamler : Bukkit.getOnlinePlayers()) {
             if (PermissionUtil.hasPermission(teamler, "commandwatch", false) && teamler != player) {

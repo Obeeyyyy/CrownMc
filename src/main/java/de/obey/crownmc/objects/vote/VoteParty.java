@@ -42,11 +42,11 @@ public final class VoteParty {
 
     private final String prefix = "&a&lV&6&lo&d&lt&3&le&2&lP&5&la&b&lr&c&lt&e&ly";
 
-    public VoteParty(final VotePartyHandler votePartyHandler, final boolean instaBoss) {
+    public VoteParty(final VotePartyHandler votePartyHandler, final boolean instaBoss, final Location location) {
         this.votePartyHandler = votePartyHandler;
 
         if(instaBoss) {
-            spawnBossMob();
+            spawnBossMob(location);
             return;
         }
 
@@ -126,7 +126,7 @@ public final class VoteParty {
             public void run() {
 
                 if(itemDrops >= 20) {
-                    spawnBossMob();
+                    spawnBossMob(votePartyHandler.getLocations().get(0));
                     cancel();
                     return;
                 }
@@ -153,14 +153,13 @@ public final class VoteParty {
         }.runTaskTimer(CrownMain.getInstance(), 5, 5);
     }
 
-    public void spawnBossMob() {
+    public void spawnBossMob(final Location location) {
         messageUtil.broadcast("§8(" + prefix + "§8) §7Gleich erscheint ein Boss Mob§9.");
 
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
 
-                final Location location = votePartyHandler.getLocations().get(0);
                 final Giant giant = location.getWorld().spawn(location, Giant.class);
 
                 giant.setMaxHealth(2000);
